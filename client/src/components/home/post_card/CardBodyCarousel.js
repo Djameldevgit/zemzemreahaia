@@ -45,7 +45,7 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
     const [isInstallingPWA, setIsInstallingPWA] = useState(false);
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [showShareModal, setShowShareModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false); // 🔷 NUEVO: Modal para confirmar eliminación
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     // Detectar si estamos en la página de detalle del post
     const isDetailPage = location.pathname === `/post/${post._id}`;
@@ -57,7 +57,7 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
     };
     const getFlexClass = () => isRTL ? 'flex-row-reverse' : 'flex-row';
 
-    // 🔷 Verificar si el usuario puede editar/eliminar el post (dueño O admin)
+    // 🔷 VERIFICAR SI EL USUARIO PUEDE EDITAR/ELIMINAR EL POST
     const canEditPost = auth.user && (
         auth.user._id === post.user?._id || 
         auth.user.role === "admin"
@@ -67,6 +67,182 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
         auth.user._id === post.user?._id || 
         auth.user.role === "admin"
     );
+
+    // 🔷 SISTEMA DE ESTILOS MEJORADO
+    const styles = {
+        card: {
+            background: theme 
+                ? 'linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(45, 45, 45, 0.95) 100%)' 
+                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            border: theme 
+                ? '1px solid rgba(255, 255, 255, 0.1)' 
+                : '1px solid rgba(0, 0, 0, 0.05)',
+            boxShadow: theme 
+                ? '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05)' 
+                : '0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.02)',
+            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+        },
+        primaryButton: {
+            display: 'block',
+            width: '100%',
+            fontWeight: '700',
+            borderRadius: '16px',
+            border: 'none',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%)',
+            backgroundSize: '200% 100%',
+            fontSize: '1.1rem',
+            padding: '18px 24px',
+            transition: 'all 0.4s ease',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+            letterSpacing: '0.5px'
+        },
+        iconContainer: {
+            width: '60px',
+            height: '60px',
+            borderRadius: '16px',
+            background: theme 
+                ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%)' 
+                : 'linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: theme 
+                ? '1px solid rgba(255, 255, 255, 0.15)' 
+                : '1px solid rgba(102, 126, 234, 0.2)',
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)'
+        },
+        interactionButton: {
+            background: 'rgba(0, 0, 0, 0.8)',
+            borderRadius: '50%',
+            width: '56px',
+            height: '56px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backdropFilter: 'blur(15px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.4)',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+        }
+    };
+
+    // 🔷 SISTEMA DE ICONOS MEJORADO
+    const getEnhancedIcon = (iconType, options = {}) => {
+        const { size = 'default', color = 'default', animation = false } = options;
+        
+        const sizeMap = {
+            small: '0.9rem',
+            default: '1.2rem',
+            large: '1.5rem',
+            xlarge: '2rem'
+        };
+
+        const colorMap = {
+            default: theme ? '#fff' : '#333',
+            primary: '#667eea',
+            success: '#10b981',
+            warning: '#f59e0b',
+            danger: '#ef4444',
+            gradient: 'linear-gradient(135deg, #667eea, #764ba2)'
+        };
+
+        const iconStyle = {
+            fontSize: sizeMap[size],
+            color: colorMap[color],
+            background: color === 'gradient' ? colorMap.gradient : 'transparent',
+            WebkitBackgroundClip: color === 'gradient' ? 'text' : 'initial',
+            WebkitTextFillColor: color === 'gradient' ? 'transparent' : 'initial',
+            animation: animation ? 'pulse 2s infinite' : 'none',
+            filter: theme && color !== 'gradient' ? 'brightness(1.2)' : 'none'
+        };
+
+        const icons = {
+            eye: 'fas fa-eye',
+            calendar: 'far fa-calendar-alt',
+            location: 'fas fa-map-marker-alt',
+            building: 'fas fa-building',
+            plane: 'fas fa-plane',
+            rocket: 'fas fa-rocket',
+            external: 'fas fa-external-link-alt',
+            edit: 'fas fa-edit',
+            trash: 'fas fa-trash-alt',
+            comments: 'fas fa-comments',
+            info: 'fas fa-info-circle',
+            flag: 'fas fa-flag',
+            share: 'fas fa-share-alt',
+            bookmark: saved ? 'fas fa-bookmark' : 'far fa-bookmark',
+            heart: isLike ? 'fas fa-heart' : 'far fa-heart',
+            spinner: 'fas fa-spinner fa-spin',
+            ellipsis: 'fas fa-ellipsis-h'
+        };
+
+        return (
+            <i 
+                className={icons[iconType]} 
+                style={iconStyle}
+            />
+        );
+    };
+
+    // 🔷 COMPONENTE DE BOTÓN MEJORADO
+    const EnhancedButton = ({ 
+        children, 
+        onClick, 
+        icon = null,
+        disabled = false,
+        fullWidth = true
+    }) => {
+        const [isHovered, setIsHovered] = useState(false);
+
+        return (
+            <Button
+                variant="primary"
+                className={`${fullWidth ? 'w-100' : ''} position-relative overflow-hidden border-0`}
+                onClick={onClick}
+                disabled={disabled}
+                style={{
+                    ...styles.primaryButton,
+                    transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
+                    boxShadow: isHovered 
+                        ? '0 15px 35px rgba(102, 126, 234, 0.4)' 
+                        : '0 8px 25px rgba(102, 126, 234, 0.3)',
+                    backgroundPosition: isHovered ? '100% 0' : '0 0'
+                }}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                {/* Efecto de brillo en hover */}
+                {isHovered && (
+                    <div 
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: '-100%',
+                            width: '100%',
+                            height: '100%',
+                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                            animation: 'shimmer 1.5s ease-in-out'
+                        }}
+                    />
+                )}
+                
+                <div className="d-flex align-items-center justify-content-center position-relative z-2">
+                    {icon && (
+                        <span className={isRTL ? 'ms-3' : 'me-3'}>
+                            {getEnhancedIcon(icon, { size: 'default' })}
+                        </span>
+                    )}
+                    <span className="fw-bold text-white">{children}</span>
+                </div>
+            </Button>
+        );
+    };
 
     // 🔷 NUEVA FUNCIÓN: Eliminar post
     const handleDeletePost = async () => {
@@ -81,19 +257,11 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
         }
 
         try {
-            // Cerrar el modal de confirmación
             setShowDeleteModal(false);
-            
-            // Mostrar alerta de carga
             showAlert(t('deleting_post'), 'info');
-            
-            // Dispatch de la acción deletePost
             await dispatch(deletePost({ post, auth }));
-            
-            // Mostrar mensaje de éxito
             showAlert(t('post_deleted_success'), 'success');
             
-            // Redirigir a home después de eliminar (opcional)
             setTimeout(() => {
                 history.push('/');
             }, 1500);
@@ -134,14 +302,6 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
     };
 
     const travelDate = formatTravelDate();
-
-    // 🔷 Función para obtener icono de agencia
-    const getAgencyIcon = () => {
-        if (post.promoteurimmobilier) {
-            return "fas fa-building text-warning";
-        }
-        return "fas fa-plane text-primary";
-    };
 
     // Resto del código existente (useEffects y funciones) se mantiene igual...
     useEffect(() => {
@@ -249,7 +409,7 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
         }, 3000);
     };
 
-    // 🔷 LÓGICA MEJORADA PARA CHAT CON EL DUEÑO (CORREGIDA)
+    // 🔷 LÓGICA MEJORADA PARA CHAT CON EL DUEÑO
     const handleAddUser = useCallback((user) => {
         if (!auth.user) {
             setShowAuthModal(true);
@@ -259,7 +419,6 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
         history.push(`/message/${user._id}`);
     }, [auth.user, dispatch, history]);
 
-    // 🔷 FUNCIÓN CORREGIDA - Maneja tanto eventos como llamadas directas
     const handleChatWithOwner = (e) => {
         if (e && e.stopPropagation) {
             e.stopPropagation();
@@ -286,7 +445,6 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
         }
     };
 
-    // Resto de funciones existentes se mantienen igual...
     const handleVisitApp = (e) => {
         e?.stopPropagation();
         const appLink = post.link || post.productionUrl;
@@ -377,23 +535,15 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
         }
     };
 
-    // 🔷 **FUNCIÓN DE EDICIÓN MEJORADA**
+    // 🔷 FUNCIÓN DE EDICIÓN MEJORADA
     const handleEditPost = (e) => {
         e?.stopPropagation();
         
-        console.group('🛠 EDIT POST CLICKED');
-        console.log('📝 Post Data:', post);
-        console.log('👤 Auth User:', auth.user);
-        console.log('🔑 Can Edit Result:', canEditPost);
-        console.groupEnd();
-
         if (!auth.user) {
-            console.log('❌ No user logged in');
             setShowAuthModal(true);
             return;
         }
 
-        // Verificación directa para mayor seguridad
         const userCanEdit = auth.user && (
             auth.user._id === post.user?._id || 
             auth.user._id === post.user || 
@@ -401,19 +551,14 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
         );
 
         if (!userCanEdit) {
-            console.log('❌ User cannot edit this post');
             showAlert(t('not_post_owner_or_admin'), 'warning');
             return;
         }
 
-        console.log('✅ User CAN edit, navigating to edit page');
-        
-        // 🔷 **CAMBIAR LA RUTA: Usar /createpost en lugar de /editpost/:id**
         history.push('/createpost', { 
             isEdit: true,
             postData: {
                 ...post,
-                // Asegurar que todos los campos necesarios estén presentes
                 title: post.title || '',
                 description: post.description || post.content || '',
                 images: post.images || [],
@@ -427,11 +572,8 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                 destinacionvoyage1: post.destinacionvoyage1 || '',
                 duracionviaje: post.duracionviaje || '',
                 transporte: post.transporte || '',
-                // Incluir todos los campos de tu schema
             }
         });
-
-        console.log('🎯 Navegación ejecutada a:', '/createpost');
     };
 
     const handleThreeDotsMenu = (action) => {
@@ -448,24 +590,19 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
             case 'edit':
                 handleEditPost();
                 break;
-            case 'delete': // 🔷 NUEVO: Opción eliminar
+            case 'delete':
                 handleDeleteClick();
                 break;
             case 'details':
                 handleViewDetails();
-                break;
-            case 'report':
-                history.push('/report', { 
-                    postId: post._id, 
-                    postTitle: post.title 
-                });
+           
                 break;
             default:
                 break;
         }
     };
 
-    // 🔷 NUEVA FUNCIÓN: Compartir en redes sociales
+    // 🔷 FUNCIÓN COMPARTIR MEJORADA
     const handleShare = (platform) => {
         const postUrl = `${BASE_URL}/post/${post._id}`;
         const shareText = `🌍 ${post.title} - Agencia de Viajes`;
@@ -480,7 +617,6 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                 shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
                 break;
             case 'tiktok':
-                // TikTok no tiene API directa de sharing, abrir app o web
                 shareUrl = `https://www.tiktok.com/share?url=${encodeURIComponent(postUrl)}`;
                 break;
             case 'twitter':
@@ -508,94 +644,77 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
 
     return (
         <>
-            <Card className="border-0 shadow-sm" style={{
-                background: theme ? 'rgba(30, 30, 30, 0.98)' : 'rgba(255, 255, 255, 0.98)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                overflow: 'hidden'
-            }}>
+            <Card className="border-0" style={styles.card}>
                 <Card.Body className="p-0">
-                    {/* Alert de descarga */}
-                    {showDownloadAlert && (
-                        <Alert variant="info" className="py-2 m-3 mb-0">
-                            <div className="d-flex align-items-center justify-content-between">
-                                <span>{t('downloading_app')}</span>
-                                <small>{downloadProgress}%</small>
-                            </div>
-                            <div className="progress mt-1" style={{ height: '4px' }}>
-                                <div 
-                                    className="progress-bar progress-bar-striped progress-bar-animated" 
-                                    style={{ width: `${downloadProgress}%` }}
-                                />
-                            </div>
-                        </Alert>
-                    )}
-
-                    {/* Alert personalizado para mensajes */}
+                    {/* Alert personalizado mejorado */}
                     {showCustomAlert && (
-                        <Alert variant={customAlertVariant} className="py-2 m-3 mb-0">
-                            {customAlertMessage}
+                        <Alert 
+                            variant={customAlertVariant} 
+                            className="border-0 rounded-0 m-0 py-3"
+                            style={{
+                                background: theme 
+                                    ? customAlertVariant === 'success' 
+                                        ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))'
+                                        : customAlertVariant === 'warning'
+                                        ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1))'
+                                        : customAlertVariant === 'danger'
+                                        ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1))'
+                                        : 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1))'
+                                    : undefined,
+                                borderBottom: theme 
+                                    ? `1px solid rgba(255, 255, 255, 0.1)` 
+                                    : `1px solid rgba(0, 0, 0, 0.05)`
+                            }}
+                        >
+                            <div className="d-flex align-items-center">
+                                {getEnhancedIcon(
+                                    customAlertVariant === 'success' ? 'info' : 
+                                    customAlertVariant === 'warning' ? 'flag' : 
+                                    customAlertVariant === 'danger' ? 'trash' : 'info',
+                                    { size: 'default', color: customAlertVariant }
+                                )}
+                                <span className={isRTL ? 'ms-0 me-3' : 'ms-3 me-0'}>{customAlertMessage}</span>
+                            </div>
                         </Alert>
                     )}
 
-                    {/* 🔷 HEADER MEJORADO Y ESTILIZADO */}
-                    <div className="p-3 pb-2">
+                    {/* 🔷 HEADER COMPLETAMENTE REDISEÑADO */}
+                    <div className="p-4 pb-3">
                         <Row className={`align-items-start ${getFlexClass()}`}>
                             <Col>
-                                <div className={`d-flex align-items-start gap-3 ${getFlexClass()}`}>
-                                    {/* Icono de agencia con mejor estilo */}
+                                <div className={`d-flex align-items-start gap-4 ${getFlexClass()}`}>
+                                    {/* Icono de agencia rediseñado */}
                                     <div className="flex-shrink-0">
-                                        <div 
-                                            style={{
-                                                width: '50px',
-                                                height: '50px',
-                                                borderRadius: '12px',
-                                                background: theme 
-                                                    ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%)' 
-                                                    : 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%)',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                border: theme ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)'
-                                            }}
-                                        >
-                                            <i 
-                                                className={getAgencyIcon()}
-                                                style={{ 
-                                                    fontSize: '1.3rem',
-                                                    background: 'linear-gradient(135deg, #3b82f6, #9333ea)',
-                                                    WebkitBackgroundClip: 'text',
-                                                    WebkitTextFillColor: 'transparent'
-                                                }}
-                                            />
+                                        <div style={styles.iconContainer}>
+                                            {getEnhancedIcon(
+                                                post.promoteurimmobilier ? 'building' : 'plane',
+                                                { size: 'large', color: 'gradient' }
+                                            )}
                                         </div>
                                     </div>
                                     
-                                    {/* Título e información mejorados */}
+                                    {/* Información principal */}
                                     <div style={{ flex: 1 }}>
                                         <Card.Title 
-                                            className="mb-2" 
+                                            className="mb-3" 
                                             style={{
-                                                fontSize: '1.2rem',
+                                                fontSize: '1.3rem',
                                                 fontWeight: '800',
                                                 color: theme ? '#fff' : '#1a1a1a',
                                                 lineHeight: '1.3',
-                                                display: '-webkit-box',
-                                                WebkitLineClamp: 2,
-                                                WebkitBoxOrient: 'vertical',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis'
+                                                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                                WebkitBackgroundClip: 'text',
+                                                WebkitTextFillColor: 'transparent'
                                             }}
                                         >
-                                            {post.category}
+                                            {post.subCategory || post.title}
                                         </Card.Title>
                                         
-                                        {/* Información del viaje en fila compacta */}
-                                        <div className="d-flex flex-wrap align-items-center gap-3">
-                                            {/* 🔷 FECHA DEL VIAJE */}
+                                        {/* Información del viaje mejorada */}
+                                        <div className="d-flex flex-wrap align-items-center gap-4">
                                             {travelDate && (
                                                 <div className="d-flex align-items-center gap-2">
-                                                    <i className="far fa-calendar-alt text-primary small" />
+                                                    {getEnhancedIcon('calendar', { size: 'small', color: 'primary' })}
                                                     <small className="fw-semibold" style={{
                                                         color: theme ? '#ccc' : '#666'
                                                     }}>
@@ -604,10 +723,9 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                                                 </div>
                                             )}
                                             
-                                            {/* Destino del viaje */}
                                             {(post.destinacionvoyage1 || post.destinacionhadj) && (
                                                 <div className="d-flex align-items-center gap-2">
-                                                    <i className="fas fa-map-marker-alt text-danger small" />
+                                                    {getEnhancedIcon('location', { size: 'small', color: 'danger' })}
                                                     <small className="fw-semibold" style={{
                                                         color: theme ? '#ccc' : '#666'
                                                     }}>
@@ -616,28 +734,19 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                                                 </div>
                                             )}
 
-                                            {/* Precio si está disponible */}
-                                            {post.price && (
-                                                <div className="d-flex align-items-center gap-2">
-                                                    <i className="fas fa-tag text-success small" />
-                                                    <small className="fw-bold text-success">
-                                                        {post.price} {post.priceType}
-                                                    </small>
-                                                </div>
-                                            )}
+                                            
                                         </div>
                                         
-                                        {/* Badge del tipo de aplicación */}
+                                        {/* Badge mejorado */}
                                         {post.appType && (
                                             <Badge 
-                                                bg="primary"
-                                                className="mt-2"
+                                                className="mt-3 border-0"
                                                 style={{
-                                                    fontSize: '0.7rem',
-                                                    fontWeight: '600',
-                                                    padding: '4px 8px',
-                                                    borderRadius: '8px',
-                                                    background: 'linear-gradient(135deg, #3b82f6, #9333ea)',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: '700',
+                                                    padding: '8px 12px',
+                                                    borderRadius: '10px',
+                                                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
                                                     border: 'none'
                                                 }}
                                             >
@@ -648,104 +757,75 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                                 </div>
                             </Col>
                             
+                            {/* Menú de tres puntos rediseñado */}
                             <Col xs="auto">
-                                {/* Menú de tres puntos mejorado */}
                                 <Dropdown>
                                     <Dropdown.Toggle 
                                         variant={theme ? "dark" : "light"} 
                                         size="sm"
-                                        className="border-0 shadow-none"
+                                        className="border-0 shadow-none p-3"
                                         style={{
-                                            background: theme ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                                            padding: '8px',
-                                            borderRadius: '10px',
-                                            width: '36px',
-                                            height: '36px'
+                                            background: theme 
+                                                ? 'rgba(255, 255, 255, 0.1)' 
+                                                : 'rgba(102, 126, 234, 0.1)',
+                                            borderRadius: '12px',
+                                            width: '44px',
+                                            height: '44px',
+                                            transition: 'all 0.3s ease'
                                         }}
                                     >
-                                        <i className="fas fa-ellipsis-h" style={{
-                                            color: theme ? '#fff' : '#666'
-                                        }} />
+                                        {getEnhancedIcon('ellipsis', { 
+                                            size: 'default', 
+                                            color: theme ? '#fff' : '#667eea' 
+                                        })}
                                     </Dropdown.Toggle>
 
-                                    <Dropdown.Menu className={theme ? 'bg-dark text-light border-0 shadow-lg' : 'shadow-lg border-0'}>
-                                        {/* Opciones del menú... */}
-                                        <Dropdown.Item 
-                                            onClick={() => handleThreeDotsMenu('contact')}
-                                            className={theme ? 'text-light' : ''}
-                                        >
-                                            <i className={getIconClass("fas fa-comments")} />
-                                            {t('chat_with_developer')}
-                                        </Dropdown.Item>
-
-                                        <Dropdown.Item 
-                                            onClick={() => handleThreeDotsMenu('install')}
-                                            className={theme ? 'text-light' : ''}
-                                            disabled={isInstallingPWA}
-                                        >
-                                            <i className={getIconClass(isInstallingPWA ? "fas fa-spinner fa-spin" : "fas fa-rocket")} />
-                                            {isInstallingPWA ? t('installing_app') : t('install_this_app')}
-                                        </Dropdown.Item>
-
-                                        <Dropdown.Item 
-                                            onClick={() => handleThreeDotsMenu('visit')}
-                                            className={theme ? 'text-light' : ''}
-                                        >
-                                            <i className={getIconClass("fas fa-external-link-alt")} />
-                                            {t('visit_live_app')}
-                                        </Dropdown.Item>
-
-                                        <Dropdown.Divider />
+                                    <Dropdown.Menu className={`
+                                        ${theme ? 'bg-dark text-light border-0' : 'border-0'} 
+                                        shadow-lg rounded-3 p-2
+                                    `}>
+                                         
+                                        
+  
 
                                         {canEditPost && (
                                             <>
                                                 <Dropdown.Item 
                                                     onClick={() => handleThreeDotsMenu('edit')}
-                                                    className={theme ? 'text-light' : ''}
+                                                    className={`d-flex align-items-center rounded-2 px-3 py-2 ${theme ? 'text-light' : ''}`}
                                                 >
-                                                    <i className={getIconClass("fas fa-edit")} />
-                                                    {auth.user.role === "admin" ? `${t('edit_post')} (Admin)` : t('edit_post')}
+                                                    {getEnhancedIcon('edit', { size: 'default', color: 'primary' })}
+                                                    <span className={isRTL ? 'ms-0 me-3' : 'ms-3 me-0'}>
+                                                        {auth.user.role === "admin" ? `${t('edit_post')} (Admin)` : t('edit_post')}
+                                                    </span>
                                                 </Dropdown.Item>
                                                 
-                                                {/* 🔷 NUEVO: Opción Eliminar Post */}
                                                 <Dropdown.Item 
                                                     onClick={() => handleThreeDotsMenu('delete')}
-                                                    className="text-danger"
+                                                    className="d-flex align-items-center rounded-2 px-3 py-2 text-danger"
                                                 >
-                                                    <i className={getIconClass("fas fa-trash-alt")} />
-                                                    {auth.user.role === "admin" ? `${t('delete_post')} (Admin)` : t('delete_post')}
+                                                    {getEnhancedIcon('trash', { size: 'default', color: 'danger' })}
+                                                    <span className={isRTL ? 'ms-0 me-3' : 'ms-3 me-0'}>
+                                                        {auth.user.role === "admin" ? `${t('delete_post')} (Admin)` : t('delete_post')}
+                                                    </span>
                                                 </Dropdown.Item>
                                                 
-                                                <Dropdown.Divider />
+                                                 
                                             </>
                                         )}
 
-                                        <Dropdown.Item 
-                                            onClick={() => handleThreeDotsMenu('details')}
-                                            className={theme ? 'text-light' : ''}
-                                        >
-                                            <i className={getIconClass("fas fa-info-circle")} />
-                                            {t('view_details')}
-                                        </Dropdown.Item>
+                                        
+ 
 
-                                        <Dropdown.Divider />
-
-                                        <Dropdown.Item 
-                                            onClick={() => handleThreeDotsMenu('report')}
-                                            className="text-danger"
-                                        >
-                                            <i className={getIconClass("fas fa-flag")} />
-                                            {t('report')}
-                                        </Dropdown.Item>
+                                         
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </Col>
                         </Row>
                     </div>
 
-                    {/* 🔷 CONTENEDOR DEL CAROUSEL CON ICONOS SUPERPUESTOS */}
+                    {/* 🔷 CAROUSEL CON BOTONES DE INTERACCIÓN MEJORADOS */}
                     <div className="position-relative">
-                        {/* Carousel */}
                         <div 
                             className="card-image"
                             onClick={() => !isDetailPage && history.push(`/post/${post._id}`)}
@@ -754,31 +834,14 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                             <Carousel images={post.images} id={post._id} />
                         </div>
 
-                        {/* 🔷 ICONOS EN COLUMNA A LA DERECHA - SOLO LIKE, SAVE Y SHARE */}
                         {!isDetailPage && (
-                            <div 
-                                className="position-absolute"
-                                style={{
-                                    bottom: '20px',
-                                    right: '15px',
-                                    zIndex: 10
-                                }}
-                            >
+                            <div className="position-absolute" style={{ bottom: '25px', right: '20px', zIndex: 10 }}>
                                 <div className="d-flex flex-column align-items-center gap-3">
-                                    {/* Like */}
+                                    {/* Like Button Mejorado */}
                                     <div className="text-center">
                                         <div 
-                                            style={{
-                                                background: 'rgba(0, 0, 0, 0.7)',
-                                                borderRadius: '50%',
-                                                width: '48px',
-                                                height: '48px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                backdropFilter: 'blur(10px)',
-                                                border: '1px solid rgba(255,255,255,0.2)'
-                                            }}
+                                            style={styles.interactionButton}
+                                            onClick={isLike ? handleUnLike : handleLike}
                                         >
                                             <LikeButton
                                                 isLike={isLike}
@@ -786,82 +849,40 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                                                 handleUnLike={handleUnLike}
                                                 size="lg"
                                                 iconStyle={{ 
-                                                    color: '#fff',
-                                                    fontSize: '1.2rem'
+                                                    color: isLike ? '#ef4444' : '#fff',
+                                                    fontSize: '1.3rem',
+                                                    transition: 'all 0.3s ease'
                                                 }}
                                             />
                                         </div>
-                                        <div 
-                                            className="fw-bold mt-1 small"
-                                            style={{ 
-                                                color: '#fff',
-                                                textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
-                                            }}
-                                        >
+                                        <div className="fw-bold mt-2 small text-white text-shadow">
                                             {post.likes.length}
                                         </div>
                                     </div>
 
-                                    {/* Save */}
+                                    {/* Save Button Mejorado */}
                                     <div className="text-center">
                                         <div 
-                                            style={{
-                                                background: 'rgba(0, 0, 0, 0.7)',
-                                                borderRadius: '50%',
-                                                width: '48px',
-                                                height: '48px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                backdropFilter: 'blur(10px)',
-                                                border: '1px solid rgba(255,255,255,0.2)',
-                                                cursor: 'pointer'
-                                            }}
+                                            style={styles.interactionButton}
                                             onClick={saved ? handleUnSavePost : handleSavePost}
                                         >
-                                            <i 
-                                                className={saved ? "fas fa-bookmark" : "far fa-bookmark"}
-                                                style={{ 
-                                                    fontSize: '1.2rem',
-                                                    color: saved ? '#ffc107' : '#fff'
-                                                }}
-                                            />
+                                            {getEnhancedIcon('bookmark', { 
+                                                size: 'large', 
+                                                color: saved ? 'warning' : 'default'
+                                            })}
                                         </div>
-                                        <div 
-                                            className="fw-bold mt-1 small"
-                                            style={{ 
-                                                color: '#fff',
-                                                textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
-                                            }}
-                                        >
+                                        <div className="fw-bold mt-2 small text-white text-shadow">
                                             {post.saves || 0}
                                         </div>
                                     </div>
 
-                                    {/* Share */}
+                                    {/* Share Button Mejorado */}
                                     <div className="text-center">
                                         <div 
-                                            style={{
-                                                background: 'rgba(0, 0, 0, 0.7)',
-                                                borderRadius: '50%',
-                                                width: '48px',
-                                                height: '48px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                backdropFilter: 'blur(10px)',
-                                                border: '1px solid rgba(255,255,255,0.2)',
-                                                cursor: 'pointer'
-                                            }}
+                                            style={styles.interactionButton}
                                             onClick={() => setShowShareModal(true)}
                                         >
-                                            <i 
-                                                className="fas fa-share-alt"
-                                                style={{ 
-                                                    fontSize: '1.2rem',
-                                                    color: '#fff'
-                                                }}
-                                            />
+                                            {getEnhancedIcon('share', { size: 'large', color: 'default' })}
                                         </div>
                                     </div>
                                 </div>
@@ -869,38 +890,21 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                         )}
                     </div>
 
-                    {/* 🔷 BOTÓN VER DETALLES DEBAJO DEL CAROUSEL */}
+                    {/* 🔷 BOTÓN PRINCIPAL MEJORADO - 100% ANCHO */}
                     {!isDetailPage && (
-                        <div className="p-3 pt-2">
-                            <Button
-                                variant="primary"
-                                className="w-100 py-3"
+                        <div className="p-4 pt-3">
+                            <EnhancedButton
                                 onClick={handleViewDetails}
-                                style={{
-                                    fontWeight: '700',
-                                    borderRadius: '12px',
-                                    border: 'none',
-                                    background: 'linear-gradient(135deg, #3b82f6, #9333ea)',
-                                    fontSize: '1rem',
-                                    transition: 'all 0.3s ease'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.transform = 'translateY(-2px)';
-                                    e.target.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.4)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.transform = 'translateY(0)';
-                                    e.target.style.boxShadow = 'none';
-                                }}
+                                icon="eye"
+                                fullWidth={true}
                             >
-                                <i className={getIconClass("fas fa-eye")} />
                                 {t('view_full_details')}
-                            </Button>
+                            </EnhancedButton>
                         </div>
                     )}
                 </Card.Body>
 
-                {/* 🔷 NUEVO: Modal de confirmación para eliminar post */}
+                {/* 🔷 MODALES REDISEÑADOS */}
                 <Modal 
                     show={showDeleteModal} 
                     onHide={() => setShowDeleteModal(false)}
@@ -909,256 +913,66 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                 >
                     <Modal.Header 
                         closeButton 
-                        className={theme ? 'bg-dark text-light border-secondary' : ''}
+                        className={theme ? 'bg-dark text-light border-secondary' : 'border-light'}
+                        style={{
+                            background: theme 
+                                ? 'linear-gradient(135deg, rgba(30, 30, 30, 0.95), rgba(45, 45, 45, 0.95))' 
+                                : undefined
+                        }}
                     >
-                        <Modal.Title>
-                            <i className={getIconClass("fas fa-exclamation-triangle text-warning")} />
-                            {t('confirm_delete')}
+                        <Modal.Title className="d-flex align-items-center">
+                            {getEnhancedIcon('trash', { size: 'default', color: 'danger' })}
+                            <span className={isRTL ? 'ms-0 me-3' : 'ms-3 me-0'}>{t('confirm_delete')}</span>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body className={theme ? 'bg-dark text-light' : ''}>
-                        <div className="text-center">
-                            <i className="fas fa-trash-alt text-danger mb-3" style={{ fontSize: '3rem' }} />
-                            <h5 className="mb-3">{t('delete_post_question')}</h5>
-                            <p className="text-muted">
+                        <div className="text-center py-4">
+                            <div className="mb-4">
+                                {getEnhancedIcon('trash', { size: 'xlarge', color: 'danger' })}
+                            </div>
+                            <h5 className="mb-3 fw-bold">{t('delete_post_question')}</h5>
+                            <p className="text-muted mb-4">
                                 "{post.title || post.category}"
                             </p>
-                            <p className="small text-warning">
-                                <i className="fas fa-exclamation-circle me-2" />
-                                {t('delete_warning')}
+                            <p className="small text-warning d-flex align-items-center justify-content-center">
+                                {getEnhancedIcon('info', { size: 'small', color: 'warning' })}
+                                <span className={isRTL ? 'ms-0 me-2' : 'ms-2 me-0'}>{t('delete_warning')}</span>
                             </p>
                         </div>
                     </Modal.Body>
-                    <Modal.Footer className={theme ? 'bg-dark border-secondary' : ''}>
+                    <Modal.Footer className={theme ? 'bg-dark border-secondary' : 'border-light'}>
                         <Button 
-                            variant="secondary" 
+                            variant="outline-secondary" 
                             onClick={() => setShowDeleteModal(false)}
-                            className="px-4"
+                            className="px-4 py-2 rounded-2"
                         >
-                            <i className={getIconClass("fas fa-times")} />
-                            {t('cancel')}
+                            {getEnhancedIcon('times', { size: 'default' })}
+                            <span className={isRTL ? 'ms-0 me-2' : 'ms-2 me-0'}>{t('cancel')}</span>
                         </Button>
                         <Button 
                             variant="danger" 
                             onClick={handleDeletePost}
-                            className="px-4"
+                            className="px-4 py-2 rounded-2"
+                            style={{
+                                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                                border: 'none'
+                            }}
                         >
-                            <i className={getIconClass("fas fa-trash-alt")} />
-                            {t('delete_confirm')}
+                            {getEnhancedIcon('trash', { size: 'default' })}
+                            <span className={isRTL ? 'ms-0 me-2' : 'ms-2 me-0'}>{t('delete_confirm')}</span>
                         </Button>
                     </Modal.Footer>
                 </Modal>
 
-                {/* 🔷 MODAL DE COMPARTIR PROFESIONAL */}
-                <Modal 
-                    show={showShareModal} 
+                {/* Modal de compartir rediseñado */}
+                <ShareModal 
+                    show={showShareModal}
                     onHide={() => setShowShareModal(false)}
-                    centered
-                    className={theme ? 'dark-modal' : ''}
-                >
-                    <Modal.Header 
-                        closeButton 
-                        className={theme ? 'bg-dark text-light border-secondary' : ''}
-                    >
-                        <Modal.Title>
-                            <i className={getIconClass("fas fa-share-alt")} />
-                            Compartir Viaje
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className={theme ? 'bg-dark text-light' : ''}>
-                        <div className="text-center">
-                            <p className="mb-4">Comparte este increíble viaje con tus amigos</p>
-                            
-                            <div className="row g-3">
-                                {/* WhatsApp */}
-                                <div className="col-4">
-                                    <div 
-                                        className="share-option p-3 rounded-3 text-center cursor-pointer"
-                                        style={{
-                                            background: theme ? 'rgba(255,255,255,0.1)' : 'rgba(37, 211, 102, 0.1)',
-                                            border: theme ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(37, 211, 102, 0.3)',
-                                            transition: 'all 0.3s ease'
-                                        }}
-                                        onClick={() => handleShare('whatsapp')}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.transform = 'translateY(-5px)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(37, 211, 102, 0.2)' 
-                                                : 'rgba(37, 211, 102, 0.15)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.transform = 'translateY(0)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(255,255,255,0.1)' 
-                                                : 'rgba(37, 211, 102, 0.1)';
-                                        }}
-                                    >
-                                        <i 
-                                            className="fab fa-whatsapp mb-2" 
-                                            style={{ fontSize: '2rem', color: '#25D366' }}
-                                        />
-                                        <div className="small fw-semibold">WhatsApp</div>
-                                    </div>
-                                </div>
-                                
-                                {/* Facebook */}
-                                <div className="col-4">
-                                    <div 
-                                        className="share-option p-3 rounded-3 text-center cursor-pointer"
-                                        style={{
-                                            background: theme ? 'rgba(255,255,255,0.1)' : 'rgba(59, 89, 152, 0.1)',
-                                            border: theme ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(59, 89, 152, 0.3)',
-                                            transition: 'all 0.3s ease'
-                                        }}
-                                        onClick={() => handleShare('facebook')}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.transform = 'translateY(-5px)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(59, 89, 152, 0.2)' 
-                                                : 'rgba(59, 89, 152, 0.15)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.transform = 'translateY(0)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(255,255,255,0.1)' 
-                                                : 'rgba(59, 89, 152, 0.1)';
-                                        }}
-                                    >
-                                        <i 
-                                            className="fab fa-facebook mb-2" 
-                                            style={{ fontSize: '2rem', color: '#3b5998' }}
-                                        />
-                                        <div className="small fw-semibold">Facebook</div>
-                                    </div>
-                                </div>
-                                
-                                {/* TikTok */}
-                                <div className="col-4">
-                                    <div 
-                                        className="share-option p-3 rounded-3 text-center cursor-pointer"
-                                        style={{
-                                            background: theme ? 'rgba(255,255,255,0.1)' : 'rgba(0, 0, 0, 0.1)',
-                                            border: theme ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(0, 0, 0, 0.3)',
-                                            transition: 'all 0.3s ease'
-                                        }}
-                                        onClick={() => handleShare('tiktok')}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.transform = 'translateY(-5px)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(0, 0, 0, 0.2)' 
-                                                : 'rgba(0, 0, 0, 0.15)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.transform = 'translateY(0)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(255,255,255,0.1)' 
-                                                : 'rgba(0, 0, 0, 0.1)';
-                                        }}
-                                    >
-                                        <i 
-                                            className="fab fa-tiktok mb-2" 
-                                            style={{ fontSize: '2rem', color: '#000' }}
-                                        />
-                                        <div className="small fw-semibold">TikTok</div>
-                                    </div>
-                                </div>
-                                
-                                {/* Twitter */}
-                                <div className="col-4">
-                                    <div 
-                                        className="share-option p-3 rounded-3 text-center cursor-pointer"
-                                        style={{
-                                            background: theme ? 'rgba(255,255,255,0.1)' : 'rgba(29, 161, 242, 0.1)',
-                                            border: theme ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(29, 161, 242, 0.3)',
-                                            transition: 'all 0.3s ease'
-                                        }}
-                                        onClick={() => handleShare('twitter')}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.transform = 'translateY(-5px)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(29, 161, 242, 0.2)' 
-                                                : 'rgba(29, 161, 242, 0.15)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.transform = 'translateY(0)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(255,255,255,0.1)' 
-                                                : 'rgba(29, 161, 242, 0.1)';
-                                        }}
-                                    >
-                                        <i 
-                                            className="fab fa-twitter mb-2" 
-                                            style={{ fontSize: '2rem', color: '#1da1f2' }}
-                                        />
-                                        <div className="small fw-semibold">Twitter</div>
-                                    </div>
-                                </div>
-                                
-                                {/* Telegram */}
-                                <div className="col-4">
-                                    <div 
-                                        className="share-option p-3 rounded-3 text-center cursor-pointer"
-                                        style={{
-                                            background: theme ? 'rgba(255,255,255,0.1)' : 'rgba(0, 136, 204, 0.1)',
-                                            border: theme ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(0, 136, 204, 0.3)',
-                                            transition: 'all 0.3s ease'
-                                        }}
-                                        onClick={() => handleShare('telegram')}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.transform = 'translateY(-5px)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(0, 136, 204, 0.2)' 
-                                                : 'rgba(0, 136, 204, 0.15)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.transform = 'translateY(0)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(255,255,255,0.1)' 
-                                                : 'rgba(0, 136, 204, 0.1)';
-                                        }}
-                                    >
-                                        <i 
-                                            className="fab fa-telegram mb-2" 
-                                            style={{ fontSize: '2rem', color: '#0088cc' }}
-                                        />
-                                        <div className="small fw-semibold">Telegram</div>
-                                    </div>
-                                </div>
-                                
-                                {/* Copiar enlace */}
-                                <div className="col-4">
-                                    <div 
-                                        className="share-option p-3 rounded-3 text-center cursor-pointer"
-                                        style={{
-                                            background: theme ? 'rgba(255,255,255,0.1)' : 'rgba(108, 117, 125, 0.1)',
-                                            border: theme ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(108, 117, 125, 0.3)',
-                                            transition: 'all 0.3s ease'
-                                        }}
-                                        onClick={() => handleShare('copy')}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.transform = 'translateY(-5px)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(108, 117, 125, 0.2)' 
-                                                : 'rgba(108, 117, 125, 0.15)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.transform = 'translateY(0)';
-                                            e.target.style.background = theme 
-                                                ? 'rgba(255,255,255,0.1)' 
-                                                : 'rgba(108, 117, 125, 0.1)';
-                                        }}
-                                    >
-                                        <i 
-                                            className="fas fa-link mb-2" 
-                                            style={{ fontSize: '2rem', color: theme ? '#fff' : '#6c757d' }}
-                                        />
-                                        <div className="small fw-semibold">Copiar</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </Modal.Body>
-                </Modal>
+                    onShare={handleShare}
+                    theme={theme}
+                    isRTL={isRTL}
+                    getEnhancedIcon={getEnhancedIcon}
+                />
             </Card>
 
             <AuthModalAddLikesCommentsSave
@@ -1167,6 +981,31 @@ const CardBodyCarousel = ({ post, hideCard = false }) => {
                 redirectToLogin={redirectToLogin}
                 redirectToRegister={redirectToRegister}
             />
+
+            {/* Estilos CSS para animaciones */}
+            <style>
+                {`
+                    @keyframes pulse {
+                        0% { opacity: 1; }
+                        50% { opacity: 0.7; }
+                        100% { opacity: 1; }
+                    }
+                    @keyframes shimmer {
+                        0% { left: -100%; }
+                        100% { left: 100%; }
+                    }
+                    .text-shadow {
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                    }
+                    .hover-primary:hover {
+                        background: rgba(102, 126, 234, 0.2) !important;
+                    }
+                    .card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+                    }
+                `}
+            </style>
         </>
     );
 };

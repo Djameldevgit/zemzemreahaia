@@ -251,7 +251,7 @@ const appinfo2 = () => {
   // Enlaces sociales
   const socialLinks = [
     {
-      name: 'Facebook Djamel Art',
+      name: 'Facebook voyage',
       icon: 'fab fa-facebook-f',
       url: 'https://www.facebook.com/DjamelArtPainting',
       color: '#1877f2'

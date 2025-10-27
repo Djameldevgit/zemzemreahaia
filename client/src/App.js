@@ -28,96 +28,38 @@ import Navbar2 from './components/header/Navbar2'
 
 import video from './pages/video';
 import { getPrivacySettings } from './redux/actions/privacyAction';
-import infoaplicacionn from './pages/infoaplicacionn';
+ 
 import bloginfo from './pages/bloginfo';
-import InfoAplicacion from './components/blogInfoComment/InfoAplicacion';
+ 
 import Bloqueos404 from './components/adminitration/Bloqueos404';
 
 import appinfo2 from './pages/appinfo2';
 import Createpost from './pages/createpost';
 
 function App() {
-  const { auth, status, modal, languageReducer, notify } = useSelector(state => state)
+  const { auth, status, modal, languageReducer } = useSelector(state => state)
   const dispatch = useDispatch()
   const language = languageReducer?.language || localStorage.getItem("lang") || "en";
-
-  // ✅ ESTADOS PARA MANEJO OFFLINE
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [showContent, setShowContent] = useState(false);
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
-
-  // ✅ EFECTO PARA DETECTAR CONEXIÓN
+ 
   useEffect(() => {
-    const handleOnline = () => {
-      console.log('✅ Conexión restaurada');
-      setIsOnline(true);
-    };
+    dispatch(refreshToken())
 
-    const handleOffline = () => {
-      console.log('🔌 Sin conexión - Modo offline activado');
-      setIsOnline(false);
-      // Forzar mostrar contenido más rápido cuando estamos offline
-      setTimeout(() => setShowContent(true), 1000);
-    };
+    const socket = io()
+    dispatch({type: GLOBALTYPES.SOCKET, payload: socket})
+    return () => socket.close()
+  },[dispatch])
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
-
-  // ✅ TIMEOUT DE SEGURIDAD PARA LOADING
+  
   useEffect(() => {
-    const maxWaitTime = isOnline ? 8000 : 2500; // 2.5s offline vs 8s online
-
-    const timeoutId = setTimeout(() => {
-      console.log('⏰ Timeout de loading - Forzando mostrar contenido');
-      setShowContent(true);
-      setLoadingTimeout(true);
-    }, maxWaitTime);
-
-    return () => clearTimeout(timeoutId);
-  }, [isOnline]);
-
-  // ✅ INICIALIZACIÓN DE APP CON MANEJO OFFLINE
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        if (isOnline) {
-          console.log('🌐 Online - Inicializando app completa');
-          await dispatch(refreshToken());
-
-          const socket = io()
-          dispatch({ type: GLOBALTYPES.SOCKET, payload: socket })
-
-          dispatch(getPosts());
-
-          if (auth.token) {
-            dispatch(getPrivacySettings(auth.token));
-            dispatch(getUsers(auth.token));
-          }
-        } else {
-          console.log('📴 Offline - Inicialización mínima');
-          // En offline, solo cargar datos esenciales del localStorage
-          const cachedAuth = localStorage.getItem('auth_cache');
-          if (cachedAuth) {
-            console.log('📦 Usando datos cacheados');
-          }
-          // Marcar como listo más rápido
-          setTimeout(() => setShowContent(true), 1500);
-        }
-      } catch (error) {
-        console.log('❌ Error en inicialización:', error);
-        // En caso de error, forzar mostrar contenido
-        setShowContent(true);
-      }
-    };
-
-    initializeApp();
-  }, [dispatch, isOnline, auth.token]);
+   
+    dispatch(getPosts())
+    if (auth.token) {
+      dispatch(getPrivacySettings((auth.token)))
+  
+      dispatch(getUsers(auth.token))
+ 
+    }
+  }, [dispatch, auth.token])
 
   // ✅ MANEJO DE IDIOMA
   useEffect(() => {
@@ -127,106 +69,29 @@ function App() {
     }
   }, [language]);
 
-  // ✅ NOTIFICACIONES (SOLO ONLINE)
   useEffect(() => {
-    if (isOnline && !("Notification" in window)) {
-      console.log("⚠️ Este navegador no soporta notificaciones");
+    if (!("Notification" in window)) {
+      alert("This browser does not support desktop notification");
     }
-    else if (isOnline && Notification.permission === "granted") {
-      // Permiso ya concedido
-    }
-    else if (isOnline && Notification.permission !== "denied") {
+    else if (Notification.permission === "granted") {}
+    else if (Notification.permission !== "denied") {
       Notification.requestPermission().then(function (permission) {
-        if (permission === "granted") {
-          console.log("✅ Permiso de notificaciones concedido");
-        }
+        if (permission === "granted") {}
       });
     }
-  }, [isOnline]);
+  },[])
+ 
 
-  // ✅ NOTIFICACIONES Y SONIDOS
-  const lastNotifyId = useRef(null);
-
-  useEffect(() => {
-    if (notify.data.length > 0 && isOnline) {
-      const ultima = notify.data[0];
-
-      if (ultima._id !== lastNotifyId.current) {
-        lastNotifyId.current = ultima._id;
-
-        // 🔔 Sonido (solo online)
-        try {
-          const audio = new Audio("/sounds/notify.mp3");
-          audio.play().catch(err => {
-            console.log("⚠️ El sonido requiere interacción del usuario", err);
-          });
-        } catch (error) {
-          console.warn("Sonido no soportado", error);
-        }
-
-        // 📳 Vibración
-        if ("vibrate" in navigator) {
-          navigator.vibrate([300, 100, 300, 100, 600]);
-        }
-      }
-    }
-  }, [notify.data, isOnline]);
-
-  // ✅ COMPONENTE DE LOADING MEJORADO
-  const LoadingComponent = () => (
-    <div className="loading-container" style={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      color: 'white'
-    }}>
-      <div className="spinner-border text-light" style={{ width: '3rem', height: '3rem' }} role="status">
-        <span className="visually-hidden">Cargando...</span>
-      </div>
-
-      <div className="mt-3 text-center">
-        <h5>Djamel APS</h5>
-        {!isOnline ? (
-          <div>
-            <p className="mb-1">🔌 Modo offline detectado</p>
-            <small>Cargando versión local...</small>
-          </div>
-        ) : loadingTimeout ? (
-          <div>
-            <p className="text-warning mb-1">⚠️ Conexión lenta</p>
-            <small>Forzando carga de la aplicación...</small>
-          </div>
-        ) : (
-          <small>Conectando con el servidor...</small>
-        )}
-      </div>
-    </div>
-  );
-
-  // ✅ BANNER DE ESTADO OFFLINE
-  const OfflineBanner = () => (
-    !isOnline && (
-      <div style={{
-        background: '#ffeb3b',
-        color: '#856404',
-        padding: '8px 16px',
-        textAlign: 'center',
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-        zIndex: 9999,
-        fontSize: '14px',
-        fontWeight: 'bold'
-      }}>
-        ⚡ Modo Offline - Algunas funciones pueden estar limitadas
-      </div>
+  if (auth.token && auth.user?.esBloqueado) {
+    return (
+      <Router>
+        <Route exact path="/bloqueos404" component={Bloqueos404} />
+        <Route path="*" component={Bloqueos404} />
+      </Router>
     )
-  );
+  }
 
-  // ✅ USUARIO BLOQUEADO
+ 
   if (auth.token && auth.user?.esBloqueado) {
     return (
       <Router>
@@ -239,20 +104,19 @@ function App() {
   // ✅ RENDER PRINCIPAL
   return (
     <Router>
-      <Alert />
+    <Alert />
 
-      <input type="checkbox" id="theme" />
-      <div className={`App ${(status || modal) && 'mode'}`}>
-        <OfflineBanner />
-        <LanguageSelectorandroid />
-        <div className="main">
-          <Navbar2 />
+    <input type="checkbox" id="theme" />
+    <div className={`App ${(status || modal) && 'mode'}`}>
+      <LanguageSelectorandroid />
+      <div className="main">
 
-          {/* Socket solo cuando hay conexión y token */}
-          {auth.token && isOnline && <SocketClient />}
+        <Navbar2 />
 
+        {status && <StatusModal />}
+        {auth.token && <SocketClient />}
 
-          {auth.token && <SocketClient />}
+       
 
           <Switch>
             {/* públicas */}
