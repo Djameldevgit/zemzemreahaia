@@ -1,8 +1,16 @@
 {
   "headers": {
-    "title": "إدارة أدوار المستخدم",
-    "totalUsers": "إجمالي المستخدمين: {{count}}"
+    "title": "إدارة أدوار المستخدمين",
+    "resultado": "بحث",
+    "usuarios": "المستخدمين"
+
+
   },
+  "resultsCount": "نتائج",
+  "usersCount": "مستخدمين",
+
+  "searchUsers": "البحث عن المستخدمين...",
+  "searching": "جاري البحث...",
   "tableHeadersss": {
     "user": "المستخدم",
     "currentRole": "الدور الحالي",
@@ -10,9 +18,18 @@
   },
   "roles": {
     "user": "مستخدم",
-    "Super-utilisateur": "مستخدم متميز",
+    "Super-utilisateur": "مستخدم مميز",
     "Moderateur": "مشرف",
-    "admin": "مسؤول"
+    "admin": "مدير"
   },
-  "noUsersAvailable": "لا يوجد مستخدمون متاحون في الوقت الحالي."
+  "noUsersFoundSearch": "لم يتم العثور على مستخدمين لهذا البحث",
+  "noUsersAvailable": "لا يوجد مستخدمون متاحون",
+  "protectedUser": "محمي",
+  "protectedUserMessage": "هذا المستخدم لا يمكن تعديله",
+  "protectedUserError": "لا يمكنك تعديل دور هذا المستخدم المحمي",
+  "loadingUsers": "جاري تحميل المستخدمين...",
+  "loadMore": "تحميل المزيد من المستخدمين",
+  
+  "changeRoleSuccess": "تم تغيير الدور بنجاح",
+  "changeRoleError": "خطأ في تغيير الدور"
 }

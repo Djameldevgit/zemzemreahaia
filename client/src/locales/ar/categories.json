@@ -1,0 +1,334 @@
+{
+
+ 
+      "transporteViaje": "نقل الرحلة",
+      "tipoTransporte": "نوع النقل",
+      "seleccionarTransporte": "اختر نوع النقل",
+      "claseTransporte": "درجة النقل",
+      "seleccionarClase": "اختر الدرجة",
+      "aerolineaCompania": "شركة الطيران/النقل",
+      "placeholderCompania": "مثال: الخطوط الجزائرية، الخطوط التركية...",
+      "numeroVueloBus": "رقم الرحلة/الحافلة",
+      "placeholderNumero": "مثال: AH2060, TR456...",
+      "itinerarioTransporte": "مسار النقل",
+      "seleccionarItinerario": "اختر المسار",
+      "tiempoEstimado": "الوقت المقدر",
+      "placeholderTiempo": "مثال: 2س 30د، 45 دقيقة...",
+      "serviciosIncluidosTransporte": "الخدمات المشمولة في النقل",
+      "comentariosTransporte": "ملاحظات حول النقل",
+      "placeholderComentarios": "معلومات إضافية حول النقل...",
+  
+      "soloIda": "ذهاب فقط",
+      "idaVuelta": "ذهاب وعودة",
+      "multipleDestinos": "وجهات متعددة",
+      "rutaCircular": "دائري",
+  
+      "transportes": {
+        "avion": "طائرة",
+        "bus": "حافلة",
+        "tren": "قطار",
+        "coche": "سيارة",
+        "barco": "قارب",
+        "minibus": "ميني باص",
+        "taxi": "تاكسي",
+        "avion_bus": "طائرة + حافلة",
+        "tren_bus": "قطار + حافلة",
+        "privado": "مركبة خاصة"
+      },
+  
+      "clases": {
+        "economica": "اقتصادية",
+        "premium_economica": "اقتصادية متميزة",
+        "negocios": "رجال الأعمال",
+        "primera_clase": "درجة أولى",
+        "estandar": "قياسية",
+        "premium": "متميزة"
+      },
+  
+      "serviciosTransporte": {
+        "comida_incluida": "وجبات مشمولة",
+        "bebidas_gratis": "مشروبات مجانية",
+        "entretenimiento": "ترفيه على متن الطائرة",
+        "wifi": "واي فاي مجاني",
+        "asientos_reclinables": "مقاعد قابلة للإمالة",
+        "espacio_extra": "مساحة إضافية",
+        "maletas_incluidas": "أمتعة مشمولة"
+      },
+ 
+ 
+      "periodoViaje": "فترة السفر",
+      "mesInicio": "شهر البداية",
+      "mesFin": "شهر النهاية",
+      "seleccionarMes": "اختر الشهر",
+      "temporada": "الموسم",
+      "seleccionarTemporada": "اختر الموسم",
+      "temporadaAlta": "موسم الذروة",
+      "temporadaMedia": "موسم متوسط",
+      "temporadaBaja": "موسم منخفض",
+      "anyo": "السنة",
+      "seleccionarAnyo": "اختر السنة",
+  
+      "meses": {
+        "enero": "يناير",
+        "febrero": "فبراير",
+        "marzo": "مارس",
+        "abril": "أبريل",
+        "mayo": "مايو",
+        "junio": "يونيو",
+        "julio": "يوليو",
+        "agosto": "أغسطس",
+        "septiembre": "سبتمبر",
+        "octubre": "أكتوبر",
+        "noviembre": "نوفمبر",
+        "diciembre": "ديسمبر"
+      },
+  
+
+      "dateRetour": "تاريخ العودة",
+
+      "titreAnnonce": "عنوان الإعلان",
+      "titre": "العنوان",
+      "placeholderTitre": "مثال: رحلة منظمة إلى إسطنبول - شاملة كل شيء",
+      "conseilTitre": "أنشئ عنوانًا جذابًا ووصفيًا لإعلانك",
+    
+      "titreTropLong": "العنوان طويل جدًا، حاول تقصيره",
+
+
+
+
+  "typePension": "نوع الإقامة",
+  "selectionnezPension": "اختر نوع الإقامة...",
+  "pensionComplete": "إقامة كاملة",
+  "demiPension": "نصف إقامة",
+  "petitDejeuner": "فطور فقط",
+  "sansRepas": "بدون وجبات",
+
+  "mediasAnnonce": "وسائط الإعلان",
+    "mediasSelectionnes": "الوسائط المحددة",
+    "ajouterMedias": "إضافة صور",
+    "aucunMedia": "لم يتم تحديد أي وسائط",
+    "preview": "معاينة",
+    "navigateurNonSupport": "متصفحك لا يدعم تشغيل الفيديو",
+    
+    "formatsAcceptes": "الصيغ المقبولة: JPG, PNG, MP4, MOV (الحد الأقصى 10MB للملف)",
+    "cliquezSupprimer": "انقر على × للحذف",
+    "conseilMedias": "أضف صورًا أو فيديوهات لجعل إعلانك أكثر جاذبية",
+    
+    "conseils": "نصائح لوسائطك",
+    "conseil1": "استخدم صورًا عالية الجودة ومضاءة جيدًا",
+    "conseil2": "اعرض زوايا وجوانب مختلفة من عرضك",
+    "conseil3": "مقاطع الفيديو القصيرة (60-30 ثانية) تزيد التفاعل",
+
+
+
+
+
+
+
+  "local": "محلي",
+  "destinosNacionales": "الوجهات الوطنية",
+  "destinosSaharianos": "الوجهات الصحراوية",
+  "destinosCosteros": "الوجهات الساحلية",
+  "dias": "أيام",
+  "noches": "ليالي",
+  "placeholderDias": "عدد الأيام",
+  "placeholderNoches": "عدد الليالي",
+  "peregrinacion": "الحج والعمرة",
+  "ciudadDestinoPeregrinacion": "مدينة وجهة الحج",
+  "elegirDestinoPeregrinacion": "اختر وجهة الحج",
+  "ciudadesSantas": "المدن المقدسة",
+  "ciudadesSantasArabia": "مدن السعودية",
+  "fechaSalida": "تاريخ المغادرة",
+  "horaSalida": "وقت المغادرة",
+  "seleccionarFechaSalida": "اختر تاريخ المغادرة",
+  "seleccionarHoraSalida": "اختر وقت المغادرة",
+  "destination": "الوجهة",
+    "villeDestination": "مدينة الوجهة",
+    "choisirDestination": "اختر وجهة...",
+    "typeHebergement": "نوع الإقامة",
+    "nomEtablissement": "اسم المنشأة",
+    "placeholderTypeHebergement": "فندق، شقة، رياض...",
+    "placeholderNomHotel": "اسم الفندق أو الشقة",
+    "destinationsNationales": "الوجهات الوطنية",
+    "destinationsInternationales": "الوجهات الدولية",
+
+
+
+  "destino": "الوجهة",
+  "internacional": "دولية",
+  "ciudadDestino": "مدينة الوجهة",
+  "elegirDestino": "اختر الوجهة",
+  "tipoAlojamiento": "نوع الإقامة",
+  "nombreEstablecimiento": "اسم المنشأة",
+  "placeholderTipoAlojamiento": "فندق، رياض، فيلا، شقة...",
+  "placeholderNombreHotel": "اسم الفندق أو المنشأة",
+  
+  "destinosArabes": "الوجهات العربية",
+  "destinosTurquia": "الوجهات التركية",
+  "destinosAsia": "الوجهات الآسيوية",
+  "destinosEuropa": "الوجهات الأوروبية",
+  "destinosAmerica": "الوجهات الأمريكية",
+  "destinosAfrica": "الوجهات الأفريقية",
+
+
+
+  "villeDepart": "مدينة المغادرة",
+  "placeholderAdresse": "العنوان المفصل",
+  "wilaya": "الولاية",
+  "commune": "البلدية", 
+  "selectionnezWilaya": "اختر الولاية",
+  "selectionnezCommune": "اختر البلدية",
+
+
+
+  "description": "الوصف",
+  "placeholderDescription": "وصف مفصل...",
+      "contactReservation": "جهات الاتصال للحجز",
+      "placeholderContact": "هاتف، بريد إلكتروني، موقع ويب، وسائل التواصل الاجتماعي، عنوان...",
+      "conseilSaisie": "افصل between المعلومات المختلفة بفواصل أو أسطر جديدة",
+      "exemplesFormat": "أمثلة على التنسيق",
+      "typesDetectes": "الأنواع المكتشفة",
+      "caracteres": "حرف",
+      
+      "type_phone": "هاتف",
+      "type_email": "بريد إلكتروني",
+      "type_website": "موقع ويب", 
+      "type_social": "وسائل التواصل الاجتماعي",
+      "type_address": "عنوان",
+      
+      "informationsAcceptees": "المعلومات المقبولة",
+      "phones": "أرقام الهواتف",
+      "emails": "العناوين البريدية",
+      "websites": "مواقع الويب",
+      "reseauxSociaux": "وسائل التواصل الاجتماعي",
+      "adresses": "العناوين الفعلية",
+      
+      "validationReussie": "تنسيق جهة اتصال صالح",
+      "validationEchec": "يرجى إدخال معلومات اتصال صالحة واحدة على الأقل",
+      
+      "exempleTelephone": "مثال: 213-555-123-456+، واتساب: 213-555-789-012+",
+      "exempleEmail": "مثال: contact@agence.dz, reservation@voyage.dz",
+      "exempleWeb": "مثال: https://www.agence-voyage.zemzem",
+      "exempleSocial": "مثال: فيسبوك: /agence.voyage، إنستغرام: @agence_voyage",
+  
+      "categoriaPublicacion": "فئة المنشور",
+      "seleccionarCategoria": "اختر فئة",
+      "campoRequerido": "هذا الحقل مطلوب",
+      "descripcionCategorias": "وصف الفئات",
+  
+      "categoriass": {
+        "Voyage_Organise": "رحلة منظمة",
+        "Location_Vacances": "إيجار عطلات",
+        "hadj_Omra": "حج وعمرة",
+        "Reservations_Visa": "حجوزات وتأشيرات",
+        "Sejour": "إقامة فندقية", 
+        "Croisiere": "رحلة بحرية",
+        "Autre": "خدمات أخرى"
+      },
+  
+      "descripciones": {
+        "Voyage_Organise": "رحلات شاملة مع النقل والإقامة والأنشطة المنظمة",
+        "Location_Vacances": "إيجار منازل أو شقق أو فيلات للعطلات",
+        "hadj_Omra": "الرحلات الدينية إلى مكة المكرمة والمدينة المنورة",
+        "Reservations_Visa": "خدمات الحجز والمساعدة في تأشيرات السفر",
+        "Sejour": "إقامات فندقية وباقات عطلات في الفنادق",
+        "Croisiere": "رحلات بحرية ورحلات بالقوارب الفاخرة",
+        "Autre": "خدمات سفر أخرى غير مصنفة"
+      },
+  
+      "categorias": {
+        "voyage_organise": "رحلة منظمة",
+        "location_vacances": "إيجار عطلات",
+        "hadj_omra": "حج وعمرة",
+        "reservations_visa": "حجوزات وتأشيرات",
+        "sejour": "إقامة فندقية",
+        "croisiere": "رحلة بحرية", 
+        "autre": "خدمات أخرى"
+    
+  },
+ 
+          "politique_annulation": "سياسة الإلغاء",
+          "selectionnez_politique": "اختر سياسة...",
+          
+          "politique_flexible": "مرنة (إلغاء مجاني حتى 24 ساعة قبل)",
+          "politique_moderee": "معتدلة (استرداد 50% حتى 7 أيام قبل)",
+          "politique_stricte": "صارمة (غير قابلة للاسترداد)",
+          
+          "description_flexible": "✅ إلغاء مجاني حتى 24 ساعة قبل بداية الإقامة. استرداد كامل.",
+          "description_moderee": "⚠️ يمكن الإلغاء حتى 7 أيام قبل مع استرداد 50%. بعد هذا الموعد النهائي، غير قابل للاسترداد.",
+          "description_strict": "❌ سياسة صارمة - لا يوجد استرداد في حالة الإلغاء. موصى به للحجوزات غير القابلة للتعديل.",
+          
+          "titre_flexible": "سياسة مرنة",
+          "titre_moderee": "سياسة معتدلة",
+          "titre_stricte": "سياسة صارمة",
+          
+          "details_flexible": "مثالي للمسافرين الذين يريدون المرونة",
+          "details_moderee": "توازن بين المرونة والالتزام", 
+          "details_stricte": "للعروض ذات الأسعار المخفضة غير القابلة للتعديل",
+    
+
+          "precioPorPersona": "السعر للفرد",
+          "moneda": "دج",
+          "precioPersonalizado": "سعر مخصص",
+          "ingresePrecio": "أدخل السعر",
+          "economico": "اقتصادي",
+          "medio": "متوسط",
+          "premium": "متميز",
+     
+          "rangoEconomico": "500 - 50,000 دج",
+          "rangoMedio": "50,000 - 500,000 دج",
+          "rangoPremium": "500,000 - 2,000,000 دج",
+          
+    
+          "deslizarParaAjustar": "اسحب لضبط السعر",
+          "precioMinimo": "أقل سعر: 500 دج",
+          "precioMaximo": "أعلى سعر: 2,000,000 دج",
+      
+
+
+     
+      "clasificacion_hotel": "تصنيف الفندق",
+      "nombre_hotel": "اسم الفندق",
+      "placeholder_nombre_hotel": "أدخل اسم الفندق",
+      "direccion_hotel": "عنوان الفندق",
+      "placeholder_direccion_hotel": "أدخل العنوان الكامل",
+      "categoria_estrellas": "فئة النجوم",
+      "seleccionar_estrellas": "اختر عدد النجوم",
+      "total_habitaciones": "إجمالي الغرف",
+      "placeholder_total_habitaciones": "العدد الإجمالي للغرف",
+      "sitio_web_hotel": "موقع الفندق الإلكتروني",
+      "placeholder_sitio_web": "https://www.example.com",
+      "tipos_habitaciones": "أنواع الغرف",
+      "servicios_hotel": "خدمات الفندق",
+      "servicios_basicos": "الخدمات الأساسية",
+      "servicios_adicionales": "خدمات إضافية",
+      "servicios_wifi": "خدمات الواي فاي",
+  
+      "tipo_habitacion_individual": "غرفة فردية",
+      "tipo_habitacion_doble": "غرفة مزدوجة",
+      "tipo_habitacion_triple": "غرفة ثلاثية",
+      "tipo_habitacion_suite": "جناح",
+      "tipo_habitacion_familiar": "غرفة عائلية",
+      "tipo_habitacion_presidencial": "جناح رئاسي",
+  
+      "servicio_wifi": "واي فاي",
+      "servicio_piscina": "مسبح",
+      "servicio_spa": "سبا",
+      "servicio_gimnasio": "نادي رياضي",
+      "servicio_restaurante": "مطعم",
+      "servicio_room_service": "خدمة الغرف",
+      "servicio_estacionamiento": "موقف سيارات",
+      "servicio_lavanderia": "خدمة الغسيل",
+      "servicio_business_center": "مركز أعمال",
+      "servicio_pets_allowed": "مسموح بالحيوانات الأليفة",
+      "servicio_desayuno_incluido": "الإفطار مشمول",
+      "servicio_vista_al_mar": "إطلالة على البحر",
+      "servicio_terraza": "تراس",
+      "servicio_minibar": "ميني بار",
+      "servicio_caja_fuerte": "خزنة",
+  
+      "wifi_wifi_gratuito": "واي فاي مجاني",
+      "wifi_wifi_premium": "واي فاي متميز",
+      "wifi_wifi_business": "واي فاي للأعمال"
+    }
+ 

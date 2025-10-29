@@ -444,13 +444,7 @@ const ProfileInfoUser = () => {
                   {/* ✅ Opciones adicionales que podrías agregar */}
                   {auth.user && (
                     <>
-  <MenuOption
-                      icon={FaTools}
-                      iconColor="#6c757d"
-                      title={t('roles', 'Gestión de Roles')}
-                      to="/users/roles"
-                    />
-
+ 
 
 
                       <MenuOption
@@ -540,26 +534,9 @@ const ProfileInfoUser = () => {
                       to="/users/roles"
                     />
 
-                    <MenuOption
-                      icon={FaCog}
-                      iconColor="#6c757d"
-                      title={t('privacySettings', 'Ajustes de Privacidad')}
-                      to="/users/privacidad"
-                    />
                     
-                    <MenuOption
-                      icon={FaCog}
-                      iconColor="#6c757d"
-                      title={t('globalSettings', 'Configuración Global')}
-                      onClick={() => setShowFeaturesModal(true)}
-                    />
-
-                    <MenuOption
-                      icon={FaEnvelope}
-                      iconColor="#17a2b8"
-                      title={t('adminSendEmail', 'Enviar Email Masivo')}
-                      to="/mails"
-                    />
+                    
+                   
                     
                     <MenuOption
                       icon={FaUsers}
@@ -575,33 +552,8 @@ const ProfileInfoUser = () => {
                       to="/usersactionn"
                     />
                     
-                    <MenuOption
-                      icon={FaUserSlash}
-                      iconColor="#dc3545"
-                      title={t('blockedUsersList', 'Usuarios Bloqueados')}
-                      to="/listuserbloque"
-                    />
-                    
-                    <MenuOption
-                      icon={FaFlag}
-                      iconColor="#ff6b6b"
-                      title={t('reportedUsers', 'Usuarios Denunciados')}
-                      to="/listausariosdenunciadoss"
-                    />
-                    
-                    <MenuOption
-                      icon={FaBan}
-                      iconColor="#6c757d"
-                      title={t('blockStatus', 'Estado de Bloqueos')}
-                      to="/bloqueos"
-                    />
-                    
-                    <MenuOption
-                      icon={FaShoppingCart}
-                      iconColor="#28a745"
-                      title={t('orders', 'Gestión de Órdenes')}
-                      to="/cart/orderss"
-                    />
+                   
+               
                   </Section>
                 )}
 

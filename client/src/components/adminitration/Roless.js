@@ -41,6 +41,19 @@ const Roless = () => {
   const [searchPage, setSearchPage] = useState(1);
   const [hasMoreSearch, setHasMoreSearch] = useState(false);
 
+  // 🛡️ FUNCIÓN PARA VERIFICAR SI EL USUARIO ES PROTEGIDO
+  const isProtectedUser = (user) => {
+    // El usuario admin autenticado NUNCA puede ser modificado
+    if (user._id === auth.user?._id && auth.user?.role === 'admin') {
+      return true;
+    }
+    
+    // También puedes agregar más usuarios protegidos aquí si lo necesitas
+    // Ejemplo: if (user._id === 'usuario_protegido_id') return true;
+    
+    return false;
+  };
+
   // Función para buscar usuarios en el servidor
   const searchUsers = useCallback(
     debounce(async (searchTerm, page = 1) => {
@@ -147,6 +160,12 @@ const Roless = () => {
   };
 
   const handleChangeRole = async (user, selectedRole) => {
+    // 🛡️ VERIFICAR SI EL USUARIO ESTÁ PROTEGIDO
+    if (isProtectedUser(user)) {
+      alert(t('protectedUserError', 'Ne peus pas ette modifie'));
+      return;
+    }
+
     setLoading(true);
     try {
       switch (selectedRole) {
@@ -180,6 +199,12 @@ const Roless = () => {
   };
 
   const handleRoleChange = async (user, selectedRole) => {
+    // 🛡️ VERIFICAR SI EL USUARIO ESTÁ PROTEGIDO ANTES DE CAMBIAR
+    if (isProtectedUser(user)) {
+      alert(t('protectedUserError', 'utilisateur protege'));
+      return;
+    }
+
     setSelectedRoles(prev => ({ ...prev, [user._id]: selectedRole }));
     await handleChangeRole(user, selectedRole);
 
@@ -222,14 +247,14 @@ const Roless = () => {
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "60vh" }}>
         <div className="text-center">
           <Spinner animation="border" variant="primary" style={{ width: "3rem", height: "3rem" }} />
-          <p className="mt-3 text-muted fw-semibold">Cargando usuarios...</p>
+          <p className="mt-3 text-muted fw-semibold">Charge utilizateurs...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <Container fluid className="py-4" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+    <Container fluid className="py-4" >
       {/* Header con título y buscador */}
       <Row className="mb-4">
         <Col>
@@ -267,14 +292,14 @@ const Roless = () => {
                   </InputGroup>
                 </Col>
                 <Col lg={4} md={5} className="text-md-end">
-                  <Badge bg="light" text="dark" className="py-2 px-3 fs-6">
-                    <Shield className="me-2" />
-                    {search.trim() !== "" 
-                      ? `${searchResults.length} resultados`
-                      : `${homeUsers.users.length} usuarios`
-                    }
-                  </Badge>
-                </Col>
+  <Badge bg="light" text="dark" className="py-2 px-3 fs-6">
+    <Shield className="me-2" />
+    {search.trim() !== "" 
+      ? `${searchResults.length} ${t('resultsCount')}`
+      : `${homeUsers.users.length} ${t('usersCount')}`
+    }
+  </Badge>
+</Col>
               </Row>
             </Card.Body>
           </Card>
@@ -342,6 +367,13 @@ const Roless = () => {
                     <tr key={user._id || index} style={{ borderBottom: '1px solid #f0f0f0' }}>
                       <td className="py-3">
                         <UserCard user={user} />
+                        {/* 🛡️ INDICADOR DE USUARIO PROTEGIDO */}
+                        {isProtectedUser(user) && (
+                          <Badge bg="warning" text="dark" className="ms-2">
+                            <i className="fas fa-shield-alt me-1"></i>
+                            {t('protectedUser', 'Protegido')}
+                          </Badge>
+                        )}
                       </td>
                       <td className="py-3 text-center">
                         {getRoleBadge(selectedRoles[user._id] || user.role)}
@@ -357,12 +389,14 @@ const Roless = () => {
                             size="sm"
                             onChange={(e) => handleRoleChange(user, e.target.value)}
                             value={selectedRoles[user._id] || user.role}
-                            disabled={loading}
+                            disabled={loading || isProtectedUser(user)} // 🛡️ DESHABILITAR SI ESTÁ PROTEGIDO
                             style={{
                               maxWidth: '250px',
                               borderRadius: '10px',
                               border: '2px solid #e0e0e0',
-                              fontWeight: '500'
+                              fontWeight: '500',
+                              backgroundColor: isProtectedUser(user) ? '#f8f9fa' : 'white',
+                              cursor: isProtectedUser(user) ? 'not-allowed' : 'pointer'
                             }}
                           >
                             <option value="user">👤 {t('roles.user')}</option>
@@ -371,6 +405,13 @@ const Roless = () => {
                             <option value="admin">👑 {t('roles.admin')}</option>
                           </Form.Select>
                         </div>
+                        {/* 🛡️ MENSAJE DE PROTECCIÓN */}
+                        {isProtectedUser(user) && (
+                          <small className="text-muted d-block mt-1">
+                            <i className="fas fa-info-circle me-1"></i>
+                            {t('protectedUserMessage', 'Este usuario no puede ser modificado')}
+                          </small>
+                        )}
                       </td>
                     </tr>
                   ))

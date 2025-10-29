@@ -9,10 +9,29 @@ export const POST_TYPES = {
     GET_POSTS: 'GET_POSTS',
     UPDATE_POST: 'UPDATE_POST',
     GET_POST: 'GET_POST',
-    DELETE_POST: 'DELETE_POST'
+    DELETE_POST: 'DELETE_POST',
+    VIEW_POST: 'VIEW_POST'
+
 }
 
-
+export const viewPost = ({ id, auth }) => async (dispatch) => {
+   
+    try {
+      const res = await postDataAPI(`post/${id}/view`, {}, auth.token);
+  
+      console.log("✅ Respuesta del backend:", res.data.post.views);
+  
+      dispatch({
+        type: POST_TYPES.VIEW_POST,
+        payload: {
+          postId: id,
+          updatedPost: res.data.post,
+        },
+      });
+    } catch (err) {
+      console.error("❌ Error en viewPost:", err.response?.data || err.message);
+    }
+  };
 export const createPost = ({ 
     postData, 
     images, 
@@ -173,10 +192,10 @@ export const unLikePost = ({post, auth, socket}) => async (dispatch) => {
     }
 }
 
-export const getPost = ({detailPost, id, auth}) => async (dispatch) => {
+export const getPost = ({detailPost, id }) => async (dispatch) => {
     if(detailPost.every(post => post._id !== id)){
         try {
-            const res = await getDataAPI(`post/${id}`, auth.token)
+            const res = await getDataAPI(`post/${id}`)
             dispatch({ type: POST_TYPES.GET_POST, payload: res.data.post })
         } catch (err) {
             dispatch({

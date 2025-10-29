@@ -1,189 +1,179 @@
 {
   
+  
+   
+    "validation_images_size": "يجب ألا يتجاوز حجم الصورة/الفيديو 5 ميجابايت",
+ 
+    
+    
+        "select_option": "اختر خيار",
+        "prix_adulte": "سعر البالغ",
+        "prix_enfant": "سعر الطفل",
+        "prix_bebe": "سعر الرضيع",
+        "prix_adulte_placeholder": "سعر للبالغ",
+        "prix_enfant_placeholder": "سعر للطفل",
+        "prix_bebe_placeholder": "سعر للرضيع",
+        "superficie": "المساحة (م²)",
+        "superficie_placeholder": "المساحة بالمتر المربع",
+        "etage": "الطابق",
+        "etage_placeholder": "رقم الطابق",
+        "capacite_personnes": "السعة (أشخاص)",
+        "capacite_placeholder": "عدد الأشخاص",
+        "nombre_chambres": "عدد الغرف",
+        "nombre_chambres_placeholder": "عدد الغرف",
+        "nombre_salles_bain": "عدد دورات المياه",
+        "nombre_salles_bain_placeholder": "عدد دورات المياه",
+        "check_in": "وقت الوصول",
+        "check_out": "وقت المغادرة",
+        "tarif_nuit": "السعر لليلة (€)",
+        "tarif_nuit_placeholder": "السعر لليلة",
+        "langues_guide": "لغة المرشد",
+    
+    
+    "voyage": {
+        "destinations_internationales": "الوجهات الدولية",
+        "dates_duree": "تواريخ ومدة الرحلة",
+        "transport_deplacements": "النقل والتنقلات",
+        "hebergement_pension": "الإقامة ونظام الطعام",
+        "activites_services": "الأنشطة والخدمات المضمنة",
+        "tarifs_conditions": "الأسعار والشروط",
+        "services_inclus": "الخدمات المضمنة في الباقة",
+        "activites_proposees": "الأنشطة المقترحة"
+    },
+    
+    "location": {
+        "informations_logement": "معلومات السكن",
+        "equipements_services": "التجهيزات والخدمات",
+        "chambres_salles_bain": "الغرف ودورات المياه",
+        "disponibilite_tarifs": "التوافر والأسعار"
+    },
+    
+    "hadj": {
+        "destination_peletinage": "وجهة الحج",
+        "dates_peletinage": "تواريخ الحج",
+        "transport_hebergement": "النقل والإقامة",
+        "services_spirituels": "الخدمات الروحية",
+        "services_religieux": "الخدمات الدينية المضمنة",
+        "documents_requis": "المستندات المطلوبة",
+        "documents_necessaires": "المستندات الضرورية",
+        "tarifs_conditions": "الأسعار والشروط",
+        "type_peletinage": "نوع الحج",
+        "niveau_confort": "مستوى الراحة"
+    },
+    
+    "services": {
+        "visite_guidee": "جولة بإرشاد",
+        "repas": "الوجبات مشمولة",
+        "transfert": "النقل من المطار",
+        "assistance": "مساعدة 24/7",
+        "assurance": "تأمين السفر",
+        "guide_religieux": "مرشد ديني",
+        "cours_rituels": "دروس الشعائر",
+        "assistance_ihram": "مساعدة في الإحرام",
+        "groupe_etude": "مجموعة دراسة",
+        "prieres_collectives": "صلاة جماعية"
+    },
+    
+    "activites": {
+        "excursion": "الجولات",
+        "plongee": "الغوص",
+        "randonnee": "المشي لمسافات طويلة",
+        "shopping": "التسوق",
+        "culture": "الجولات الثقافية"
+    },
+    
+    "langues": {
+        "arabe": "العربية",
+        "francais": "الفرنسية",
+        "anglais": "الإنجليزية",
+        "berbere": "الأمازيغية"
+    },
+    
+    "documents": {
+        "passeport": "جواز السفر",
+        "photos_identite": "صور شخصية",
+        "certificat_vaccination": "شهادة التطعيم",
+        "reservation_hotel": "حجز الفندق",
+        "billet_avion": "تذكرة الطائرة"
+    },
+    
+    "equipements": {
+        "wifi_gratuit": "واي فاي مجاني",
+        "climatisation": "تكييف",
+        "cuisine_equipee": "مطبخ مجهز",
+        "television": "تلفزيون",
+        "piscine": "مسبح",
+        "parking": "موقف سيارات",
+        "animaux_acceptes": "مسموح بالحيوانات",
+        "menage_inclus": "التنظيف مشمول"
+    },
+    
+    "types_voyage": {
+        "hadj": "حج",
+        "omra": "عمرة",
+        "hadj_omra": "حج وعمرة"
+    },
+    
+    "niveaux_confort": {
+        "economique": "اقتصادي",
+        "standard": "قياسي",
+        "confort": "مريح",
+        "luxe": "فاخر"
+    },
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  "select_category_title": "📋 اختر فئة",
+  "select_category_message": "اختر بين رحلة منظمة، إيجار عطلات أو حج وعمرة",
+
+ 
     "edit_title": "تعديل الإعلان",
     "create_title": "إنشاء إعلان جديد",
-    "modification": "تعديل",
-    "debug_mode": "الوضع",
-    "debug_id": "المعرف",
-    "debug_category": "الفئة",
-    "debug_not_selected": "غير محددة",
-    
-    "category_Voyage_Organise": "رحلة منظمة",
-    "category_Location_Vacances": "إيجار عطلات",
-    "category_hadj_Omra": "حج وعمرة", 
-    "category_Reservations_Visa": "حجوزات وتأشيرات",
-    
-    "placeholder_voyage": "مثال: رحلة ثقافية إلى إسطنبول ودبي",
-    "placeholder_location": "مثال: فيلا جميلة مع مسبح في وهران",
-    "placeholder_hadj": "مثال: حج 2024 - باقة كاملة",
-    "placeholder_visa": "مثال: مساعدة في تأشيرة شنغن - معالجة سريعة",
-    
-    "informations_generales": "معلومات عامة",
-    "dates_duree": "التواريخ والمدة",
-    "transport_destinations": "النقل والوجهات",
-    "hebergement_pension": "الإقامة ونظام الطعام",
-    "activites_excursions": "الأنشطة والجولات",
-    "prix_conditions": "السعر والشروط",
-    "services_inclus": "الخدمات المضمنة",
-    "caracteristiques_logement": "مواصفات السكن",
-    "equipements_services": "التجهيزات والخدمات",
-    "informations_sejour": "معلومات الإقامة",
-    "prix_reservation": "السعر والحجز",
-    "informations_peletinage": "معلومات الحج",
-    "services_spirituels": "الخدمات الروحية",
-    "documents_requis": "المستندات المطلوبة",
-    "informations_visa": "معلومات التأشيرة",
-    "formalites_documents": "الإجراءات والمستندات",
-    "tarifs_conditions": "الأسعار والشروط",
-    
-    "type_voyage": "نوع الرحلة",
-    "select_type": "اختر النوع",
-    "niveau_confort": "مستوى الراحة",
-    "select_confort": "اختر",
-    "public_cible": "الفئة المستهدفة",
-    "select_public": "اختر الفئة",
-    
-    "type_culturel": "ثقافي",
-    "type_aventure": "مغامرة",
-    "type_detente": "استرخاء",
-    "type_religieux": "ديني",
-    "type_affaires": "أعمال",
-    "type_hadj": "حج",
-    "type_omra": "عمرة", 
-    "type_hadj_omra": "حج وعمرة",
-    "type_touristique": "سياحي",
-    "type_etudiant": "طالب",
-    "type_medical": "طبي",
-    "type_transit": "ترانزيت",
-    "type_familial": "عائلي",
-    
-    "comfort_economique": "اقتصادي",
-    "comfort_standard": "عادي",
-    "comfort_confort": "مريح",
-    "comfort_luxe": "فاخر",
-    "comfort_premium": "بريميوم",
-    
-    "public_familles": "عائلات",
-    "public_couples": "أزواج", 
-    "public_seniors": "كبار السن",
-    "public_jeunes": "شباب",
-    "public_groupes": "مجموعات",
-    "public_tous": "جميع الفئات",
-    
-    "services_hotel_inclus": "خدمات الفندق المضمنة",
-    "activites_incluses": "الأنشطة المضمنة",
-    
-    "capacite_personnes": "السعة (أشخاص)",
-    "nombre_chambres": "عدد الغرف",
-    "nombre_salles_bain": "عدد الحمامات",
-    "superficie": "المساحة (م²)",
-    "etage": "الطابق",
-    "check_in": "وقت الوصول",
-    "check_out": "وقت المغادرة",
-    "conditions_annulation": "شروط الإلغاء",
-    "options_paiement": "خيارات الدفع المقبولة",
-    "acompte_requise": "دفعة مقدمة مطلوبة",
-    "pourcentage_acompte": "نسبة الدفعة المقدمة",
-    
-    "wifi_gratuit": "واي فاي مجاني",
-    "climatisation": "تكييف هواء",
-    "cuisine_equipee": "مطبخ مجهز",
-    "television": "تلفزيون",
-    "piscine": "مسبح",
-    "parking": "موقف سيارات",
-    "animaux_acceptes": "مسموح بالحيوانات الأليفة",
-    "menage_inclus": "التنظيف مشمول",
-    
-    "type_peletinage": "نوع الحج",
-    "destination_principale": "الوجهة الرئيسية",
-    "distance_lieux_saints": "المسافة من الأماكن المقدسة",
-    "services_religieux_inclus": "الخدمات الدينية المضمنة",
-    "langue_guide": "لغة المرشد",
-    
-    "distance_tres_proche": "قريب جداً (0-500م)",
-    "distance_proche": "قريب (500م-1كم)",
-    "distance_moyenne": "متوسط (1-2كم)",
-    "distance_eloigne": "بعيد (+2كم)",
-    
-    "pays_destination": "بلد المقصد",
-    "duree_validite": "مدة الصلاحية",
-    "delai_traitement": "مدة المعالجة",
-    "formalites_speciales": "إجراءات خاصة",
-    "frais_dossier": "رسوم الملف",
-    "frais_ambassade": "رسوم السفارة",
-    
-    "assurances_incluses": "التأمين مشمول",
-    "guide_local_francophone": "مرشد محلي ناطق بالفرنسية",
-    "repas_inclus": "الوجبات مشمولة",
-    "transfert_aeroport": "نقل من المطار",
-    "excursions_incluses": "الجولات مشمولة",
-    "assistance_complete_dossier": "مساعدة كاملة في الملف",
-    "remplissage_formulaires": "ملء الاستمارات",
-    "prise_rendez_vous": "حجز موعد",
-    "accompagnement_ambassade": "مرافقة إلى السفارة",
-    "suivi_dossier_temps_reel": "متابعة الملف في الوقت الحقيقي",
-    "assistance_administrative": "مساعدة إدارية",
-    
-    "prix_adulte": "سعر البالغ",
-    "prix_enfant": "سعر الطفل",
-    "prix_bebe": "سعر الرضيع",
-    "prix_par_adulte": "سعر للبالغ",
-    "prix_par_enfant": "سعر للطفل",
-    "prix_par_bebe": "سعر للرضيع",
-    
-    "documents_necessaires": "المستندات المطلوبة",
-    
-    "validation_category_required": "يرجى اختيار فئة.",
-    "validation_wilaya_required": "يرجى اختيار الولاية والبلدية.",
-    "validation_images_required": "يرجى إضافة صورة أو فيديو واحد على الأقل.",
-    "success_update": "تم تحديث الإعلان بنجاح!",
-    "success_create": "تم نشر الإعلان بنجاح!",
-    "error_publication": "خطأ أثناء النشر.",
-    
+    "modification": "جاري التعديل",
     "button_update": "تحديث",
     "button_publish": "نشر الإعلان",
     "button_cancel": "إلغاء",
-    
-    "service_wifi": "واي فاي",
-    "service_piscine": "مسبح",
-    "service_spa": "سبا",
-    "service_restaurant": "مطعم",
-    "service_gym": "نادي رياضي",
-    "service_room_service": "خدمة الغرف",
+
+    "validation_category_required": "يرجى اختيار فئة",
+    "validation_wilaya_required": "يرجى اختيار الولاية والبلدية",
+    "validation_images_required": "يرجى إضافة صورة واحدة على الأقل",
+    "success_update": "تم تحديث الإعلان بنجاح!",
+    "success_create": "تم إنشاء الإعلان بنجاح!",
+    "error_publication": "خطأ أثناء النشر",
+
+    "service_visite_guidee": "جولة بإرشاد",
+    "service_repas": "وجبات مشمولة",
+    "service_transfert": "نقل من المطار",
+    "service_assistance": "مساعدة 24/7",
+    "service_assurance": "تأمين السفر",
     "service_guide_religieux": "مرشد ديني",
     "service_cours_rituels": "دروس الشعائر",
     "service_assistance_ihram": "مساعدة الإحرام",
     "service_groupe_etude": "مجموعة دراسة",
-    "service_prieres_collectives": "صلاة جماعية",
-    
-    "activite_visite_guidee": "جولة إرشادية",
-    "activite_randonnee": "تنزه",
+    "service_prieres_collectives": "صلوات جماعية",
+
+    "activite_excursion": "رحلات",
     "activite_plongee": "غوص",
+    "activite_randonnee": "تسلق",
     "activite_shopping": "تسوق",
-    "activite_degustation": "تذوق",
-    "activite_spectacle": "عرض",
-    
-    "document_passeport": "جواز السفر",
-    "document_photos_identite": "صور شخصية",
-    "document_certificat_vaccination": "شهادة تطعيم",
-    "document_reservation_hotel": "حجز الفندق",
-    "document_billet_avion": "تذكرة الطائرة",
-    "document_justificatif_domicile": "إثبات عنوان",
-    "document_releve_bancaire": "كشف حساب بنكي",
-    "document_assurance_voyage": "تأمين سفر",
-    "document_lettre_invitation": "رسالة دعوة",
-    
-    "option_especes": "نقداً",
-    "option_carte_credit": "بطاقة ائتمان",
-    "option_virement": "تحويل بنكي",
-    "option_cheque": "شيك",
-    
+    "activite_culture": "أنشطة ثقافية",
+
     "langue_arabe": "العربية",
     "langue_francais": "الفرنسية",
     "langue_anglais": "الإنجليزية",
     "langue_berbere": "الأمازيغية",
 
-    "file_not_exists": "الملف غير موجود.",
-    "file_size_exceeded": "يجب ألا يتجاوز حجم الصورة/الفيديو 5 ميجابايت."
+    "document_passeport": "جواز السفر",
+    "document_photos_identite": "صور شخصية",
+    "document_certificat_vaccination": "شهادة التلقيح",
+    "document_reservation_hotel": "حجز الفندق",
+    "document_billet_avion": "تذكرة الطائرة"
   }
  

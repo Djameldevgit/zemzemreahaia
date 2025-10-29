@@ -8,20 +8,11 @@ import Avatar from '../Avatar';
 import Card from 'react-bootstrap/Card';
 import {
   FaPlus,
-  FaEnvelope,
   FaInfoCircle,
-  FaComments,
   FaTools,
   FaShieldAlt,
-  FaBlog,
   FaUsers,
-  FaClipboardList,
   FaUserCog,
-  FaUserSlash,
-  FaFlag,
-  FaBan,
-  FaShoppingCart,
-  FaHome,
   FaSignOutAlt,
   FaUserCircle,
   FaSignInAlt,
@@ -30,52 +21,10 @@ import {
   FaBell,
   FaShareAlt,
   FaGlobe,
-  FaCog,
   FaCheckCircle,
 } from 'react-icons/fa';
 
-/*
-  
-  {auth.user && (
-             
-    <Link
-       to="/cart"
-       className="position-relative text-decoration-none d-flex align-items-center justify-content-center icon-button"
-       style={{
-         width: isMobile ? '40px' : '45px',
-         height: isMobile ? '40px' : '45px',
-         borderRadius: '12px',
-         backgroundColor: settings.style ? 'rgba(255,255,255,0.1)' : 'rgba(102, 126, 234, 0.1)',
-         transition: 'all 0.3s ease'
-       }}
-     >
-       <BsCartFill size={isMobile ? 20 : 22} style={{ color: '#667eea' }} />
-       {totalItems > 0 && (
-         <Badge
-           pill
-           style={{
-             fontSize: '0.65rem',
-             position: 'absolute',
-             top: '-2px',
-             right: '-2px',
-             padding: '4px 7px',
-             background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-             border: '2px solid white',
-             boxShadow: '0 2px 8px rgba(245, 87, 108, 0.4)'
-           }}
-         >
-           {cart.items?.length > 9 ? '9+' : cart.items?.length || 0}
-         </Badge>
-       )}
-     </Link>
-   )}import { BsCartFill } from 'react-icons/bs';
-*/
-
-
-
-
 import { Navbar, Container, NavDropdown, Badge } from 'react-bootstrap';
-
 
 import LanguageSelectorpc from '../LanguageSelectorpc';
 import ActivateButton from '../../auth/ActivateButton';
@@ -108,13 +57,12 @@ const Navbar2 = () => {
   if (!settings) {
     return (
       <nav className="navbar navbar-light bg-light">
-        <span className="navbar-brand">Cargando...</span>
+        <span className="navbar-brand">{t('loading')}</span>
       </nav>
     );
   }
 
   const [showLanguageModal, setShowLanguageModal] = useState(false);
-
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showDeactivatedModal, setShowDeactivatedModal] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 700);
@@ -147,6 +95,7 @@ const Navbar2 = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
   const totalItems = (cart?.items && Array.isArray(cart.items))
     ? cart.items.reduce((acc, item) => acc + (item?.quantity || 0), 0)
     : 0;
@@ -155,10 +104,11 @@ const Navbar2 = () => {
   if (!settings || Object.keys(settings).length === 0) {
     return (
       <nav className="navbar navbar-light bg-light">
-        <span className="navbar-brand">Cargando configuración...</span>
+        <span className="navbar-brand">{t('loadingSettings')}</span>
       </nav>
     );
   }
+
   const unreadNotifications = notify.data.filter(n => !n.isRead).length;
 
   // Función helper para items del menú
@@ -178,7 +128,7 @@ const Navbar2 = () => {
         fontWeight: '500'
       }}
     >
-      <Icon className={`me-3`} style={{ color: iconColor, fontSize: '1.1rem' }} />
+      <Icon className="me-3" style={{ color: iconColor, fontSize: '1.1rem' }} />
       <span>{children}</span>
     </NavDropdown.Item>
   );
@@ -207,10 +157,10 @@ const Navbar2 = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: isMobile ? '40px' : '55px',    // 🔷 Más pequeño en móvil
-                height: isMobile ? '40px' : '55px',   // 🔷 Más pequeño en móvil
+                width: isMobile ? '40px' : '55px',
+                height: isMobile ? '40px' : '55px',
                 marginLeft: '8px',
-                padding: isMobile ? '2px' : '0',      // 🔷 Más padding en móvil
+                padding: isMobile ? '2px' : '0',
                 marginRight: isMobile ? '6px' : '12px',
                 background: 'transparent',
                 border: 'none',
@@ -229,7 +179,6 @@ const Navbar2 = () => {
                   borderRadius: '8px'
                 }}
                 onError={(e) => {
-                  // Fallback con icono más pequeño en móvil
                   e.target.style.display = 'none';
                 }}
               />
@@ -278,7 +227,6 @@ const Navbar2 = () => {
 
             {/* Botón Agregar Post */}
             {(userRole === "Super-utilisateur" || userRole === "admin") && (
-
               <Link
                 to="/createpost"
                 className="d-flex align-items-center justify-content-center icon-button text-decoration-none"
@@ -341,7 +289,6 @@ const Navbar2 = () => {
                 )}
               </div>
             )}
-
 
             {/* Dropdown de usuario */}
             <NavDropdown
@@ -440,10 +387,10 @@ const Navbar2 = () => {
                               fontWeight: '600'
                             }}
                           >
-                            {userRole === 'admin' ? '👑 Admin' :
-                              userRole === 'Moderateur' ? '🛡️ Moderador' :
-                                userRole === 'Super-utilisateur' ? '⭐ Super User' :
-                                  '👤 Usuario'}
+                            {userRole === 'admin' ? `👑 ${t('admin')}` :
+                              userRole === 'Moderateur' ? `🛡️ ${t('moderator')}` :
+                                userRole === 'Super-utilisateur' ? `⭐ ${t('superUser')}` :
+                                  `👤 ${t('user')}`}
                           </div>
                         </div>
                       </div>
@@ -451,77 +398,22 @@ const Navbar2 = () => {
 
                     {/* Estado de verificación */}
                     <div style={{ padding: '12px 20px', margin: '0 8px' }}>
-                      {auth.user?.isVerified ? (
-                        <div
-                          style={{
-                            background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-                            padding: '12px 16px',
-                            borderRadius: '10px',
-                            color: 'white',
-                            display: 'flex',
-                            alignItems: 'center',
-                            fontWeight: '600',
-                            fontSize: '0.9rem',
-                            boxShadow: '0 4px 12px rgba(56, 239, 125, 0.3)'
-                          }}
-                        >
-                          <FaCheckCircle className="me-2" size={18} />
-                          {t('verified', 'Cuenta Verificada')}
-                        </div>
-                      ) : (
-                        <ActivateButton onClose={() => console.log("Dropdown cerrado")} />
-                      )}
+
                     </div>
 
-                    <NavDropdown.Divider style={{ margin: '8px 16px' }} />
+                    
+ 
 
-                    {/* Cambio de idioma en móvil */}
-                    <div className="d-lg-none">
-                      <MenuItem
-                        icon={FaGlobe}
-                        iconColor="#667eea"
-                        onClick={() => setShowLanguageModal(true)}
-                      >
-                        {t('changeLanguage')}
-                      </MenuItem>
-                    </div>
-
-                    {/* Agregar post para super usuarios */}
-                    {(userRole === "Super-utilisateur" || userRole === "admin") && (
-                      <>
-                        <MenuItem
-                          icon={FaPlus}
-                          iconColor="#667eea"
-                          onClick={openStatusModal}
-                        >
-                          {t('addPost')}
-                        </MenuItem>
-                        <NavDropdown.Divider style={{ margin: '8px 16px' }} />
-                      </>
-                    )}
-
-
-
-                    <MenuItem icon={FaInfoCircle} iconColor="#6c757d" to="/bloginfo">
-                      {t('appInfo')}
+                    <MenuItem icon={FaShareAlt} iconColor="#ffc107" onClick={() => setShowShareModal(true)}>
+                      {t('shareApp')}
                     </MenuItem>
-
                     <MenuItem icon={FaUserCircle} iconColor="#667eea" to={`/profile/${auth.user._id}`}>
                       {t('profile')}
                     </MenuItem>
 
-
                     <NavDropdown.Divider style={{ margin: '8px 16px' }} />
 
-                    <MenuItem icon={FaShareAlt} iconColor="#ffc107" onClick={() => setShowShareModal(true)}>
-                      Compartir Aplicación
-                    </MenuItem>
 
-                    <NavDropdown.Divider style={{ margin: '8px 16px' }} />
-
-                    <MenuItem icon={FaTools} iconColor="#6c757d" to="/users/roles">
-                      {t('roles')}
-                    </MenuItem>
 
                     {/* Panel de Admin */}
                     {userRole === "admin" && (
@@ -543,63 +435,24 @@ const Navbar2 = () => {
                           }}
                         >
                           <FaShieldAlt className="me-2" size={18} />
-                          {t('adminPanel', 'Panel de Administración')}
+                          {t('adminPanel')}
                         </div>
 
-                        <MenuItem icon={FaCog} iconColor="#6c757d" to="/users/privacidad">
-                          Ajustes de privacidad
-                        </MenuItem>
-
-                        <MenuItem icon={FaCog} iconColor="#6c757d" onClick={() => setShowFeaturesModal(true)}>
-                          Configuración global
-                        </MenuItem>
-
-                        <MenuItem icon={FaBlog} iconColor="#667eea" to="/blog">
-                          {t('blog')}
-                        </MenuItem>
-
-                        <MenuItem icon={FaEnvelope} iconColor="#17a2b8" to="/mails">
-                          {t('adminSendEmail')}
+                        <MenuItem icon={FaTools} iconColor="#6c757d" to="/users/roles">
+                          {t('roles')}
                         </MenuItem>
 
                         <MenuItem icon={FaUsers} iconColor="#28a745" to="/users">
                           {t('users')}
                         </MenuItem>
 
-                        <MenuItem icon={FaClipboardList} iconColor="#ffc107" to="/postspendientes">
-                          {t('pendingPosts')}
-                        </MenuItem>
-
                         <MenuItem icon={FaUserCog} iconColor="#667eea" to="/usersactionn">
                           {t('userActions')}
                         </MenuItem>
-
-                        <MenuItem icon={FaUserSlash} iconColor="#dc3545" to="/listuserbloque">
-                          {t('blockedUsersList')}
-                        </MenuItem>
-
-                        <MenuItem icon={FaFlag} iconColor="#ff6b6b" to="/listausariosdenunciadoss">
-                          {t('usariosdenunciados')}
-                        </MenuItem>
-
-                        <MenuItem icon={FaBan} iconColor="#6c757d" to="/bloqueos">
-                          {t('estadodeusuariosrespectoalbloqueo')}
-                        </MenuItem>
-
-
                       </>
                     )}
 
                     <NavDropdown.Divider style={{ margin: '8px 16px' }} />
-
-                    {/* Tema y Logout */}
-                    <MenuItem
-                      icon={theme ? () => <span style={{ fontSize: '1.2rem' }}>🌞</span> : () => <span style={{ fontSize: '1.2rem' }}>🌙</span>}
-                      iconColor="#ffc107"
-                      onClick={toggleTheme}
-                    >
-                      {theme ? t('lightMode') : t('darkMode')}
-                    </MenuItem>
 
                     <MenuItem
                       icon={FaSignOutAlt}
@@ -626,7 +479,7 @@ const Navbar2 = () => {
                     </MenuItem>
 
                     <MenuItem icon={FaShareAlt} iconColor="#ffc107" onClick={() => setShowShareModal(true)}>
-                      Compartir Aplicación
+                      {t('shareApp')}
                     </MenuItem>
                   </>
                 )}
@@ -694,7 +547,7 @@ const Navbar2 = () => {
               >
                 <h5 className="modal-title fw-bold">
                   <FaGlobe className="me-2" />
-                  {t('selectLanguage', 'Seleccionar Idioma')}
+                  {t('selectLanguage')}
                 </h5>
                 <button
                   type="button"

@@ -1,67 +1,104 @@
 import React from 'react';
-import { Card, Form, Button, Row, Col } from 'react-bootstrap';
+import { Card, Form, Button, Row, Col, Badge } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const ImageUpload = ({ images, handleChangeImages, deleteImages, theme }) => {
+    const { t } = useTranslation('categories');
     
-    // Función para mostrar imagen/video
-    const mediaShow = (src, isVideo = false) => {
-        if (isVideo) {
-            return (
-                <video 
-                    controls 
-                    style={{ 
-                        maxWidth: '100%', 
-                        maxHeight: '150px',
-                        filter: theme ? 'invert(1)' : 'invert(0)'
-                    }}
+    // Función para mostrar imagen/video mejorada
+    const mediaShow = (src, isVideo = false, index) => {
+        const mediaElement = isVideo ? (
+            <video 
+                controls 
+                style={{ 
+                    width: '100%', 
+                    height: '120px',
+                    objectFit: 'cover',
+                    borderRadius: '8px'
+                }}
+            >
+                <source src={src} type="video/mp4" />
+                {t('navigateurNonSupport')}
+            </video>
+        ) : (
+            <img 
+                src={src} 
+                alt={t('preview')} 
+                style={{ 
+                    width: '100%', 
+                    height: '120px',
+                    objectFit: 'cover',
+                    borderRadius: '8px'
+                }}
+            />
+        );
+
+        return (
+            <div className="position-relative">
+                {mediaElement}
+                <Badge 
+                    bg={isVideo ? 'info' : 'success'} 
+                    className="position-absolute top-0 start-0 m-1"
                 >
-                    <source src={src} type="video/mp4" />
-                    Votre navigateur ne supporte pas la lecture de vidéos.
-                </video>
-            );
-        } else {
-            return (
-                <img 
-                    src={src} 
-                    alt="Preview" 
-                    style={{ 
-                        maxWidth: '100%', 
-                        maxHeight: '150px',
-                        filter: theme ? 'invert(1)' : 'invert(0)'
-                    }}
-                />
-            );
-        }
+                    {isVideo ? '🎥' : '🖼️'}
+                </Badge>
+                <Badge 
+                    bg="secondary" 
+                    className="position-absolute top-0 end-0 m-1"
+                >
+                    #{index + 1}
+                </Badge>
+            </div>
+        );
     };
 
     return (
-        <Card className="mb-4">
-            <Card.Header>
-                <h5 className="mb-0">📷 Médias de l'Annonce</h5>
+        <Card className="mb-4 border-0 shadow-sm">
+            <Card.Header className={`${theme ? 'bg-dark text-light' : 'bg-light'}`}>
+                <h5 className="mb-0">📷 {t('mediasAnnonce')}</h5>
             </Card.Header>
             <Card.Body>
                 {/* Preview des images */}
                 {images.length > 0 && (
-                    <div className="mb-3">
-                        <h6>Médias sélectionnés ({images.length})</h6>
-                        <Row>
+                    <div className="mb-4">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h6 className="mb-0">
+                                {t('mediasSelectionnes')} 
+                                <Badge bg="primary" className="ms-2">
+                                    {images.length}
+                                </Badge>
+                            </h6>
+                            <small className="text-muted">
+                                {t('cliquezSupprimer')}
+                            </small>
+                        </div>
+                        <Row className="g-3">
                             {images.map((img, index) => (
-                                <Col key={index} xs={6} md={4} lg={3} className="mb-3">
-                                    <div className="position-relative">
+                                <Col key={index} xs={6} md={4} lg={3}>
+                                    <div className="position-relative media-thumbnail">
                                         {img.camera 
-                                            ? mediaShow(img.camera)
+                                            ? mediaShow(img.camera, false, index)
                                             : img.url
-                                                ? mediaShow(img.url, img.url.match(/video/i))
-                                                : mediaShow(URL.createObjectURL(img), img.type.match(/video/i))
+                                                ? mediaShow(img.url, img.url.match(/video/i), index)
+                                                : mediaShow(URL.createObjectURL(img), img.type?.match(/video/i), index)
                                         }
                                         <Button
                                             variant="danger"
                                             size="sm"
-                                            className="position-absolute top-0 end-0"
+                                            className="position-absolute top-0 end-0 rounded-circle"
                                             onClick={() => deleteImages(index)}
-                                            style={{ transform: 'translate(50%, -50%)' }}
+                                            style={{ 
+                                                width: '28px', 
+                                                height: '28px',
+                                                transform: 'translate(30%, -30%)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: '14px',
+                                                padding: 0
+                                            }}
                                         >
-                                            &times;
+                                            ×
                                         </Button>
                                     </div>
                                 </Col>
@@ -72,9 +109,9 @@ const ImageUpload = ({ images, handleChangeImages, deleteImages, theme }) => {
 
                 {/* Upload d'images */}
                 <Form.Group>
-                    <Form.Label className="btn btn-primary w-100">
+                    <Form.Label className={`btn ${theme ? 'btn-outline-light' : 'btn-primary'} w-100 py-3`}>
                         <i className="fas fa-cloud-upload-alt me-2"></i>
-                        Ajouter des Photos/Vidéos
+                        {t('ajouterMedias')}
                         <Form.Control 
                             type="file" 
                             multiple 
@@ -83,18 +120,30 @@ const ImageUpload = ({ images, handleChangeImages, deleteImages, theme }) => {
                             style={{ display: 'none' }}
                         />
                     </Form.Label>
-                    <Form.Text className="text-muted">
-                        Formats acceptés: JPG, PNG, MP4 (max. 5MB par fichier)
+                    <Form.Text className="text-muted d-block mt-2">
+                        <i className="fas fa-info-circle me-1"></i>
+                        {t('formatsAcceptes')}
                     </Form.Text>
                 </Form.Group>
 
                 {/* Message si aucune image */}
                 {images.length === 0 && (
-                    <div className="text-center text-muted py-3">
-                        <i className="fas fa-images fa-2x mb-2"></i>
-                        <p>Aucun média sélectionné. Ajoutez des photos ou vidéos pour votre annonce.</p>
+                    <div className="text-center text-muted py-4">
+                        <i className="fas fa-images fa-3x mb-3 opacity-50"></i>
+                        <p className="mb-0">{t('aucunMedia')}</p>
+                        <small>{t('conseilMedias')}</small>
                     </div>
                 )}
+
+                {/* Informations supplémentaires */}
+                <div className="mt-3 p-3 bg-light rounded">
+                    <h6 className="mb-2">💡 {t('conseils')}</h6>
+                    <ul className="small mb-0">
+                        <li>{t('conseil1')}</li>
+                        <li>{t('conseil2')}</li>
+                        <li>{t('conseil3')}</li>
+                    </ul>
+                </div>
             </Card.Body>
         </Card>
     );

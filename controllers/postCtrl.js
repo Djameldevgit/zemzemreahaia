@@ -39,7 +39,7 @@ const postCtrl = {
                 return res.status(400).json({msg: "La wilaya et la commune sont requises."})
             }
     
-            // 🔥 CREAR NUEVO POST OPTIMIZADO - SOLO 3 CAMPOS ESPECÍFICOS
+            // 🔥 CREAR NUEVO POST OPTIMIZADO
             const newPost = new Posts({
                 ...postData, // ✅ TODOS los campos del frontend automáticamente
                 images,
@@ -48,6 +48,10 @@ const postCtrl = {
                 // Solo asegurar campos críticos con valores por defecto
                 category: postData.category || "Agence de Voyage",
                 description: postData.description || postData.content || "",
+                
+                // 🔷 AGREGA SOLO ESTOS 2 CAMPOS FALTANTES:
+                servicios: postData.servicios || [],        // ✅ NUEVO
+                serviciosTr: postData.serviciosTr || [],    // ✅ NUEVO
                 
                 // Arrays que deben estar inicializados
                 specifications: postData.specifications || [],
@@ -231,25 +235,54 @@ const postCtrl = {
     getPost: async (req, res) => {
         try {
             const post = await Posts.findById(req.params.id)
-            .populate("user likes", "avatar username fullname followers")
-            .populate({
-                path: "comments",
-                populate: {
-                    path: "user likes",
-                    select: "-password"
-                }
-            })
+                .populate("user likes", "avatar username followers")
+                .populate({
+                    path: "comments",
+                    populate: {
+                        path: "user likes",
+                        select: "-password"
+                    }
+                });
 
-            if(!post) return res.status(400).json({msg: 'This post does not exist.'})
+            if (!post) return res.status(400).json({ msg: req.__('post.post_not_exist') });
 
-            res.json({
-                post
-            })
-
+            res.json({ post });
         } catch (err) {
-            return res.status(500).json({msg: err.message})
+            return res.status(500).json({ msg: err.message });
         }
     },
+
+
+    viewPost: async (req, res) => {
+        try {
+            const { id } = req.params;
+
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                return res.status(400).json({ msg: 'ID inválido' });
+            }
+
+            const postUpdated = await Posts.findByIdAndUpdate(
+                id,
+                { $inc: { views: 1 } },
+                { new: true }
+            )
+                .populate("user likes", "avatar username followers")
+                .populate({
+                    path: "comments",
+                    populate: {
+                        path: "user likes",
+                        select: "-password"
+                    }
+                });
+
+            if (!postUpdated) return res.status(404).json({ msg: 'Post no encontrado' });
+
+            res.json({ post: postUpdated }); // ✅ enviar post completo
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+
     getPostsDicover: async (req, res) => {
         try {
 

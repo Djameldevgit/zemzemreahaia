@@ -28,38 +28,52 @@ import Navbar2 from './components/header/Navbar2'
 
 import video from './pages/video';
 import { getPrivacySettings } from './redux/actions/privacyAction';
- 
 import bloginfo from './pages/bloginfo';
- 
 import Bloqueos404 from './components/adminitration/Bloqueos404';
-
 import appinfo2 from './pages/appinfo2';
 import Createpost from './pages/createpost';
 
 function App() {
   const { auth, status, modal, languageReducer } = useSelector(state => state)
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(true)
   const language = languageReducer?.language || localStorage.getItem("lang") || "en";
- 
-  useEffect(() => {
-    dispatch(refreshToken())
 
-    const socket = io()
-    dispatch({type: GLOBALTYPES.SOCKET, payload: socket})
-    return () => socket.close()
-  },[dispatch])
-
-  
+  // ✅ EFECTO PRINCIPAL PARA REFRESCAR TOKEN
   useEffect(() => {
-   
-    dispatch(getPosts())
-    if (auth.token) {
-      dispatch(getPrivacySettings((auth.token)))
-  
-      dispatch(getUsers(auth.token))
- 
+    const initializeApp = async () => {
+      try {
+        // Primero refrescar el token antes de cualquier otra acción
+        await dispatch(refreshToken());
+        
+        // Inicializar socket después del token
+        const socket = io();
+        dispatch({ type: GLOBALTYPES.SOCKET, payload: socket });
+        
+        setLoading(false);
+      } catch (error) {
+        console.error('Error initializing app:', error);
+        setLoading(false);
+      }
+    };
+
+    initializeApp();
+
+    return () => {
+      // Cleanup si es necesario
+    };
+  }, [dispatch]);
+
+  // ✅ EFECTO PARA CARGAR DATOS CUANDO HAY TOKEN
+  useEffect(() => {
+     dispatch(getPosts());
+    if (auth.token && auth.user) {
+      console.log('Token exists, loading data...');
+     
+      dispatch(getPrivacySettings(auth.token));
+      dispatch(getUsers(auth.token));
     }
-  }, [dispatch, auth.token])
+  }, [dispatch, auth.token, auth.user]);
 
   // ✅ MANEJO DE IDIOMA
   useEffect(() => {
@@ -69,57 +83,58 @@ function App() {
     }
   }, [language]);
 
+  // ✅ NOTIFICACIONES
   useEffect(() => {
     if (!("Notification" in window)) {
-      alert("This browser does not support desktop notification");
-    }
-    else if (Notification.permission === "granted") {}
-    else if (Notification.permission !== "denied") {
+      console.log("This browser does not support desktop notification");
+    } else if (Notification.permission === "granted") {
+      console.log("Notifications granted");
+    } else if (Notification.permission !== "denied") {
       Notification.requestPermission().then(function (permission) {
-        if (permission === "granted") {}
+        if (permission === "granted") {
+          console.log("Notifications permission granted");
+        }
       });
     }
-  },[])
- 
+  }, []);
 
-  if (auth.token && auth.user?.esBloqueado) {
+  // ✅ MOSTRAR LOADING MIENTRAS SE INICIALIZA
+  if (loading) {
     return (
-      <Router>
-        <Route exact path="/bloqueos404" component={Bloqueos404} />
-        <Route path="*" component={Bloqueos404} />
-      </Router>
-    )
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <span className="ms-2">Loading...</span>
+      </div>
+    );
   }
 
- 
+  // ✅ VERIFICACIÓN DE USUARIO BLOQUEADO (CORREGIDO)
   if (auth.token && auth.user?.esBloqueado) {
     return (
       <Router>
         <Route exact path="/bloqueos404" component={Bloqueos404} />
         <Route path="*" component={Bloqueos404} />
       </Router>
-    )
+    );
   }
 
   // ✅ RENDER PRINCIPAL
   return (
     <Router>
-    <Alert />
-
-    <input type="checkbox" id="theme" />
-    <div className={`App ${(status || modal) && 'mode'}`}>
-      <LanguageSelectorandroid />
-      <div className="main">
-
-        <Navbar2 />
-
-        {status && <StatusModal />}
-        {auth.token && <SocketClient />}
-
-       
+      <Alert />
+      <input type="checkbox" id="theme" />
+      <div className={`App ${(status || modal) && 'mode'}`}>
+        <LanguageSelectorandroid />
+        <div className="main">
+          <Navbar2 />
+          
+          {status && <StatusModal />}
+          {auth.token && <SocketClient />}
 
           <Switch>
-            {/* públicas */}
+            {/* Rutas públicas */}
             <Route exact path="/" component={Home} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
@@ -127,37 +142,25 @@ function App() {
             <Route exact path="/infoaplicacionn" component={appinfo2} />
             <Route exact path="/infoAplicacionn" component={appinfo2} />
             <Route exact path="/appinfo2" component={appinfo2} />
-
-
-            <Route path="/editpost/:id" element={<Createpost />} />
             <Route exact path="/bloqueos404" component={Bloqueos404} />
             <Route exact path="/video/:obraId" component={video} />
             <Route exact path="/forgot_password" component={ForgotPassword} />
             <Route path="/user/reset/:token" component={ResetPassword} exact />
             <Route path="/user/activate/:activation_token" component={auth.token ? ActivatePage : Login} exact />
 
-            {/* privadas específicas */}
+            {/* Rutas privadas específicas */}
             <PrivateRouter exact path="/users/roles" component={PageRender} />
             <PrivateRouter exact path="/users/contactt" component={PageRender} />
             <PrivateRouter exact path="/users/bloqueados" component={PageRender} />
 
-            {/* privadas genéricas */}
+            {/* Rutas privadas genéricas */}
             <PrivateRouter exact path="/:page/:id/:tab" component={PageRender} />
             <PrivateRouter exact path="/:page/:id" component={PageRender} />
             <PrivateRouter exact path="/:page" component={PageRender} />
-
-
-
-
-
           </Switch>
         </div>
-
       </div>
-
-
-
-    </Router >
+    </Router>
   );
 }
 

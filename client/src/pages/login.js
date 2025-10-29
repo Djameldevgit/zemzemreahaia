@@ -123,32 +123,10 @@ const Login = () => {
                                 <Form onSubmit={handleSubmit}>
                                     
                                     {/* Login con Facebook/Google - Añadir contenedor con prevención */}
-                                    <Form.Group 
-                                        className="mb-4"
-                                        onClick={(e) => e.stopPropagation()}
-                                    >
-                                        <Loginfacegoogle />
-                                    </Form.Group>
+                                   
 
-                                    {/* Divisor */}
-                                    <div className="position-relative mb-4">
-                                        <hr style={{ 
-                                            margin: '0',
-                                            borderTop: '1px solid #e2e8f0'
-                                        }} />
-                                        <span 
-                                            className={`position-absolute top-50 ${isRTL ? 'end-0 translate-middle-x' : 'start-50 translate-middle'} px-3`}
-                                            style={{
-                                                background: 'white',
-                                                color: '#a0aec0',
-                                                fontSize: '0.875rem',
-                                                fontWeight: '500'
-                                            }}
-                                        >
-                                            {t('orContinueWith' ) }
-                                        </span>
-                                       
-                                    </div>
+                                  
+                                   
 
                                     {/* Email */}
                                     <Form.Group className="mb-4">
