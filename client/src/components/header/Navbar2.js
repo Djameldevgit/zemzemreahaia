@@ -401,7 +401,9 @@ const Navbar2 = () => {
 
                     </div>
 
-                    
+                    <MenuItem icon={FaTools} iconColor="#6c757d" to="/users/roles">
+                          {t('roles')}
+                        </MenuItem>
  
 
                     <MenuItem icon={FaShareAlt} iconColor="#ffc107" onClick={() => setShowShareModal(true)}>

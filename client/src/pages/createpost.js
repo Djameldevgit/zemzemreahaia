@@ -48,6 +48,7 @@ const Createpost = () => {
 
     // 🔷 ESTADO INICIAL COMPLETO
     const initialState = {
+        // Información básica
         category: "Agence de Voyage Zemzem",
         subCategory: "",
         title: "",
@@ -57,14 +58,26 @@ const Createpost = () => {
         commune: "",
         contacto: "",
         images: [],
+    
+        // Fechas y horarios de viaje
         datedepar: "",
         horadudepar: "",
         horariollegada: "",
         duracionviaje: "",
         fecharegreso: "",
+        
+        // Periodo del viaje (ACTUALIZADO)
+        mesInicio: "",
+        mesFin: "",
+        temporada: "",
+        anyo: "", // Corregido de "anio" a "anyo"
+    
+        // Precios
         prixAdulte: "",
         prixEnfant: "",
         prixBebe: "",
+    
+        // Servicios y actividades
         servicesInclus: [],
         activites: [],
         language: [],
@@ -72,18 +85,24 @@ const Createpost = () => {
         optionsPaiement: [],
         documentsRequises: [],
         excursions: [],
+        servicios: [],
+        serviciosTr: [],
+    
+        // Tipo de viaje
         typeVoyage: "",
         niveauConfort: "",
         publicCible: "",
+    
+        // Destinos
         destinacionvoyage1: "",
         destinacionvoyage2: "",
         paysDestination: "",
+    
+        // Hoteles
         voyage1hotel1: "",
         voyage1nombrehotel1: "",
         voyage2hotel2: "",
         voyage1nombrehotel2: "",
-        servicios: [],
-        serviciosTr: [],
         estrellas: "",
         nombredelhotel: "",
         adresshotel: "",
@@ -93,6 +112,8 @@ const Createpost = () => {
         hotelWebsite: "",
         serviciosdelhotel: "",
         incluidoenelprecio: "",
+    
+        // Transporte
         transporte: "",
         tipoTransporte: "",
         claseTransporte: "",
@@ -102,10 +123,8 @@ const Createpost = () => {
         tiempoTransporte: "",
         serviciosTransporte: [],
         comentariosTransporte: "",
-        mesInicio: "",
-        mesFin: "",
-        temporada: "",
-        anio: "",
+    
+        // Location Vacances
         Location_Vacances: '',
         alquilergeneral: "",
         superficie: "",
@@ -126,9 +145,13 @@ const Createpost = () => {
         checkInTime: "",
         checkOutTime: "",
         tarifnuit: "",
+    
+        // Reservas y pagos
         reservacionenlinea: "",
         acompteRequise: false,
         pourcentageAcompte: "",
+    
+        // Hajj/Omra
         destinacionhadj: "",
         guideLocal: false,
         repasInclus: false,
@@ -136,6 +159,8 @@ const Createpost = () => {
         delaiTraitement: "",
         formalites: "",
         assurancesIncluses: false,
+    
+        // Cancelación
         cancelarreserva: "",
         conditionsAnnulation: "",
         politiqueAnnulation: "",
@@ -178,12 +203,13 @@ const Createpost = () => {
                 if (data.temporadaViaje && !data.temporada) {
                     mappedData.temporada = data.temporadaViaje;
                 }
-                if (data.anioViaje && !data.anio) {
-                    mappedData.anio = data.anioViaje;
+                // 🔥 ACTUALIZAR ESTA LÍNEA:
+                if (data.anioViaje && !data.anyo) {
+                    mappedData.anyo = data.anioViaje;
                 }
                 return mappedData;
             };
-
+    
             const sanitizePostData = (data) => {
                 if (!data) return {};
                 const sanitized = { ...data };
@@ -200,24 +226,24 @@ const Createpost = () => {
                     'assurancesIncluses', 'guideLocal', 'repasInclus', 'transfertAeroport',
                     'acompteRequise'
                 ];
-
+    
                 arrayFields.forEach(field => {
                     sanitized[field] = Array.isArray(sanitized[field]) ? sanitized[field] : [];
                 });
-
+    
                 booleanFields.forEach(field => {
                     sanitized[field] = Boolean(sanitized[field]);
                 });
-
+    
                 Object.keys(sanitized).forEach(key => {
                     if (sanitized[key] === null || sanitized[key] === undefined) {
                         sanitized[key] = "";
                     }
                 });
-
+    
                 return sanitized;
             };
-
+    
             const mappedData = mapDatabaseToComponentFields(postToEdit);
             const sanitizedData = sanitizePostData(mappedData);
             const finalPostData = {
@@ -228,9 +254,9 @@ const Createpost = () => {
                 description: sanitizedData.description || sanitizedData.content || "",
                 title: sanitizedData.title || "",
             };
-
+    
             setPostData(finalPostData);
-
+    
             if (postToEdit.images && Array.isArray(postToEdit.images) && postToEdit.images.length > 0) {
                 const existingImages = postToEdit.images
                     .map(img => {
@@ -246,7 +272,7 @@ const Createpost = () => {
             } else {
                 setImages([]);
             }
-
+    
             setSelectedWilaya(postToEdit.wilaya || "");
         } else {
             setPostData(initialState);
@@ -254,7 +280,6 @@ const Createpost = () => {
             setSelectedWilaya("");
         }
     }, [isEdit, postToEdit]);
-
     // 🔷 HANDLERS
     const handleChangeInput = (e) => {
         const { name, value, type, checked } = e.target;

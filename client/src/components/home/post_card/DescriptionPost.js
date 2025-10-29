@@ -86,10 +86,10 @@ const DescriptionPost = ({ post }) => {
   // Componente para mostrar información de transporte mejorado
   const TransportInfo = () => {
     const serviciosTransporte = formatArray(post.serviciosTransporte);
-    
-    if (!post.transporte && !post.tipoTransporte && !post.claseTransporte && 
-        !post.companiaTransporte && serviciosTransporte.length === 0 && 
-        !post.comentariosTransporte) {
+
+    if (!post.transporte && !post.tipoTransporte && !post.claseTransporte &&
+      !post.companiaTransporte && serviciosTransporte.length === 0 &&
+      !post.comentariosTransporte) {
       return null;
     }
 
@@ -120,7 +120,7 @@ const DescriptionPost = ({ post }) => {
                 </div>
               </Col>
             )}
-            
+
             {post.tipoTransporte && (
               <Col xs={12} md={6}>
                 <div className={`p-3 rounded-3 ${theme ? 'bg-secondary bg-opacity-25' : 'bg-light'}`}>
@@ -136,7 +136,7 @@ const DescriptionPost = ({ post }) => {
                 </div>
               </Col>
             )}
-            
+
             {post.claseTransporte && (
               <Col xs={12} md={6}>
                 <div className={`p-3 rounded-3 ${theme ? 'bg-secondary bg-opacity-25' : 'bg-light'}`}>
@@ -152,7 +152,7 @@ const DescriptionPost = ({ post }) => {
                 </div>
               </Col>
             )}
-            
+
             {post.companiaTransporte && (
               <Col xs={12} md={6}>
                 <div className={`p-3 rounded-3 ${theme ? 'bg-secondary bg-opacity-25' : 'bg-light'}`}>
@@ -168,7 +168,7 @@ const DescriptionPost = ({ post }) => {
                 </div>
               </Col>
             )}
-            
+
             {post.numeroTransporte && (
               <Col xs={12} md={6}>
                 <div className={`p-3 rounded-3 ${theme ? 'bg-secondary bg-opacity-25' : 'bg-light'}`}>
@@ -184,7 +184,7 @@ const DescriptionPost = ({ post }) => {
                 </div>
               </Col>
             )}
-            
+
             {post.tiempoTransporte && (
               <Col xs={12} md={6}>
                 <div className={`p-3 rounded-3 ${theme ? 'bg-secondary bg-opacity-25' : 'bg-light'}`}>
@@ -201,7 +201,7 @@ const DescriptionPost = ({ post }) => {
               </Col>
             )}
           </Row>
-          
+
           {/* Itinerario de transporte */}
           {post.itinerarioTransporte && (
             <div className="mt-4">
@@ -214,7 +214,7 @@ const DescriptionPost = ({ post }) => {
               </div>
             </div>
           )}
-          
+
           {/* Servicios de transporte */}
           {serviciosTransporte.length > 0 && (
             <div className="mt-4">
@@ -234,7 +234,7 @@ const DescriptionPost = ({ post }) => {
               </Row>
             </div>
           )}
-          
+
           {/* Comentarios adicionales */}
           {post.comentariosTransporte && (
             <div className="mt-4">
@@ -256,10 +256,10 @@ const DescriptionPost = ({ post }) => {
   const HotelInfo = () => {
     const serviciosHotel = formatArray(post.serviciosdelhotel);
     const tipoHabitaciones = formatArray(post.tipodehabutaciones);
-    
-    if (!post.nombredelhotel && !post.adresshotel && !post.estrellas && 
-        !post.totalhabitaciones && serviciosHotel.length === 0 && 
-        tipoHabitaciones.length === 0) {
+
+    if (!post.nombredelhotel && !post.adresshotel && !post.estrellas &&
+      !post.totalhabitaciones && serviciosHotel.length === 0 &&
+      tipoHabitaciones.length === 0) {
       return null;
     }
 
@@ -311,7 +311,7 @@ const DescriptionPost = ({ post }) => {
               <Col xs={12} md={6}>
                 <div className={`p-3 rounded-3 ${theme ? 'bg-secondary bg-opacity-25' : 'bg-light'}`}>
                   <i className="fas fa-globe text-success me-2"></i>
-                  <strong>{t('hotel_website')}:</strong> 
+                  <strong>{t('hotel_website')}:</strong>
                   <a href={post.hotelWebsite} target="_blank" rel="noopener noreferrer" className="ms-2">
                     {t('visit_website')}
                   </a>
@@ -377,9 +377,9 @@ const DescriptionPost = ({ post }) => {
     );
   };
 
-  // Componente para periodo de viaje mejorado
+  // Componente para periodo de viaje mejorado - CORREGIDO
   const TravelPeriod = () => {
-    if (!post.mesInicio && !post.mesFin && !post.temporada && !post.anio) {
+    if (!post.mesInicio && !post.mesFin && !post.temporada && !post.anyo) {
       return null;
     }
 
@@ -422,11 +422,11 @@ const DescriptionPost = ({ post }) => {
                 </div>
               </Col>
             )}
-            {post.anio && (
+            {post.anyo && (
               <Col xs={12} md={6} lg={3}>
                 <div className={`text-center p-3 rounded-3 ${theme ? 'bg-secondary bg-opacity-25' : 'bg-light'}`}>
                   <i className="fas fa-calendar fs-2 text-primary mb-2"></i>
-                  <div className="fw-bold">{post.anio}</div>
+                  <div className="fw-bold">{post.anyo}</div>
                   <div className="text-muted small">{t('year')}</div>
                 </div>
               </Col>
@@ -505,31 +505,44 @@ const DescriptionPost = ({ post }) => {
           <Row className="align-items-center">
             <Col xs={12} lg={8}>
               <div className={`d-flex align-items-center mb-3 ${getFlexClass()}`}>
-                <div className="bg-white bg-opacity-25 rounded-circle p-3 me-3">
-                  <i className="fas fa-plane-departure fs-1"></i>
+                <div className={`rounded-circle p-3 me-3 ${theme ? 'bg-light bg-opacity-10' : 'bg-white bg-opacity-25'}`}>
+                  <i className={`fas fa-plane-departure fs-1 ${theme ? 'text-light' : 'text-white'}`}></i>
                 </div>
                 <div>
-                  <h2 className="fw-bold">{post.title || t('travel_agency')}</h2>
-                  <p className="opacity-90">
-                    <i className={getIconClass("fas fa-map-location-dot")}></i>
-                    {t('discover_adventure')}
-                  </p>
-                </div>
+  <div className="position-relative">
+    <h2 className="fw-bold text-white mb-2 position-relative d-inline-block px-4 py-2" style={{
+      fontSize: '2.5rem',
+      fontWeight: '800',
+      background: 'linear-gradient(135deg, #2c5282 0%, #3182ce 50%, #63b3ed 100%)',
+      borderRadius: '10px',
+      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+      border: '1px solid rgba(255,255,255,0.2)'
+    }}>
+      {post.title || t('travel_agency')}
+    </h2>
+  </div>
+  <p className={`opacity-90 ${theme ? 'text-light' : 'text-white'} d-flex align-items-center mt-3`}>
+    <i className={`${getIconClass("fas fa-map-location-dot")} ${theme ? 'text-warning' : 'text-warning'} me-2`}></i>
+    {t('discover_adventure')}
+  </p>
+</div>
               </div>
             </Col>
 
             <Col xs={12} lg={4} className="text-lg-end">
               {post.price && (
-                <div className="bg-white bg-opacity-25 rounded-3 p-3 d-inline-block">
-                  <div className="text-white text-opacity-75 small">{t('desde')}</div>
-                  <div className="fs-2 fw-bold">{post.price} <small>DA</small></div>
-                  <div className="text-white text-opacity-75 small">{t('per_person')}</div>
+                <div className={`rounded-3 p-3 d-inline-block ${theme ? 'bg-secondary' : 'bg-light'}`}>
+                  <div className={`small ${theme ? 'text-light' : 'text-dark'}`}>{t('desde')}</div>
+                  <div className={`fs-2 fw-bold ${theme ? 'text-light' : 'text-dark'}`}>
+                    {post.price} <small className="fs-4">DA</small>
+                  </div>
+                  <div className={`small ${theme ? 'text-light' : 'text-dark'}`}>{t('per_person')}</div>
                 </div>
               )}
             </Col>
           </Row>
 
-          {/* BADGES INFORMATIVOS */}
+          {/* BADGES INFORMATIVOS - CORREGIDOS */}
           <div className={`d-flex flex-wrap gap-2 mt-3 ${isRTL ? 'justify-content-end' : ''}`}>
             {post.typeVoyage && (
               <Badge bg="light" text="dark" className="px-3 py-2 fs-6 shadow-sm">
