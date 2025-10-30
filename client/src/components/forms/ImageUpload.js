@@ -4,89 +4,59 @@ import { useTranslation } from 'react-i18next';
 
 const ImageUpload = ({ images, handleChangeImages, deleteImages, theme }) => {
     const { t } = useTranslation('categories');
-    
-    // Función para mostrar imagen/video mejorada
-    const mediaShow = (src, isVideo = false, index) => {
-        const mediaElement = isVideo ? (
-            <video 
-                controls 
-                style={{ 
-                    width: '100%', 
-                    height: '120px',
-                    objectFit: 'cover',
-                    borderRadius: '8px'
-                }}
-            >
-                <source src={src} type="video/mp4" />
-                {t('navigateurNonSupport')}
-            </video>
-        ) : (
-            <img 
-                src={src} 
-                alt={t('preview')} 
-                style={{ 
-                    width: '100%', 
+
+    // Mostrar solo imágenes
+    const imageShow = (src, index) => (
+        <div className="position-relative">
+            <img
+                src={src}
+                alt={t('preview')}
+                style={{
+                    width: '100%',
                     height: '120px',
                     objectFit: 'cover',
                     borderRadius: '8px'
                 }}
             />
-        );
-
-        return (
-            <div className="position-relative">
-                {mediaElement}
-                <Badge 
-                    bg={isVideo ? 'info' : 'success'} 
-                    className="position-absolute top-0 start-0 m-1"
-                >
-                    {isVideo ? '🎥' : '🖼️'}
-                </Badge>
-                <Badge 
-                    bg="secondary" 
-                    className="position-absolute top-0 end-0 m-1"
-                >
-                    #{index + 1}
-                </Badge>
-            </div>
-        );
-    };
+            <Badge
+                bg="success"
+                className="position-absolute top-0 start-0 m-1"
+            >
+                🖼️
+            </Badge>
+            <Badge
+                bg="secondary"
+                className="position-absolute top-0 end-0 m-1"
+            >
+                #{index + 1}
+            </Badge>
+        </div>
+    );
 
     return (
         <Card className="mb-4 border-0 shadow-sm">
-          
             <Card.Body>
-                {/* Preview des images */}
+                {/* Preview de imágenes */}
                 {images.length > 0 && (
                     <div className="mb-4">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h6 className="mb-0">
-                                {t('mediasSelectionnes')} 
-                                <Badge bg="primary" className="ms-2">
-                                    {images.length}
-                                </Badge>
-                            </h6>
-                            <small className="text-muted">
-                                {t('cliquezSupprimer')}
-                            </small>
-                        </div>
+                      
                         <Row className="g-3">
                             {images.map((img, index) => (
                                 <Col key={index} xs={6} md={4} lg={3}>
                                     <div className="position-relative media-thumbnail">
-                                        {img.camera 
-                                            ? mediaShow(img.camera, false, index)
+                                        {img.camera
+                                            ? imageShow(img.camera, index)
                                             : img.url
-                                                ? mediaShow(img.url, img.url.match(/video/i), index)
-                                                : mediaShow(URL.createObjectURL(img), img.type?.match(/video/i), index)
+                                                ? imageShow(img.url, index)
+                                                : imageShow(URL.createObjectURL(img), index)
                                         }
                                         <Button
                                             variant="danger"
                                             size="sm"
                                             className="position-absolute top-0 end-0 rounded-circle"
                                             onClick={() => deleteImages(index)}
-                                            style={{ 
-                                                width: '28px', 
+                                            style={{
+                                                width: '28px',
                                                 height: '28px',
                                                 transform: 'translate(30%, -30%)',
                                                 display: 'flex',
@@ -105,26 +75,30 @@ const ImageUpload = ({ images, handleChangeImages, deleteImages, theme }) => {
                     </div>
                 )}
 
-                {/* Upload d'images */}
-                <Form.Group>
-                    <Form.Label className={`btn ${theme ? 'btn-outline-light' : 'btn-primary'} w-100 py-3`}>
-                        <i className="fas fa-cloud-upload-alt me-2"></i>
-                        {t('ajouterMedias')}
-                        <Form.Control 
-                            type="file" 
-                            multiple 
-                            accept="image/*,video/*" 
-                            onChange={handleChangeImages}
-                            style={{ display: 'none' }}
-                        />
-                    </Form.Label>
-                    <Form.Text className="text-muted d-block mt-2">
-                        <i className="fas fa-info-circle me-1"></i>
-                        {t('formatsAcceptes')}
-                    </Form.Text>
+                {/* Upload d'images avec icône */}
+                <Form.Group className="text-center">
+                    <label
+                        htmlFor="image-upload"
+                        className="cursor-pointer"
+                        style={{
+                            display: 'inline-block',
+                            cursor: 'pointer',
+                            fontSize: '2rem',
+                            color: theme ? '#f8f9fa' : '#0d6efd',
+                        }}
+                    >
+                        <i className="fas fa-image"></i>
+                    </label>
+                    <Form.Control
+                        id="image-upload"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleChangeImages}
+                        style={{ display: 'none' }}
+                    />
+                  
                 </Form.Group>
-
-             
             </Card.Body>
         </Card>
     );

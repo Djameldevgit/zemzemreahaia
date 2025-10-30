@@ -92,49 +92,16 @@ const ContactReservation = ({ postData, handleChangeInput }) => {
                     style={{ resize: 'vertical' }}
                 />
             </InputGroup>
-
-            <Form.Text className="text-muted">
-                💡 {t('conseilSaisie')}
-            </Form.Text>
+ 
 
             {/* Contador de caracteres */}
             <div className="text-end small text-muted mt-1">
                 {(postData.contacto || '').length} {t('caracteres')}
             </div>
 
-            {/* Ejemplos de formato */}
-            <Alert 
-                variant="info" 
-                className="mt-3" 
-                style={{ cursor: 'pointer' }}
-                onClick={() => setShowExamples(!showExamples)}
-            >
-                <div className="d-flex justify-content-between align-items-center">
-                    <span>
-                        <i className="fas fa-lightbulb me-2"></i>
-                        {t('exemplesFormat')}
-                    </span>
-                    <i className={`fas fa-chevron-${showExamples ? 'up' : 'down'}`}></i>
-                </div>
-                
-                {showExamples && (
-                    <div className="mt-2 small">
-                        {contactExamples.map((example, index) => (
-                            <div key={index} className="text-muted mb-1">
-                                • {example}
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </Alert>
+          
 
-            {/* Información de validación */}
-            <Alert variant="light" className="small">
-                <strong>✅ {t('informationsAcceptees')}:</strong>
-                <div className="mt-1">
-                    {t('phones')}, {t('emails')}, {t('websites')}, {t('reseauxSociaux')}, {t('adresses')}
-                </div>
-            </Alert>
+            
         </Form.Group>
     );
 };

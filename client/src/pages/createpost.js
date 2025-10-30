@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Form, Button, Alert, Accordion } from 'react
 
 // 🔷 IMPORTAR TODOS LOS COMPONENTES COMUNES
 import CategorySelector from '../components/forms/CategorySelector';
- 
+
 import DescriptionTextarea from '../components/forms/DescriptionTextarea';
 import AddressInput from '../components/forms/AddressInput';
 import ImageUpload from '../components/forms/ImageUpload';
@@ -15,14 +15,15 @@ import ImageUpload from '../components/forms/ImageUpload';
 import Horariodesalida from '../components/forms/Horariodesalida';
 import DurationInput from '../components/forms/DurationInput';
 import TransportSelect from '../components/forms/TransporteViaje';
+import TransportSelecthadj from '../components/forms/TransporteViajehadj';
 import PensionSelect from '../components/forms/PensionSelect';
 import ReturnDateInput from '../components/forms/ReturnDateInput';
 import PriceSlider from '../components/forms/PriceSlider';
 import CancellationPolicy from '../components/forms/CancellationPolicy';
 import ContactReservation from '../components/forms/ContactReservation';
 import PeriodoViaje from '../components/forms/Perdiodoviajje';
+import ClasificacionHotelhadj from '../components/forms/ClasificacionHotelhadj';
 import ClasificacionHotel from '../components/forms/ClasificacionHotel';
-
 // 🔷 IMPORTAR COMPONENTES DE DESTINOS
 import DestinacionExtranjera from '../components/forms/DestinacionExstranjera';
 import DestinacionHadjOmra from '../components/forms/DestinacionHdjaOmra';
@@ -58,25 +59,25 @@ const Createpost = () => {
         commune: "",
         contacto: "",
         images: [],
-    
+
         // Fechas y horarios de viaje
         datedepar: "",
         horadudepar: "",
         horariollegada: "",
         duracionviaje: "",
         fecharegreso: "",
-        
+
         // Periodo del viaje (ACTUALIZADO)
         mesInicio: "",
         mesFin: "",
         temporada: "",
         anyo: "", // Corregido de "anio" a "anyo"
-    
+
         // Precios
         prixAdulte: "",
         prixEnfant: "",
         prixBebe: "",
-    
+
         // Servicios y actividades
         servicesInclus: [],
         activites: [],
@@ -87,17 +88,17 @@ const Createpost = () => {
         excursions: [],
         servicios: [],
         serviciosTr: [],
-    
+
         // Tipo de viaje
         typeVoyage: "",
         niveauConfort: "",
         publicCible: "",
-    
+
         // Destinos
         destinacionvoyage1: "",
         destinacionvoyage2: "",
         paysDestination: "",
-    
+
         // Hoteles
         voyage1hotel1: "",
         voyage1nombrehotel1: "",
@@ -112,7 +113,7 @@ const Createpost = () => {
         hotelWebsite: "",
         serviciosdelhotel: "",
         incluidoenelprecio: "",
-    
+
         // Transporte
         transporte: "",
         tipoTransporte: "",
@@ -123,7 +124,7 @@ const Createpost = () => {
         tiempoTransporte: "",
         serviciosTransporte: [],
         comentariosTransporte: "",
-    
+
         // Location Vacances
         Location_Vacances: '',
         alquilergeneral: "",
@@ -145,12 +146,12 @@ const Createpost = () => {
         checkInTime: "",
         checkOutTime: "",
         tarifnuit: "",
-    
+
         // Reservas y pagos
         reservacionenlinea: "",
         acompteRequise: false,
         pourcentageAcompte: "",
-    
+
         // Hajj/Omra
         destinacionhadj: "",
         guideLocal: false,
@@ -159,7 +160,7 @@ const Createpost = () => {
         delaiTraitement: "",
         formalites: "",
         assurancesIncluses: false,
-    
+
         // Cancelación
         cancelarreserva: "",
         conditionsAnnulation: "",
@@ -190,7 +191,7 @@ const Createpost = () => {
             const mapDatabaseToComponentFields = (data) => {
                 if (!data) return {};
                 const mappedData = { ...data };
-                
+
                 if (data.transporte && !data.tipoTransporte) {
                     mappedData.tipoTransporte = data.transporte;
                 }
@@ -209,41 +210,41 @@ const Createpost = () => {
                 }
                 return mappedData;
             };
-    
+
             const sanitizePostData = (data) => {
                 if (!data) return {};
                 const sanitized = { ...data };
-                
+
                 const arrayFields = [
                     'servicesInclus', 'activites', 'language', 'servicios', 'serviciosTr',
-                    'specifications', 'wifi', 'optionsPaiement', 'documentsRequises', 
+                    'specifications', 'wifi', 'optionsPaiement', 'documentsRequises',
                     'excursions', 'tipodehabutaciones', 'serviciosTransporte'
                 ];
-                
+
                 const booleanFields = [
                     'promoteurimmobilier', 'wifiGratuit', 'climatisation', 'cuisineEquipee',
                     'television', 'piscine', 'parking', 'animauxAcceptes', 'menageInclus',
                     'assurancesIncluses', 'guideLocal', 'repasInclus', 'transfertAeroport',
                     'acompteRequise'
                 ];
-    
+
                 arrayFields.forEach(field => {
                     sanitized[field] = Array.isArray(sanitized[field]) ? sanitized[field] : [];
                 });
-    
+
                 booleanFields.forEach(field => {
                     sanitized[field] = Boolean(sanitized[field]);
                 });
-    
+
                 Object.keys(sanitized).forEach(key => {
                     if (sanitized[key] === null || sanitized[key] === undefined) {
                         sanitized[key] = "";
                     }
                 });
-    
+
                 return sanitized;
             };
-    
+
             const mappedData = mapDatabaseToComponentFields(postToEdit);
             const sanitizedData = sanitizePostData(mappedData);
             const finalPostData = {
@@ -254,9 +255,9 @@ const Createpost = () => {
                 description: sanitizedData.description || sanitizedData.content || "",
                 title: sanitizedData.title || "",
             };
-    
+
             setPostData(finalPostData);
-    
+
             if (postToEdit.images && Array.isArray(postToEdit.images) && postToEdit.images.length > 0) {
                 const existingImages = postToEdit.images
                     .map(img => {
@@ -272,7 +273,7 @@ const Createpost = () => {
             } else {
                 setImages([]);
             }
-    
+
             setSelectedWilaya(postToEdit.wilaya || "");
         } else {
             setPostData(initialState);
@@ -422,9 +423,7 @@ const Createpost = () => {
         }
     };
 
-    const handleCancel = () => {
-        history.goBack();
-    };
+   
 
     // 🔷 🧳 VOYAGE ORGANISÉ - COMPLETAMENTE TRADUCIDO
     const renderVoyageOrganise = () => (
@@ -488,7 +487,7 @@ const Createpost = () => {
                         🏨 {t('voyage.hebergement_pension')}
                     </Accordion.Header>
                     <Accordion.Body>
-                        <ClasificacionHotel
+                        <ClasificacionHotelhadj
                             postData={postData}
                             handleChangeInput={handleChangeInput}
                         />
@@ -697,11 +696,11 @@ const Createpost = () => {
                                     <Form.Check
                                         key={equipement}
                                         type="checkbox"
-                                        name={equipement === 'animaux_acceptes' ? 'animauxAcceptes' : 
-                                              equipement === 'menage_inclus' ? 'menageInclus' : equipement}
+                                        name={equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
+                                            equipement === 'menage_inclus' ? 'menageInclus' : equipement}
                                         label={t(`equipements.${equipement}`)}
-                                        checked={postData[equipement === 'animaux_acceptes' ? 'animauxAcceptes' : 
-                                                         equipement === 'menage_inclus' ? 'menageInclus' : equipement] || false}
+                                        checked={postData[equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
+                                            equipement === 'menage_inclus' ? 'menageInclus' : equipement] || false}
                                         onChange={handleChangeInput}
                                         className={isRTL ? 'text-end' : ''}
                                     />
@@ -892,10 +891,7 @@ const Createpost = () => {
                             postData={postData}
                             handleChangeInput={handleChangeInput}
                         />
-                        <PeriodoViaje
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
+                       
                     </Accordion.Body>
                 </Accordion.Item>
 
@@ -905,11 +901,11 @@ const Createpost = () => {
                         🏨 {t('hadj.transport_hebergement')}
                     </Accordion.Header>
                     <Accordion.Body>
-                        <TransportSelect
+                        <TransportSelecthadj
                             postData={postData}
                             handleChangeInput={handleChangeInput}
                         />
-                        <ClasificacionHotel
+                        <ClasificacionHotelhadj
                             postData={postData}
                             handleChangeInput={handleChangeInput}
                         />
@@ -921,43 +917,8 @@ const Createpost = () => {
                 </Accordion.Item>
 
                 <Accordion.Item eventKey="3">
-                    <Accordion.Header>
-                        <i className={`fas fa-book-quran ${isRTL ? 'ms-2' : 'me-2'} text-warning`}></i>
-                        📖 {t('hadj.services_spirituels')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <Form.Group>
-                            <Form.Label>{t('hadj.services_religieux')}</Form.Label>
-                            <div className={`d-flex flex-wrap gap-3 ${isRTL ? 'text-end' : ''}`}>
-                                {['guide_religieux', 'cours_rituels', 'assistance_ihram', 'groupe_etude', 'prieres_collectives'].map(service => (
-                                    <Form.Check
-                                        key={service}
-                                        type="checkbox"
-                                        label={t(`services.${service}`)}
-                                        checked={postData.servicesInclus?.includes(service) || false}
-                                        onChange={(e) => handleArrayChange('servicesInclus', service, e.target.checked)}
-                                        className={isRTL ? 'text-end' : ''}
-                                    />
-                                ))}
-                            </div>
-                        </Form.Group>
-
-                        <Form.Group className="mt-3">
-                            <Form.Label>{t('common.langues_guide')}</Form.Label>
-                            <div className={`d-flex flex-wrap gap-3 ${isRTL ? 'text-end' : ''}`}>
-                                {['arabe', 'francais', 'anglais', 'berbere'].map(langue => (
-                                    <Form.Check
-                                        key={langue}
-                                        type="checkbox"
-                                        label={t(`langues.${langue}`)}
-                                        checked={postData.language?.includes(langue) || false}
-                                        onChange={(e) => handleArrayChange('language', langue, e.target.checked)}
-                                        className={isRTL ? 'text-end' : ''}
-                                    />
-                                ))}
-                            </div>
-                        </Form.Group>
-                    </Accordion.Body>
+                  
+                   
                 </Accordion.Item>
 
                 <Accordion.Item eventKey="4">
@@ -1063,16 +1024,16 @@ const Createpost = () => {
             case "hadj_Omra":
                 return renderHadjOmra();
             default:
-                return  
+                return
         }
     };
-    
+
     const wilayasOptions = communesjson.map((wilaya, index) => (
         <option key={index} value={wilaya.wilaya}>
             {wilaya.wilaya}
         </option>
     ));
-    
+
     const communesOptions = selectedWilaya
         ? communesjson
             .find((wilaya) => wilaya.wilaya === selectedWilaya)
@@ -1082,7 +1043,7 @@ const Createpost = () => {
                 </option>
             ))
         : [];
-    
+
     return (
         <Container className="my-4" dir={isRTL ? "rtl" : "ltr"}>
             <Row className="justify-content-center">
@@ -1107,16 +1068,16 @@ const Createpost = () => {
                                     {alertMessage}
                                 </Alert>
                             )}
-    
+
                             <Form onSubmit={handleSubmit}>
                                 <CategorySelector
                                     postData={postData}
                                     handleChangeInput={handleChangeInput}
                                 />
-    
+
                                 {postData.subCategory && (
                                     <>
-                                        
+
                                         <DescriptionTextarea
                                             postData={postData}
                                             handleChangeInput={handleChangeInput}
@@ -1131,16 +1092,16 @@ const Createpost = () => {
                                         />
                                     </>
                                 )}
-    
+
                                 {renderCategoryFields()}
-    
+
                                 <ImageUpload
                                     images={images}
                                     handleChangeImages={handleChangeImages}
                                     deleteImages={deleteImages}
                                     theme={theme}
                                 />
-    
+
                                 <div className={`d-flex gap-2 mt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                                     <Button
                                         variant={isEdit ? "warning" : "success"}
@@ -1149,15 +1110,6 @@ const Createpost = () => {
                                         className="flex-fill"
                                     >
                                         {isEdit ? `💾 ${t('button_update')}` : `📢 ${t('button_publish')}`}
-                                    </Button>
-    
-                                    <Button
-                                        variant="secondary"
-                                        type="button"
-                                        size="lg"
-                                        onClick={handleCancel}
-                                    >
-                                        ❌ {t('button_cancel')}
                                     </Button>
                                 </div>
                             </Form>
