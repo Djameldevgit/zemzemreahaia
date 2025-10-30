@@ -54,9 +54,7 @@ const ImageUpload = ({ images, handleChangeImages, deleteImages, theme }) => {
 
     return (
         <Card className="mb-4 border-0 shadow-sm">
-            <Card.Header className={`${theme ? 'bg-dark text-light' : 'bg-light'}`}>
-                <h5 className="mb-0">📷 {t('mediasAnnonce')}</h5>
-            </Card.Header>
+          
             <Card.Body>
                 {/* Preview des images */}
                 {images.length > 0 && (
@@ -126,24 +124,7 @@ const ImageUpload = ({ images, handleChangeImages, deleteImages, theme }) => {
                     </Form.Text>
                 </Form.Group>
 
-                {/* Message si aucune image */}
-                {images.length === 0 && (
-                    <div className="text-center text-muted py-4">
-                        <i className="fas fa-images fa-3x mb-3 opacity-50"></i>
-                        <p className="mb-0">{t('aucunMedia')}</p>
-                        <small>{t('conseilMedias')}</small>
-                    </div>
-                )}
-
-                {/* Informations supplémentaires */}
-                <div className="mt-3 p-3 bg-light rounded">
-                    <h6 className="mb-2">💡 {t('conseils')}</h6>
-                    <ul className="small mb-0">
-                        <li>{t('conseil1')}</li>
-                        <li>{t('conseil2')}</li>
-                        <li>{t('conseil3')}</li>
-                    </ul>
-                </div>
+             
             </Card.Body>
         </Card>
     );

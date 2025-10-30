@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Form, Button, Alert, Accordion } from 'react
 
 // 🔷 IMPORTAR TODOS LOS COMPONENTES COMUNES
 import CategorySelector from '../components/forms/CategorySelector';
-import TitleInput from '../components/forms/TitleInput';
+ 
 import DescriptionTextarea from '../components/forms/DescriptionTextarea';
 import AddressInput from '../components/forms/AddressInput';
 import ImageUpload from '../components/forms/ImageUpload';
@@ -1063,12 +1063,7 @@ const Createpost = () => {
             case "hadj_Omra":
                 return renderHadjOmra();
             default:
-                return (
-                    <Alert variant="warning" className="mb-4">
-                        <h5>{t('select_category_title')}</h5>
-                        <p className="mb-0">{t('select_category_message')}</p>
-                    </Alert>
-                );
+                return  
         }
     };
     
@@ -1121,10 +1116,7 @@ const Createpost = () => {
     
                                 {postData.subCategory && (
                                     <>
-                                        <TitleInput
-                                            postData={postData}
-                                            handleChangeInput={handleChangeInput}
-                                        />
+                                        
                                         <DescriptionTextarea
                                             postData={postData}
                                             handleChangeInput={handleChangeInput}

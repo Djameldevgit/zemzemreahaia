@@ -10,7 +10,7 @@ const DescriptionTextarea = ({ postData, handleChangeInput, placeholder }) => {
             <Form.Label>{t('description')}</Form.Label>
             <Form.Control
                 as="textarea"
-                rows={4}
+                rows={3}
                 name="description"
                 value={postData.description || ''}
                 onChange={handleChangeInput}

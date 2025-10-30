@@ -48,20 +48,7 @@ const CategorySelector = ({ postData, handleChangeInput }) => {
                 ))}
             </Form.Select>
             
-            <Form.Text className="text-danger">⚠️ {t('campoRequerido')}</Form.Text>
-            
-            {/* Descripción de categorías */}
-            <div className="mt-3 p-3 bg-light rounded">
-                <h6 className="mb-2">{t('descripcionCategorias')}</h6>
-                <div className="small">
-                    {categorias.map((cat) => (
-                        <div key={cat.value} className="mb-1">
-                            <strong>{cat.emoji} {t(`categoriass.${cat.value}`)}:</strong> 
-                            <span className="text-muted"> {t(`descripciones.${cat.value}`)}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
+         
         </Form.Group>
     );
 };
