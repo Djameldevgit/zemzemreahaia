@@ -49,7 +49,7 @@ const Createpost = () => {
     // 🔷 ESTADO INICIAL COMPLETO
     const initialState = {
         // Información básica
-        category: "Agence de Voyage Zemzem",
+        category: "Agence de Voyage",
         subCategory: "",
         title: "",
         description: "",

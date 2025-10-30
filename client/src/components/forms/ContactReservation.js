@@ -10,7 +10,7 @@ const ContactReservation = ({ postData, handleChangeInput }) => {
     const contactExamples = [
         "📞 +213-555-123-456",
         "📧 email@example.com", 
-        "🌐 https://www.agence-voyage.dz",
+        "🌐 https://www.agence-voyage.com",
         "📱 WhatsApp: +213-555-789-012",
         "📠 Fax: +213-21-123-456",
         "📍 Adresse: Rue Example, Alger"

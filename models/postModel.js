@@ -23,7 +23,7 @@ const postSchema = new mongoose.Schema({
     // 🔷 CAMPOS COMUNES A TODAS LAS CATEGORÍAS
     category: {
         type: String,
-        default: "Agence de Voyage Zemzem"
+        default: "Agence de Voyage"
     },
     subCategory: String,
     description: String,

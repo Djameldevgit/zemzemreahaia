@@ -469,110 +469,111 @@ const CardBodyCarousel = ({ post }) => {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            {/* NUEVO: Contenedor de textos en la parte superior izquierda */}
-            <div style={{
-              position: "absolute",
-              top: "1px",
-              left: "1px",
-              zIndex: 10,
-              background: "rgba(0, 0, 0, 0.1)",
-              backdropFilter: "blur(10px)",
-              borderRadius: "12px",
-              padding: "4px 4px",
-              color: "white",
-              maxWidth: "65%",
-              minWidth: "200px",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)"
-            }}>
-              {/* Primera fila: Nombre de la agencia decorado */}
-              <div style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                marginBottom: "4px",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                fontFamily: "'Playfair Display', serif",
-                textShadow: "0 2px 4px rgba(0,0,0,0.3)"
-              }}>
-                ⭐ {post.category} ⭐
-              </div>
-
-              {/* Segunda fila: Subcategoría */}
-              <div style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                marginBottom: "6px",
-                color: "#ffd700",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px"
-              }}>
-                <span className="material-icons" style={{ fontSize: "16px" }}>
-                  category
-                </span>
-                {post.subCategory || t('default_category')}
-              </div>
-
-              {/* Tercera fila: Destinos y fecha */}
-              <div style={{
-                fontSize: "12px",
-                lineHeight: "1.4",
-                color: "#f0f0f0"
-              }}>
-                {/* Mostrar los destinos disponibles */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: "4px" }}>
-                  {post.destinacionvoyage1 && (
-                    <span style={{
-                      background: "rgba(76, 175, 80, 0.3)",
-                      padding: "2px 6px",
-                      borderRadius: "8px",
-                      border: "1px solid rgba(76, 175, 80, 0.5)"
-                    }}>
-                      🛫 {post.destinacionvoyage1}
-                    </span>
-                  )}
-                  {post.destinacionvoyage2 && (
-                    <span style={{
-                      background: "rgba(33, 150, 243, 0.3)",
-                      padding: "2px 6px",
-                      borderRadius: "8px",
-                      border: "1px solid rgba(33, 150, 243, 0.5)"
-                    }}>
-                      ✈️ {post.destinacionvoyage2}
-                    </span>
-                  )}
-                  {post.destinacionhadj && (
-                    <span style={{
-                      background: "rgba(156, 39, 176, 0.3)",
-                      padding: "2px 6px",
-                      borderRadius: "8px",
-                      border: "1px solid rgba(156, 39, 176, 0.5)"
-                    }}>
-                      🕋 {post.destinacionhadj}
-                    </span>
-                  )}
+            {/* MODIFICADO: Contenedor de textos en la parte superior izquierda - OCULTO EN DETAILPAGE */}
+            {!isDetailPage && (
+              
+                <div style={{
+                  position: "absolute",
+                  top: "1px",
+                  left: "1px",
+                  zIndex: 10,
+         
+                  borderRadius: "12px",
+                  padding: "4px 4px",
+                  color: "white",
+                  maxWidth: "65%",
+                  minWidth: "200px",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                
                   
-                  {post.datedepar && (
-                    <div style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      fontSize: "11px",
-                      color: "#ffa726",
-                      fontWeight: "500"
-                    }}>
-                      <span className="material-icons" style={{ fontSize: "14px" }}>
-                        calendar_today
-                      </span>
-                      {formatDate(post.datedepar)}
+                }}>
+                  {/* Primera fila: Nombre de la agencia decorado - TEXTO EN AMARILLO */}
+                  <div style={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    marginBottom: "4px",
+                    color: "#FFD700", // AMARILLO DORADO PARA MEJOR CONTRASTE
+                    fontFamily: "'Playfair Display', serif",
+                    textShadow: "0 2px 4px rgba(0,0,0,0.8)" // SOMBRA MÁS FUERTE PARA MEJOR LEGIBILIDAD
+                  }}>
+                    ⭐ {post.category} ⭐
+                  </div>
+              
+                  {/* Segunda fila: Subcategoría */}
+                  <div style={{
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    marginBottom: "6px",
+                    color: "#ffd700",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px"
+                  }}>
+                    <span className="material-icons" style={{ fontSize: "16px" }}>
+                      category
+                    </span>
+                    {post.subCategory || t('default_category')}
+                  </div>
+              
+                  {/* Tercera fila: Destinos y fecha */}
+                  <div style={{
+                    fontSize: "12px",
+                    lineHeight: "1.4",
+                    color: "#f0f0f0"
+                  }}>
+                    {/* Mostrar los destinos disponibles */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: "4px" }}>
+                      {post.destinacionvoyage1 && (
+                        <span style={{
+                          background: "rgba(76, 175, 80, 0.3)",
+                          padding: "2px 6px",
+                          borderRadius: "8px",
+                          border: "1px solid rgba(76, 175, 80, 0.5)"
+                        }}>
+                          🛫 {post.destinacionvoyage1}
+                        </span>
+                      )}
+                      {post.destinacionvoyage2 && (
+                        <span style={{
+                          background: "rgba(33, 150, 243, 0.3)",
+                          padding: "2px 6px",
+                          borderRadius: "8px",
+                          border: "1px solid rgba(33, 150, 243, 0.5)"
+                        }}>
+                          ✈️ {post.destinacionvoyage2}
+                        </span>
+                      )}
+                      {post.destinacionhadj && (
+                        <span style={{
+                          background: "rgba(156, 39, 176, 0.3)",
+                          padding: "2px 6px",
+                          borderRadius: "8px",
+                          border: "1px solid rgba(156, 39, 176, 0.5)"
+                        }}>
+                          🕋 {post.destinacionhadj}
+                        </span>
+                      )}
+                      
+                      {post.datedepar && (
+                        <div style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          fontSize: "11px",
+                          color: "#ffa726",
+                          fontWeight: "500"
+                        }}>
+                          <span className="material-icons" style={{ fontSize: "14px" }}>
+                            calendar_today
+                          </span>
+                          {formatDate(post.datedepar)}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            </div>
+              
+            )}
 
             {/* Botón de tres puntos (parte superior derecha) - OCULTO EN DETAILPAGE */}
             {!isDetailPage && (
