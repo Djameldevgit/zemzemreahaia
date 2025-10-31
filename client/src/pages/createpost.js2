@@ -1,364 +1,1093 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
-import { GLOBALTYPES } from '../redux/actions/globalTypes'
-import { createPost, updatePost } from '../redux/actions/postAction'
-import { imageShow } from '../utils/mediaShow'
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Container, Row, Col, Card, Form, Button, Alert, Accordion } from 'react-bootstrap';
 
-const CreatePost = () => {
-    const { auth, theme, status, socket } = useSelector(state => state)
-    const dispatch = useDispatch()
-    const history = useHistory()
-    const location = useLocation()
+// 🔷 IMPORTAR TODOS LOS COMPONENTES COMUNES
+import CategorySelector from '../components/forms/CategorySelector';
 
-    const [content, setContent] = useState('')
-    const [images, setImages] = useState([])
+import DescriptionTextarea from '../components/forms/DescriptionTextarea';
+import AddressInput from '../components/forms/AddressInput';
+import ImageUpload from '../components/forms/ImageUpload';
 
-    const isEdit = location.state?.isEdit || status.onEdit
-    const postToEdit = location.state?.post || status
+// 🔷 IMPORTAR TODOS LOS COMPONENTES ESPECÍFICOS DE FORMULARIOS
+import Horariodesalida from '../components/forms/Horariodesalida';
+import DurationInput from '../components/forms/DurationInput';
+import TransportSelect from '../components/forms/TransporteViaje';
+import TransportSelecthadj from '../components/forms/TransporteViajehadj';
+import PensionSelect from '../components/forms/PensionSelect';
+import ReturnDateInput from '../components/forms/ReturnDateInput';
+import PriceSlider from '../components/forms/PriceSlider';
+import CancellationPolicy from '../components/forms/CancellationPolicy';
+import ContactReservation from '../components/forms/ContactReservation';
+import PeriodoViaje from '../components/forms/Perdiodoviajje';
+import ClasificacionHotelhadj from '../components/forms/ClasificacionHotelhadj';
+import ClasificacionHotel from '../components/forms/ClasificacionHotel';
+// 🔷 IMPORTAR COMPONENTES DE DESTINOS
+import DestinacionExtranjera from '../components/forms/DestinacionExstranjera';
+import DestinacionHadjOmra from '../components/forms/DestinacionHdjaOmra';
+import DestinacionLocal from '../components/forms/DestinacionLocal';
 
+// Importar acciones
+import { createPost, updatePost } from '../redux/actions/postAction';
+import communesjson from "../json/communes.json";
+
+const Createpost = () => {
+    // 🔷 ESTADOS GLOBALES 
+    const { auth, theme, socket, languageReducer } = useSelector((state) => state);
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const location = useLocation();
+    const { t, i18n } = useTranslation('createpost');
+
+    const isEdit = location.state?.isEdit || false;
+    const postToEdit = location.state?.postData || null;
+
+    // 🔷 DETECTAR SI ES IDIOMA ÁRABE
+    const isRTL = languageReducer?.language === 'ar' || i18n.language === 'ar';
+
+    // 🔷 ESTADO INICIAL COMPLETO
+    const initialState = {
+        // Información básica
+        category: "Agence de Voyage",
+        subCategory: "",
+        title: "",
+        description: "",
+        price: "",
+        wilaya: "",
+        commune: "",
+        contacto: "",
+        images: [],
+
+        // Fechas y horarios de viaje
+        datedepar: "",
+        horadudepar: "",
+        horariollegada: "",
+        duracionviaje: "",
+        fecharegreso: "",
+
+        // Periodo del viaje (ACTUALIZADO)
+        mesInicio: "",
+        mesFin: "",
+        temporada: "",
+        anyo: "", // Corregido de "anio" a "anyo"
+
+        // Precios
+        prixAdulte: "",
+        prixEnfant: "",
+        prixBebe: "",
+
+        // Servicios y actividades
+        servicesInclus: [],
+        activites: [],
+        language: [],
+        specifications: [],
+        optionsPaiement: [],
+        documentsRequises: [],
+        excursions: [],
+        servicios: [],
+        serviciosTr: [],
+
+        // Tipo de viaje
+        typeVoyage: "",
+        niveauConfort: "",
+        publicCible: "",
+
+        // Destinos
+        destinacionvoyage1: "",
+        destinacionvoyage2: "",
+        paysDestination: "",
+
+        // Hoteles
+        voyage1hotel1: "",
+        voyage1nombrehotel1: "",
+        voyage2hotel2: "",
+        voyage1nombrehotel2: "",
+        estrellas: "",
+        nombredelhotel: "",
+        adresshotel: "",
+        totalhabitaciones: "",
+        tipodehabutaciones: [],
+        wifi: [],
+        hotelWebsite: "",
+        serviciosdelhotel: "",
+        incluidoenelprecio: "",
+
+        // Transporte
+        transporte: "",
+        tipoTransporte: "",
+        claseTransporte: "",
+        companiaTransporte: "",
+        numeroTransporte: "",
+        itinerarioTransporte: "",
+        tiempoTransporte: "",
+        serviciosTransporte: [],
+        comentariosTransporte: "",
+
+        // Location Vacances
+        Location_Vacances: '',
+        alquilergeneral: "",
+        superficie: "",
+        etage: "",
+        promoteurimmobilier: false,
+        adress: "",
+        capacitePersonnes: "",
+        nombreChambres: "",
+        nombreSallesBain: "",
+        wifiGratuit: false,
+        climatisation: false,
+        cuisineEquipee: false,
+        television: false,
+        piscine: false,
+        parking: false,
+        animauxAcceptes: false,
+        menageInclus: false,
+        checkInTime: "",
+        checkOutTime: "",
+        tarifnuit: "",
+
+        // Reservas y pagos
+        reservacionenlinea: "",
+        acompteRequise: false,
+        pourcentageAcompte: "",
+
+        // Hajj/Omra
+        destinacionhadj: "",
+        guideLocal: false,
+        repasInclus: false,
+        transfertAeroport: false,
+        delaiTraitement: "",
+        formalites: "",
+        assurancesIncluses: false,
+
+        // Cancelación
+        cancelarreserva: "",
+        conditionsAnnulation: "",
+        politiqueAnnulation: "",
+        itemsReservations_Visa: "",
+    };
+
+    // 🔷 ESTADOS
+    const [postData, setPostData] = useState(initialState);
+    const [images, setImages] = useState([]);
+    const [selectedWilaya, setSelectedWilaya] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [alertVariant, setAlertVariant] = useState("info");
+    const [activeAccordion, setActiveAccordion] = useState(['0']);
+
+    // 🔷 EFFECT PARA CAMBIO DE IDIOMA
+    useEffect(() => {
+        const lang = languageReducer?.language || 'fr';
+        if (i18n.language !== lang) {
+            i18n.changeLanguage(lang);
+        }
+    }, [languageReducer?.language, i18n]);
+
+    // 🔷 EFFECT PARA CARGAR DATOS DE EDICIÓN
     useEffect(() => {
         if (isEdit && postToEdit) {
-            setContent(postToEdit.content || '')
-            setImages(postToEdit.images || [])
-        }
-    }, [isEdit, postToEdit])
+            const mapDatabaseToComponentFields = (data) => {
+                if (!data) return {};
+                const mappedData = { ...data };
 
-    const handleChangeImages = e => {
-        const files = [...e.target.files]
-        let err = ""
-        let newImages = []
+                if (data.transporte && !data.tipoTransporte) {
+                    mappedData.tipoTransporte = data.transporte;
+                }
+                if (data.periodoInicio && !data.mesInicio) {
+                    mappedData.mesInicio = data.periodoInicio;
+                }
+                if (data.periodoFin && !data.mesFin) {
+                    mappedData.mesFin = data.periodoFin;
+                }
+                if (data.temporadaViaje && !data.temporada) {
+                    mappedData.temporada = data.temporadaViaje;
+                }
+                // 🔥 ACTUALIZAR ESTA LÍNEA:
+                if (data.anioViaje && !data.anyo) {
+                    mappedData.anyo = data.anioViaje;
+                }
+                return mappedData;
+            };
+
+            
+            
+
+            const mappedData = mapDatabaseToComponentFields(postToEdit);
+            const sanitizedData = sanitizePostData(mappedData);
+            const finalPostData = {
+                ...initialState,
+                ...sanitizedData,
+                category: sanitizedData.category || "Agence de Voyage",
+                subCategory: sanitizedData.subCategory || "",
+                description: sanitizedData.description || sanitizedData.content || "",
+                title: sanitizedData.title || "",
+            };
+
+            setPostData(finalPostData);
+
+            if (postToEdit.images && Array.isArray(postToEdit.images) && postToEdit.images.length > 0) {
+                const existingImages = postToEdit.images
+                    .map(img => {
+                        if (typeof img === 'string') {
+                            return { url: img, file: null, isExisting: true };
+                        } else if (img && img.url) {
+                            return { ...img, file: null, isExisting: true };
+                        }
+                        return null;
+                    })
+                    .filter(img => img !== null);
+                setImages(existingImages);
+            } else {
+                setImages([]);
+            }
+
+            setSelectedWilaya(postToEdit.wilaya || "");
+        } else {
+            setPostData(initialState);
+            setImages([]);
+            setSelectedWilaya("");
+        }
+    }, [isEdit, postToEdit]);
+    // 🔷 HANDLERS
+    const handleChangeInput = (e) => {
+        const { name, value, type, checked } = e.target;
+        setPostData(prevState => ({
+            ...prevState,
+            [name]: type === "checkbox" ? checked : value
+        }));
+    };
+
+    const handleArrayChange = (field, value, isChecked) => {
+        setPostData(prevState => {
+            const currentArray = prevState[field] || [];
+            let newArray;
+
+            if (isChecked) {
+                newArray = [...currentArray, value];
+            } else {
+                newArray = currentArray.filter(item => item !== value);
+            }
+
+            return {
+                ...prevState,
+                [field]: newArray
+            };
+        });
+    };
+
+    const handleWilayaChange = (event) => {
+        const selectedWilaya = event.target.value;
+        setSelectedWilaya(selectedWilaya);
+        const wilayaEncontrada = communesjson.find((wilaya) => wilaya.wilaya === selectedWilaya);
+        const communes = wilayaEncontrada ? wilayaEncontrada.commune : [];
+
+        setPostData((prevState) => ({
+            ...prevState,
+            wilaya: selectedWilaya,
+            commune: communes.length > 0 ? communes[0] : "",
+        }));
+    };
+
+    const handleCommuneChange = (event) => {
+        const selectedCommune = event.target.value;
+        setPostData((prevState) => ({
+            ...prevState,
+            commune: selectedCommune,
+        }));
+    };
+
+    const handleChangeImages = (e) => {
+        const files = [...e.target.files];
+        let err = "";
+        let newImages = [];
 
         files.forEach(file => {
-            if(!file) return err = "File does not exist."
-            if(file.size > 1024 * 1024 * 5){
-                return err = "The image largest is 5mb."
+            if (!file) return err = t('validation_images_required');
+            if (file.size > 1024 * 1024 * 5) {
+                return err = t('validation_images_size');
             }
-            return newImages.push(file)
-        })
+            return newImages.push(file);
+        });
 
-        if(err) dispatch({ type: GLOBALTYPES.ALERT, payload: {error: err} })
-        setImages([...images, ...newImages])
-    }
+        if (err) {
+            setAlertMessage(err);
+            setAlertVariant("danger");
+            setShowAlert(true);
+            return;
+        }
+
+        setImages([...images, ...newImages]);
+    };
 
     const deleteImages = (index) => {
-        const newArr = [...images]
-        newArr.splice(index, 1)
-        setImages(newArr)
-    }
+        const newArr = [...images];
+        newArr.splice(index, 1);
+        setImages(newArr);
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        
-        if(images.length === 0) {
-            return dispatch({ 
-                type: GLOBALTYPES.ALERT, payload: {error: "Please add your photo."}
-            })
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!postData.subCategory) {
+            setAlertMessage(t('validation_category_required'));
+            setAlertVariant("danger");
+            setShowAlert(true);
+            return;
         }
 
-        if(isEdit && postToEdit){
-            dispatch(updatePost({
-                content, 
-                images, 
-                auth, 
-                status: { ...postToEdit, onEdit: true }
-            }))
-        } else {
-            dispatch(createPost({
-                content, 
-                images, 
-                auth, 
-                socket
-            }))
+        if (!postData.wilaya || !postData.commune) {
+            setAlertMessage(t('validation_wilaya_required'));
+            setAlertVariant("danger");
+            setShowAlert(true);
+            return;
         }
 
-        setContent('')
-        setImages([])
-        dispatch({ type: GLOBALTYPES.STATUS, payload: false })
-        history.push('/')
-    }
+        if (images.length === 0) {
+            setAlertMessage(t('validation_images_required'));
+            setAlertVariant("danger");
+            setShowAlert(true);
+            return;
+        }
 
-    const handleCancel = () => {
-        dispatch({ type: GLOBALTYPES.STATUS, payload: false })
-        history.goBack()
-    }
+        try {
+            if (isEdit && postToEdit) {
+                const status = {
+                    _id: postToEdit._id,
+                    ...postToEdit
+                };
 
-    return (
-        <div style={{
-            minHeight: '100vh',
-            background: theme ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)' : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-            padding: '2rem 1rem'
-        }}>
-            <div style={{
-                maxWidth: '680px',
-                margin: '0 auto'
-            }}>
-                {/* Header Card */}
-                <div style={{
-                    background: theme ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: '20px',
-                    padding: '1.5rem',
-                    marginBottom: '1.5rem',
-                    border: theme ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.05)',
-                    boxShadow: theme ? '0 8px 32px rgba(0, 0, 0, 0.3)' : '0 8px 32px rgba(0, 0, 0, 0.1)'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <div style={{
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '50%',
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '1.5rem',
-                                fontWeight: 'bold',
-                                color: 'white'
-                            }}>
-                                {auth.user.username?.[0]?.toUpperCase() || 'U'}
-                            </div>
-                            <div>
-                                <h3 style={{
-                                    margin: 0,
-                                    fontSize: '1.5rem',
-                                    color: theme ? '#fff' : '#1a1a2e',
-                                    fontWeight: '700'
-                                }}>
-                                    {isEdit ? 'Edit Post' : 'Create Post'}
-                                </h3>
-                                <p style={{
-                                    margin: 0,
-                                    fontSize: '0.875rem',
-                                    color: theme ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.5)'
-                                }}>
-                                    Share your moment
-                                </p>
-                            </div>
-                        </div>
-                        <button
-                            onClick={handleCancel}
-                            style={{
-                                width: '40px',
-                                height: '40px',
-                                borderRadius: '50%',
-                                border: 'none',
-                                background: theme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
-                                color: theme ? '#fff' : '#1a1a2e',
-                                fontSize: '1.5rem',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'all 0.3s ease'
-                            }}
-                            onMouseEnter={e => e.target.style.background = theme ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'}
-                            onMouseLeave={e => e.target.style.background = theme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'}
-                        >
-                            ×
-                        </button>
-                    </div>
-                </div>
+                await dispatch(updatePost({
+                    postData,
+                    images,
+                    auth,
+                    status
+                }));
 
-                {/* Main Content Card */}
-                <div style={{
-                    background: theme ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: '20px',
-                    padding: '2rem',
-                    border: theme ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.05)',
-                    boxShadow: theme ? '0 8px 32px rgba(0, 0, 0, 0.3)' : '0 8px 32px rgba(0, 0, 0, 0.1)'
-                }}>
-                    <form onSubmit={handleSubmit}>
-                        {/* Textarea */}
-                        <textarea
-                            placeholder={`What's on your mind, ${auth.user.username}?`}
-                            value={content}
-                            onChange={e => setContent(e.target.value)}
-                            style={{
-                                width: '100%',
-                                minHeight: '150px',
-                                padding: '1.25rem',
-                                border: theme ? '2px solid rgba(255, 255, 255, 0.1)' : '2px solid rgba(0, 0, 0, 0.08)',
-                                borderRadius: '16px',
-                                fontSize: '1.1rem',
-                                resize: 'vertical',
-                                background: theme ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
-                                color: theme ? '#fff' : '#1a1a2e',
-                                transition: 'all 0.3s ease',
-                                fontFamily: 'inherit',
-                                marginBottom: '1.5rem'
-                            }}
-                            onFocus={e => e.target.style.borderColor = '#667eea'}
-                            onBlur={e => e.target.style.borderColor = theme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)'}
+                setAlertMessage(t('success_update'));
+                setAlertVariant("success");
+            } else {
+                await dispatch(createPost({
+                    postData,
+                    images,
+                    auth,
+                    socket
+                }));
+
+                setAlertMessage(t('success_create'));
+                setAlertVariant("success");
+            }
+
+            setShowAlert(true);
+
+            setTimeout(() => {
+                history.push('/');
+            }, 2000);
+
+        } catch (error) {
+            setAlertMessage(t('error_publication'));
+            setAlertVariant("danger");
+            setShowAlert(true);
+        }
+    };
+
+   
+
+    // 🔷 🧳 VOYAGE ORGANISÉ - COMPLETAMENTE TRADUCIDO
+    const renderVoyageOrganise = () => (
+        <>
+            <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} className="mb-3">
+
+                <Accordion.Item eventKey="0">
+                    <Accordion.Header>
+                        <i className={`fas fa-map-marked-alt ${isRTL ? 'ms-2' : 'me-2'} text-primary`}></i>
+                        🗺️ {t('voyage.destinations_internationales')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <DestinacionExtranjera
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
                         />
+                    </Accordion.Body>
+                </Accordion.Item>
 
-                        {/* Image Preview Grid */}
-                        {images.length > 0 && (
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-                                gap: '1rem',
-                                marginBottom: '1.5rem'
-                            }}>
-                                {images.map((img, index) => (
-                                    <div key={index} style={{
-                                        position: 'relative',
-                                        borderRadius: '16px',
-                                        overflow: 'hidden',
-                                        aspectRatio: '1',
-                                        background: theme ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)'
-                                    }}>
-                                        <div style={{ width: '100%', height: '100%' }}>
-                                            {img.url ? 
-                                                imageShow(img.url, theme)
-                                            : 
-                                                imageShow(URL.createObjectURL(img), theme)
-                                            }
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => deleteImages(index)}
-                                            style={{
-                                                position: 'absolute',
-                                                top: '8px',
-                                                right: '8px',
-                                                width: '32px',
-                                                height: '32px',
-                                                borderRadius: '50%',
-                                                border: 'none',
-                                                background: 'rgba(239, 68, 68, 0.95)',
-                                                color: 'white',
-                                                fontSize: '1.25rem',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                transition: 'all 0.3s ease',
-                                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
-                                            }}
-                                            onMouseEnter={e => {
-                                                e.target.style.transform = 'scale(1.1)'
-                                                e.target.style.background = 'rgba(220, 38, 38, 0.95)'
-                                            }}
-                                            onMouseLeave={e => {
-                                                e.target.style.transform = 'scale(1)'
-                                                e.target.style.background = 'rgba(239, 68, 68, 0.95)'
-                                            }}
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
+                <Accordion.Item eventKey="1">
+                    <Accordion.Header>
+                        <i className={`fas fa-calendar-alt ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
+                        📅 {t('voyage.dates_duree')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <Horariodesalida
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <DurationInput
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <ReturnDateInput
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <PeriodoViaje
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="2">
+                    <Accordion.Header>
+                        <i className={`fas fa-plane ${isRTL ? 'ms-2' : 'me-2'} text-info`}></i>
+                        ✈️ {t('voyage.transport_deplacements')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <TransportSelect
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="3">
+                    <Accordion.Header>
+                        <i className={`fas fa-hotel ${isRTL ? 'ms-2' : 'me-2'} text-warning`}></i>
+                        🏨 {t('voyage.hebergement_pension')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <ClasificacionHotelhadj
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <PensionSelect
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="4">
+                    <Accordion.Header>
+                        <i className={`fas fa-hiking ${isRTL ? 'ms-2' : 'me-2'} text-primary`}></i>
+                        🎯 {t('voyage.activites_services')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <Form.Group>
+                            <Form.Label>{t('voyage.services_inclus')}</Form.Label>
+                            <div className={`d-flex flex-wrap gap-3 ${isRTL ? 'text-end' : ''}`}>
+                                {['visite_guidee', 'repas', 'transfert', 'assistance', 'assurance'].map(service => (
+                                    <Form.Check
+                                        key={service}
+                                        type="checkbox"
+                                        label={t(`services.${service}`)}
+                                        checked={postData.servicesInclus?.includes(service) || false}
+                                        onChange={(e) => handleArrayChange('servicesInclus', service, e.target.checked)}
+                                        className={isRTL ? 'text-end' : ''}
+                                    />
                                 ))}
                             </div>
-                        )}
+                        </Form.Group>
 
-                        {/* Upload Button */}
-                        <div style={{
-                            position: 'relative',
-                            marginBottom: '2rem'
-                        }}>
-                            <input
-                                type="file"
-                                id="fileInput"
-                                multiple
-                                accept="image/*"
-                                onChange={handleChangeImages}
-                                style={{ display: 'none' }}
+                        <Form.Group className="mt-3">
+                            <Form.Label>{t('voyage.activites_proposees')}</Form.Label>
+                            <div className={`d-flex flex-wrap gap-3 ${isRTL ? 'text-end' : ''}`}>
+                                {['excursion', 'plongee', 'randonnee', 'shopping', 'culture'].map(activite => (
+                                    <Form.Check
+                                        key={activite}
+                                        type="checkbox"
+                                        label={t(`activites.${activite}`)}
+                                        checked={postData.activites?.includes(activite) || false}
+                                        onChange={(e) => handleArrayChange('activites', activite, e.target.checked)}
+                                        className={isRTL ? 'text-end' : ''}
+                                    />
+                                ))}
+                            </div>
+                        </Form.Group>
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="5">
+                    <Accordion.Header>
+                        <i className={`fas fa-euro-sign ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
+                        💰 {t('voyage.tarifs_conditions')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <PriceSlider
+                            postData={postData}
+                            setPostData={setPostData}
+                        />
+
+                        <Row className="g-3 mt-3">
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.prix_adulte')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="prixAdulte"
+                                        value={postData.prixAdulte || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.prix_adulte_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.prix_enfant')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="prixEnfant"
+                                        value={postData.prixEnfant || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.prix_enfant_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.prix_bebe')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="prixBebe"
+                                        value={postData.prixBebe || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.prix_bebe_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        <CancellationPolicy
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                    </Accordion.Body>
+                </Accordion.Item>
+
+            </Accordion>
+
+            <ContactReservation
+                postData={postData}
+                handleChangeInput={handleChangeInput}
+            />
+        </>
+    );
+
+    // 🔷 🏠 LOCATION VACANCES - COMPLETAMENTE TRADUCIDO
+    const renderLocationVacances = () => (
+        <>
+            <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} className="mb-3">
+
+                <Accordion.Item eventKey="0">
+                    <Accordion.Header>
+                        <i className={`fas fa-home ${isRTL ? 'ms-2' : 'me-2'} text-primary`}></i>
+                        🏠 {t('location.informations_logement')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <DestinacionLocal
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <ClasificacionHotel
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+
+                        <Row className="g-3 mt-3">
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.superficie')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="superficie"
+                                        value={postData.superficie || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.superficie_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.etage')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="etage"
+                                        value={postData.etage || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.etage_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.capacite_personnes')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="capacitePersonnes"
+                                        value={postData.capacitePersonnes || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.capacite_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="1">
+                    <Accordion.Header>
+                        <i className={`fas fa-tv ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
+                        📺 {t('location.equipements_services')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+    <Row>
+        <Col md={6}>
+            {['wifi_gratuit', 'climatisation', 'cuisine_equipee', 'television'].map(equipement => (
+                <Form.Check
+                    key={equipement}
+                    type="checkbox"
+                    name={equipement === 'wifi_gratuit' ? 'wifiGratuit' : equipement}
+                    label={t(`equipements.${equipement}`)}
+                    checked={postData[equipement === 'wifi_gratuit' ? 'wifiGratuit' : equipement] || false}
+                    onChange={handleChangeInput}
+                    className={isRTL ? 'text-end' : ''}
+                />
+            ))}
+        </Col>
+        <Col md={6}>
+            {['piscine', 'parking', 'animaux_acceptes', 'menage_inclus'].map(equipement => (
+                <Form.Check
+                    key={equipement}
+                    type="checkbox"
+                    name={equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
+                          equipement === 'menage_inclus' ? 'menageInclus' : equipement}
+                    label={t(`equipements.${equipement}`)}
+                    checked={postData[equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
+                              equipement === 'menage_inclus' ? 'menageInclus' : equipement] || false}
+                    onChange={handleChangeInput}
+                    className={isRTL ? 'text-end' : ''}
+                />
+            ))}
+        </Col>
+    </Row>
+</Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="2">
+                    <Accordion.Header>
+                        <i className={`fas fa-bed ${isRTL ? 'ms-2' : 'me-2'} text-info`}></i>
+                        🛏️ {t('location.chambres_salles_bain')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <Row className="g-3">
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.nombre_chambres')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="nombreChambres"
+                                        value={postData.nombreChambres || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.nombre_chambres_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.nombre_salles_bain')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="nombreSallesBain"
+                                        value={postData.nombreSallesBain || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.nombre_salles_bain_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="3">
+                    <Accordion.Header>
+                        <i className={`fas fa-calendar-check ${isRTL ? 'ms-2' : 'me-2'} text-warning`}></i>
+                        📅 {t('location.disponibilite_tarifs')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <PeriodoViaje
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+
+                        <Row className="g-3 mt-3">
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.check_in')}</Form.Label>
+                                    <Form.Control
+                                        type="time"
+                                        name="checkInTime"
+                                        value={postData.checkInTime || ''}
+                                        onChange={handleChangeInput}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.check_out')}</Form.Label>
+                                    <Form.Control
+                                        type="time"
+                                        name="checkOutTime"
+                                        value={postData.checkOutTime || ''}
+                                        onChange={handleChangeInput}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        <PriceSlider
+                            postData={postData}
+                            setPostData={setPostData}
+                        />
+
+                        <Form.Group className="mt-3">
+                            <Form.Label>{t('common.tarif_nuit')}</Form.Label>
+                            <Form.Control
+                                type="number"
+                                name="tarifnuit"
+                                value={postData.tarifnuit || ''}
+                                onChange={handleChangeInput}
+                                placeholder={t('common.tarif_nuit_placeholder')}
+                                dir={isRTL ? "rtl" : "ltr"}
                             />
-                            <label
-                                htmlFor="fileInput"
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.75rem',
-                                    padding: '1.25rem',
-                                    border: theme ? '2px dashed rgba(255, 255, 255, 0.2)' : '2px dashed rgba(0, 0, 0, 0.15)',
-                                    borderRadius: '16px',
-                                    background: theme ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.3s ease',
-                                    color: theme ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.6)'
-                                }}
-                                onMouseEnter={e => {
-                                    e.target.style.borderColor = '#667eea'
-                                    e.target.style.background = theme ? 'rgba(102, 126, 234, 0.1)' : 'rgba(102, 126, 234, 0.05)'
-                                }}
-                                onMouseLeave={e => {
-                                    e.target.style.borderColor = theme ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)'
-                                    e.target.style.background = theme ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)'
-                                }}
-                            >
-                                <i className="fas fa-image" style={{ fontSize: '1.5rem', color: '#667eea' }}></i>
-                                <span style={{ fontSize: '1rem', fontWeight: '500' }}>
-                                    {images.length > 0 ? 'Add more photos' : 'Add photos to your post'}
-                                </span>
-                            </label>
-                        </div>
+                        </Form.Group>
 
-                        {/* Action Buttons */}
-                        <div style={{
-                            display: 'flex',
-                            gap: '1rem'
-                        }}>
-                            <button
-                                type="button"
-                                onClick={handleCancel}
-                                style={{
-                                    flex: '1',
-                                    padding: '1rem',
-                                    border: theme ? '2px solid rgba(255, 255, 255, 0.2)' : '2px solid rgba(0, 0, 0, 0.1)',
-                                    borderRadius: '12px',
-                                    background: 'transparent',
-                                    color: theme ? '#fff' : '#1a1a2e',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.3s ease'
-                                }}
-                                onMouseEnter={e => {
-                                    e.target.style.background = theme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
-                                }}
-                                onMouseLeave={e => {
-                                    e.target.style.background = 'transparent'
-                                }}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                style={{
-                                    flex: '2',
-                                    padding: '1rem',
-                                    border: 'none',
-                                    borderRadius: '12px',
-                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    color: 'white',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.3s ease',
-                                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
-                                }}
-                                onMouseEnter={e => {
-                                    e.target.style.transform = 'translateY(-2px)'
-                                    e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.5)'
-                                }}
-                                onMouseLeave={e => {
-                                    e.target.style.transform = 'translateY(0)'
-                                    e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)'
-                                }}
-                            >
-                                {isEdit ? '✨ Update Post' : '🚀 Create Post'}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    )
-}
+                        <CancellationPolicy
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                    </Accordion.Body>
+                </Accordion.Item>
 
-export default CreatePost
+            </Accordion>
+
+            <ContactReservation
+                postData={postData}
+                handleChangeInput={handleChangeInput}
+            />
+        </>
+    );
+
+    // 🔷 🕋 HAJJ & OMRA - COMPLETAMENTE TRADUCIDO
+    const renderHadjOmra = () => (
+        <>
+            <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} className="mb-3">
+
+                <Accordion.Item eventKey="0">
+                    <Accordion.Header>
+                        <i className={`fas fa-kaaba ${isRTL ? 'ms-2' : 'me-2'} text-primary`}></i>
+                        🕋 {t('hadj.destination_peletinage')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <DestinacionHadjOmra
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                            destinationNumber={1}
+                        />
+
+                        <Row className="g-3 mt-3">
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Label>{t('hadj.type_peletinage')}</Form.Label>
+                                    <Form.Select
+                                        name="typeVoyage"
+                                        value={postData.typeVoyage || ''}
+                                        onChange={handleChangeInput}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    >
+                                        <option value="">{t('common.select_option')}</option>
+                                        <option value="hadj">{t('types_voyage.hadj')}</option>
+                                        <option value="omra">{t('types_voyage.omra')}</option>
+                                        <option value="hadj_omra">{t('types_voyage.hadj_omra')}</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col md={6}>
+                                <Form.Group>
+                                    <Form.Label>{t('hadj.niveau_confort')}</Form.Label>
+                                    <Form.Select
+                                        name="niveauConfort"
+                                        value={postData.niveauConfort || ''}
+                                        onChange={handleChangeInput}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    >
+                                        <option value="">{t('common.select_option')}</option>
+                                        <option value="economique">{t('niveaux_confort.economique')}</option>
+                                        <option value="standard">{t('niveaux_confort.standard')}</option>
+                                        <option value="confort">{t('niveaux_confort.confort')}</option>
+                                        <option value="luxe">{t('niveaux_confort.luxe')}</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="1">
+                    <Accordion.Header>
+                        <i className={`fas fa-calendar-alt ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
+                        📅 {t('hadj.dates_peletinage')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <Horariodesalida
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <DurationInput
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <ReturnDateInput
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                       
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="2">
+                    <Accordion.Header>
+                        <i className={`fas fa-hotel ${isRTL ? 'ms-2' : 'me-2'} text-info`}></i>
+                        🏨 {t('hadj.transport_hebergement')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <TransportSelecthadj
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <ClasificacionHotelhadj
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                        <PensionSelect
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="3">
+                  
+                   
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="4">
+                    <Accordion.Header>
+                        <i className={`fas fa-passport ${isRTL ? 'ms-2' : 'me-2'} text-danger`}></i>
+                        📋 {t('hadj.documents_requis')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <Form.Group>
+                            <Form.Label>{t('hadj.documents_necessaires')}</Form.Label>
+                            <div className={`d-flex flex-wrap gap-3 ${isRTL ? 'text-end' : ''}`}>
+                                {['passeport', 'photos_identite', 'certificat_vaccination', 'reservation_hotel', 'billet_avion'].map(doc => (
+                                    <Form.Check
+                                        key={doc}
+                                        type="checkbox"
+                                        label={t(`documents.${doc}`)}
+                                        checked={postData.documentsRequises?.includes(doc) || false}
+                                        onChange={(e) => handleArrayChange('documentsRequises', doc, e.target.checked)}
+                                        className={isRTL ? 'text-end' : ''}
+                                    />
+                                ))}
+                            </div>
+                        </Form.Group>
+                    </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey="5">
+                    <Accordion.Header>
+                        <i className={`fas fa-euro-sign ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
+                        💰 {t('hadj.tarifs_conditions')}
+                    </Accordion.Header>
+                    <Accordion.Body>
+                        <PriceSlider
+                            postData={postData}
+                            setPostData={setPostData}
+                        />
+
+                        <Row className="g-3 mt-3">
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.prix_adulte')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="prixAdulte"
+                                        value={postData.prixAdulte || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.prix_adulte_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.prix_enfant')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="prixEnfant"
+                                        value={postData.prixEnfant || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.prix_enfant_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group>
+                                    <Form.Label>{t('common.prix_bebe')}</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="prixBebe"
+                                        value={postData.prixBebe || ''}
+                                        onChange={handleChangeInput}
+                                        placeholder={t('common.prix_bebe_placeholder')}
+                                        dir={isRTL ? "rtl" : "ltr"}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        <CancellationPolicy
+                            postData={postData}
+                            handleChangeInput={handleChangeInput}
+                        />
+                    </Accordion.Body>
+                </Accordion.Item>
+
+            </Accordion>
+
+            <ContactReservation
+                postData={postData}
+                handleChangeInput={handleChangeInput}
+            />
+        </>
+    );
+
+    // 🔷 RENDERIZADO DINÁMICO SEGÚN CATEGORÍA
+    const renderCategoryFields = () => {
+        switch (postData.subCategory) {
+            case "Voyage Organise":
+                return renderVoyageOrganise();
+            case "Location_Vacances":
+                return renderLocationVacances();
+            case "hadj_Omra":
+                return renderHadjOmra();
+            default:
+                return
+        }
+    };
+
+    const wilayasOptions = communesjson.map((wilaya, index) => (
+        <option key={index} value={wilaya.wilaya}>
+            {wilaya.wilaya}
+        </option>
+    ));
+
+    const communesOptions = selectedWilaya
+        ? communesjson
+            .find((wilaya) => wilaya.wilaya === selectedWilaya)
+            ?.commune?.map((commune, index) => (
+                <option key={index} value={commune}>
+                    {commune}
+                </option>
+            ))
+        : [];
+
+    return (
+        <Container className="my-4" dir={isRTL ? "rtl" : "ltr"}>
+            <Row className="justify-content-center">
+                <Col lg={10}>
+                    <Card>
+                        <Card.Header className={isEdit ? "bg-warning text-dark" : "bg-primary text-white"}>
+                            <h4 className="mb-0">
+                                {isEdit ? `✏️ ${t('edit_title')}` : `📢 ${t('create_title')}`}
+                            </h4>
+                            {isEdit && postToEdit?.title && (
+                                <small>{t('modification')}: "{postToEdit.title}"</small>
+                            )}
+                        </Card.Header>
+                        <Card.Body>
+                            {showAlert && (
+                                <Alert
+                                    variant={alertVariant}
+                                    dismissible
+                                    onClose={() => setShowAlert(false)}
+                                    className="mb-4"
+                                >
+                                    {alertMessage}
+                                </Alert>
+                            )}
+
+                            <Form onSubmit={handleSubmit}>
+                                <CategorySelector
+                                    postData={postData}
+                                    handleChangeInput={handleChangeInput}
+                                />
+
+                                {postData.subCategory && (
+                                    <>
+
+                                        <DescriptionTextarea
+                                            postData={postData}
+                                            handleChangeInput={handleChangeInput}
+                                        />
+                                        <AddressInput
+                                            postData={postData}
+                                            handleChangeInput={handleChangeInput}
+                                            wilayasOptions={wilayasOptions}
+                                            communesOptions={communesOptions}
+                                            handleWilayaChange={handleWilayaChange}
+                                            handleCommuneChange={handleCommuneChange}
+                                        />
+                                    </>
+                                )}
+
+                                {renderCategoryFields()}
+
+                                <ImageUpload
+                                    images={images}
+                                    handleChangeImages={handleChangeImages}
+                                    deleteImages={deleteImages}
+                                    theme={theme}
+                                />
+
+                                <div className={`d-flex gap-2 mt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                    <Button
+                                        variant={isEdit ? "warning" : "success"}
+                                        type="submit"
+                                        size="lg"
+                                        className="flex-fill"
+                                    >
+                                        {isEdit ? `💾 ${t('button_update')}` : `📢 ${t('button_publish')}`}
+                                    </Button>
+                                </div>
+                            </Form>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+    );
+};
+
+export default Createpost;

@@ -1,6 +1,7 @@
 {
-  "short_name": "Djamel Agence",
-  "name": "Agence Djamel",
+  "short_name": "Agence Voyage",
+  "name": "Agence Voyage - Votre partenaire de voyage",
+  "description": "Application de voyage pour les voyages organisés, locations de vacances et pèlerinages",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,16 +11,74 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#2c5aa0",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["travel", "lifestyle", "business"],
+  "lang": "fr",
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nouveau Voyage",
+      "short_name": "Créer",
+      "description": "Créer une nouvelle annonce de voyage",
+      "url": "/createpost",
+      "icons": [
+        {
+          "src": "/icons/plus.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Mes Messages",
+      "short_name": "Messages",
+      "description": "Voir mes messages",
+      "url": "/message",
+      "icons": [
+        {
+          "src": "/icons/message.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Rechercher",
+      "short_name": "Recherche",
+      "description": "Rechercher des voyages",
+      "url": "/search",
+      "icons": [
+        {
+          "src": "/icons/search.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
 }

@@ -2,88 +2,62 @@ import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
-// Componente para Wilaya
-export const WilayaInput = ({ 
-    postData, 
-    handleWilayaChange, 
-    wilayasOptions 
-}) => {
-    const { t } = useTranslation('categories');
-    
-    return (
-        <Form.Group className="mb-3">
-            <Form.Label>{t('wilaya')}</Form.Label>
-            <Form.Select
-                name="wilaya"
-                value={postData.wilaya || ''}
-                onChange={handleWilayaChange}
-                required
-            >
-                <option value="">{t('selectionnezWilaya')}</option>
-                {wilayasOptions}
-            </Form.Select>
-        </Form.Group>
-    );
-};
-
-// Componente para Ville
-export const VilleInput = ({ 
-    postData, 
-    handleCommuneChange, 
-    communesOptions 
-}) => {
-    const { t } = useTranslation('categories');
-    
-    return (
-        <Form.Group className="mb-3">
-            <Form.Label>{t('commune')}</Form.Label>
-            <Form.Select
-                name="commune"
-                value={postData.commune || ''}
-                onChange={handleCommuneChange}
-                required
-            >
-                <option value="">{t('selectionnezCommune')}</option>
-                {communesOptions}
-            </Form.Select>
-        </Form.Group>
-    );
-};
-
-// Componente principal que usa ambos inputs (opcional, para mantener compatibilidad)
 const AddressInput = ({ 
     postData, 
     handleChangeInput, 
-    wilayasOptions, 
-    
     handleWilayaChange, 
- 
+    wilayasOptions 
 }) => {
-    const { t } = useTranslation('categories');
-    
+    const { t, i18n } = useTranslation('categories');
+    const isRTL = i18n.language === 'ar';
+
     return (
-        <>
-            <Form.Group className="mb-3">
-                <Form.Label>{t('villeDepart')}</Form.Label>
-                <Form.Control
-                    type="text"
-                    name="adress"
-                    value={postData.adress || ''}
-                    onChange={handleChangeInput}
-                    placeholder={t('placeholderAdresse')}
-                />
-            </Form.Group>
-            <Form.Group className="mb-3">
-               
-                    <WilayaInput 
-                    postData={postData}
-                    handleWilayaChange={handleWilayaChange}
-                    wilayasOptions={wilayasOptions}
-                />
-                
-            </Form.Group>
+        <Row className={`${isRTL ? 'rtl-direction' : ''}`}>
+            {/* Ville de départ - Input de texto */}
+            <Col xs={12} md={6}>
+                <Form.Group className="mb-3">
+                    <Form.Label className={isRTL ? 'text-end d-block' : ''}>
+                        {t('villeDepart', 'Ville de Départ')} *
+                    </Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="villeDepart"
+                        value={postData.villeDepart || ''}
+                        onChange={handleChangeInput}
+                        placeholder={t('placeholderVilleDepart', 'Ex: Alger, Oran, Constantine...')}
+                        required
+                        className={isRTL ? 'text-end' : ''}
+                        dir={isRTL ? 'rtl' : 'ltr'}
+                    />
+                    <Form.Text className={`text-muted ${isRTL ? 'text-end d-block' : ''}`}>
+                        {t('villeDepartHelp', 'Entrez la ville de départ du voyage')}
+                    </Form.Text>
+                </Form.Group>
+            </Col>
             
-        </>
+            {/* Wilaya - Select option */}
+            <Col xs={12} md={6}>
+                <Form.Group className="mb-3">
+                    <Form.Label className={isRTL ? 'text-end d-block' : ''}>
+                        {t('wilaya', 'Wilaya')} *
+                    </Form.Label>
+                    <Form.Select
+                        name="wilaya"
+                        value={postData.wilaya || ''}
+                        onChange={handleWilayaChange}
+                        required
+                        className={isRTL ? 'text-end' : ''}
+                        dir={isRTL ? 'rtl' : 'ltr'}
+                    >
+                        <option value="">{t('selectionnezWilaya', 'Sélectionnez une wilaya')}</option>
+                        {wilayasOptions}
+                    </Form.Select>
+                    <Form.Text className={`text-muted ${isRTL ? 'text-end d-block' : ''}`}>
+                        {t('wilayaHelp', 'Sélectionnez la wilaya de départ')}
+                    </Form.Text>
+                </Form.Group>
+            </Col>
+        </Row>
     );
 };
 

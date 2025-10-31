@@ -2,36 +2,51 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Container, Row, Col, Card, Form, Button, Alert, Accordion } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, Alert, Accordion, Badge, ProgressBar } from 'react-bootstrap';
 
-// 🔷 IMPORTAR TODOS LOS COMPONENTES COMUNES
+// 🔷 COMPONENTES COMUNES (CAMPOS QUE APARECEN EN LAS 3 CATEGORÍAS)
 import CategorySelector from '../components/forms/CategorySelector';
-
 import DescriptionTextarea from '../components/forms/DescriptionTextarea';
 import AddressInput from '../components/forms/AddressInput';
 import ImageUpload from '../components/forms/ImageUpload';
-
-// 🔷 IMPORTAR TODOS LOS COMPONENTES ESPECÍFICOS DE FORMULARIOS
-import Horariodesalida from '../components/forms/Horariodesalida';
-import DurationInput from '../components/forms/DurationInput';
-import TransportSelect from '../components/forms/TransporteViaje';
-import TransportSelecthadj from '../components/forms/TransporteViajehadj';
-import PensionSelect from '../components/forms/PensionSelect';
-import ReturnDateInput from '../components/forms/ReturnDateInput';
-import PriceSlider from '../components/forms/PriceSlider';
-import CancellationPolicy from '../components/forms/CancellationPolicy';
+import TarifasYprecios from '../components/forms/TarifasYprecios';
 import ContactReservation from '../components/forms/ContactReservation';
-import PeriodoViaje from '../components/forms/Perdiodoviajje';
-import ClasificacionHotelhadj from '../components/forms/ClasificacionHotelhadj';
-import ClasificacionHotel from '../components/forms/ClasificacionHotel';
-// 🔷 IMPORTAR COMPONENTES DE DESTINOS
-import DestinacionExtranjera from '../components/forms/DestinacionExstranjera';
-import DestinacionHadjOmra from '../components/forms/DestinacionHdjaOmra';
-import DestinacionLocal from '../components/forms/DestinacionLocal';
+import CancellationPolicy from '../components/forms/CancellationPolicy';
 
-// Importar acciones
+// 🔷 COMPONENTES DE FECHAS Y HORARIOS
+import DateDeparRetour from '../components/forms/DateDeparRetour';
+import HoraDepart from '../components/forms/HoraDepart';
+import DurationDisplay from '../components/forms/DuracionDelViaje';
+
+// 🔷 COMPONENTES DE DESTINOS
+import DestinationHajjOmra from '../components/forms/hadjpmra/DestinacionHdjaOmra';
+import DestinationLocationVacances from '../components/forms/locationvacances/DestinacionLocationvacances';
+import DestinationVoyagesOrganises from '../components/forms/voyageorgranise/Destinacionvoyageorganise';
+
+// 🔷 COMPONENTES DE TRANSPORTE
+import TransportHajjOmra from '../components/forms/hadjpmra/TransporHajjOmra';
+import TransportLocationVacances from '../components/forms/locationvacances/TransportLocationVacances';
+import TransportVoyagesOrganises from '../components/forms/voyageorgranise/TransportVoyageOrganise';
+
+// 🔷 COMPONENTES DE ALOJAMIENTO
+import AlojamientoHajjOmra from '../components/forms/hadjpmra/HotelHajjOmra';
+import AlojamientoLocationVacances from '../components/forms/locationvacances/Hotellocationvacance';
+import AlojamientoVoyagesOrganises from '../components/forms/voyageorgranise/Hotelvoyageorganise';
+
+// 🔷 COMPONENTES DE NOMBRE Y LUGAR
+import NombreLugarHajjOmra from '../components/forms/hadjpmra/Nombrelugarhotelhadj';
+import NombreLugarLocationVacances from '../components/forms/locationvacances/NombreLugarLocationVacances';
+import NombreLugarVoyagesOrganises from '../components/forms/voyageorgranise/NombreLugarVoyagesOrganiseq';
+
+// 🔷 COMPONENTES DE SERVICIOS
+import ServiciosHajjOmra from '../components/forms/hadjpmra/ServiciosHajjOmra';
+import ServiciosLocationVacances from '../components/forms/locationvacances/ServiciosLocationVancances';
+import ServiciosVoyagesOrganises from '../components/forms/voyageorgranise/ServiciosVpuageOrganise';
+
+// 🔷 IMPORTAR ACCIONES Y DATOS
 import { createPost, updatePost } from '../redux/actions/postAction';
 import communesjson from "../json/communes.json";
+import valid from './../utils/valid';
 
 const Createpost = () => {
     // 🔷 ESTADOS GLOBALES 
@@ -45,11 +60,11 @@ const Createpost = () => {
     const postToEdit = location.state?.postData || null;
 
     // 🔷 DETECTAR SI ES IDIOMA ÁRABE
-    const isRTL = languageReducer?.language === 'ar' || i18n.language === 'ar';
+    const isRTL = i18n.language === 'ar';
 
-    // 🔷 ESTADO INICIAL COMPLETO
+    // 🔷 ESTADO INICIAL SIMPLIFICADO
     const initialState = {
-        // Información básica
+        // Información básica (COMÚN)
         category: "Agence de Voyage",
         subCategory: "",
         title: "",
@@ -60,112 +75,19 @@ const Createpost = () => {
         contacto: "",
         images: [],
 
-        // Fechas y horarios de viaje
+        // Fechas y horarios (COMÚN)
         datedepar: "",
         horadudepar: "",
-        horariollegada: "",
-        duracionviaje: "",
-        fecharegreso: "",
+        dateretour: "",
+        dureeSejour: "",
 
-        // Periodo del viaje (ACTUALIZADO)
-        mesInicio: "",
-        mesFin: "",
-        temporada: "",
-        anyo: "", // Corregido de "anio" a "anyo"
-
-        // Precios
+        // Precios (COMÚN)
         prixAdulte: "",
         prixEnfant: "",
         prixBebe: "",
 
-        // Servicios y actividades
-        servicesInclus: [],
-        activites: [],
-        language: [],
-        specifications: [],
-        optionsPaiement: [],
-        documentsRequises: [],
-        excursions: [],
-        servicios: [],
-        serviciosTr: [],
-
-        // Tipo de viaje
-        typeVoyage: "",
-        niveauConfort: "",
-        publicCible: "",
-
-        // Destinos
-        destinacionvoyage1: "",
-        destinacionvoyage2: "",
-        paysDestination: "",
-
-        // Hoteles
-        voyage1hotel1: "",
-        voyage1nombrehotel1: "",
-        voyage2hotel2: "",
-        voyage1nombrehotel2: "",
-        estrellas: "",
-        nombredelhotel: "",
-        adresshotel: "",
-        totalhabitaciones: "",
-        tipodehabutaciones: [],
-        wifi: [],
-        hotelWebsite: "",
-        serviciosdelhotel: "",
-        incluidoenelprecio: "",
-
-        // Transporte
-        transporte: "",
-        tipoTransporte: "",
-        claseTransporte: "",
-        companiaTransporte: "",
-        numeroTransporte: "",
-        itinerarioTransporte: "",
-        tiempoTransporte: "",
-        serviciosTransporte: [],
-        comentariosTransporte: "",
-
-        // Location Vacances
-        Location_Vacances: '',
-        alquilergeneral: "",
-        superficie: "",
-        etage: "",
-        promoteurimmobilier: false,
-        adress: "",
-        capacitePersonnes: "",
-        nombreChambres: "",
-        nombreSallesBain: "",
-        wifiGratuit: false,
-        climatisation: false,
-        cuisineEquipee: false,
-        television: false,
-        piscine: false,
-        parking: false,
-        animauxAcceptes: false,
-        menageInclus: false,
-        checkInTime: "",
-        checkOutTime: "",
-        tarifnuit: "",
-
-        // Reservas y pagos
-        reservacionenlinea: "",
-        acompteRequise: false,
-        pourcentageAcompte: "",
-
-        // Hajj/Omra
-        destinacionhadj: "",
-        guideLocal: false,
-        repasInclus: false,
-        transfertAeroport: false,
-        delaiTraitement: "",
-        formalites: "",
-        assurancesIncluses: false,
-
-        // Cancelación
-        cancelarreserva: "",
-        conditionsAnnulation: "",
-        politiqueAnnulation: "",
-        itemsReservations_Visa: "",
+        // Campos específicos por categoría (se inicializan vacíos)
+        // Estos se llenarán según la categoría seleccionada
     };
 
     // 🔷 ESTADOS
@@ -176,6 +98,7 @@ const Createpost = () => {
     const [alertMessage, setAlertMessage] = useState("");
     const [alertVariant, setAlertVariant] = useState("info");
     const [activeAccordion, setActiveAccordion] = useState(['0']);
+    const [completionPercentage, setCompletionPercentage] = useState(0);
 
     // 🔷 EFFECT PARA CAMBIO DE IDIOMA
     useEffect(() => {
@@ -188,83 +111,7 @@ const Createpost = () => {
     // 🔷 EFFECT PARA CARGAR DATOS DE EDICIÓN
     useEffect(() => {
         if (isEdit && postToEdit) {
-            const mapDatabaseToComponentFields = (data) => {
-                if (!data) return {};
-                const mappedData = { ...data };
-
-                if (data.transporte && !data.tipoTransporte) {
-                    mappedData.tipoTransporte = data.transporte;
-                }
-                if (data.periodoInicio && !data.mesInicio) {
-                    mappedData.mesInicio = data.periodoInicio;
-                }
-                if (data.periodoFin && !data.mesFin) {
-                    mappedData.mesFin = data.periodoFin;
-                }
-                if (data.temporadaViaje && !data.temporada) {
-                    mappedData.temporada = data.temporadaViaje;
-                }
-                // 🔥 ACTUALIZAR ESTA LÍNEA:
-                if (data.anioViaje && !data.anyo) {
-                    mappedData.anyo = data.anioViaje;
-                }
-                return mappedData;
-            };
-
-            const sanitizePostData = (data) => {
-                if (!data) return {};
-                const sanitized = { ...data };
-
-                const arrayFields = [
-                    t('fields.servicesInclus'),
-                    t('fields.activites'),
-                    t('fields.language'),
-                    t('fields.servicios'),
-                    t('fields.serviciosTr'),
-                    t('fields.specifications'),
-                    t('fields.wifi'),
-                    t('fields.optionsPaiement'),
-                    t('fields.documentsRequises'),
-                    t('fields.excursions'),
-                    t('fields.tipodehabutaciones'),
-                    t('fields.serviciosTransporte')
-                ];
-                
-                const booleanFields = [
-                    t('fields.promoteurimmobilier'),
-                    t('fields.wifiGratuit'),
-                    t('fields.climatisation'),
-                    t('fields.cuisineEquipee'),
-                    t('fields.television'),
-                    t('fields.piscine'),
-                    t('fields.parking'),
-                    t('fields.animauxAcceptes'),
-                    t('fields.menageInclus'),
-                    t('fields.assurancesIncluses'),
-                    t('fields.guideLocal'),
-                    t('fields.repasInclus'),
-                    t('fields.transfertAeroport'),
-                    t('fields.acompteRequise')
-                ];
-                arrayFields.forEach(field => {
-                    sanitized[field] = Array.isArray(sanitized[field]) ? sanitized[field] : [];
-                });
-
-                booleanFields.forEach(field => {
-                    sanitized[field] = Boolean(sanitized[field]);
-                });
-
-                Object.keys(sanitized).forEach(key => {
-                    if (sanitized[key] === null || sanitized[key] === undefined) {
-                        sanitized[key] = "";
-                    }
-                });
-
-                return sanitized;
-            };
-
-            const mappedData = mapDatabaseToComponentFields(postToEdit);
-            const sanitizedData = sanitizePostData(mappedData);
+            const sanitizedData = sanitizePostData(postToEdit);
             const finalPostData = {
                 ...initialState,
                 ...sanitizedData,
@@ -276,6 +123,7 @@ const Createpost = () => {
 
             setPostData(finalPostData);
 
+            // Manejar imágenes existentes
             if (postToEdit.images && Array.isArray(postToEdit.images) && postToEdit.images.length > 0) {
                 const existingImages = postToEdit.images
                     .map(img => {
@@ -299,7 +147,37 @@ const Createpost = () => {
             setSelectedWilaya("");
         }
     }, [isEdit, postToEdit]);
-    // 🔷 HANDLERS
+
+    // 🔷 EFFECT PARA CALCULAR PORCENTAJE DE COMPLETADO
+    useEffect(() => {
+        calculateCompletionPercentage();
+    }, [postData, images]);
+
+    // 🔷 FUNCIÓN PARA CALCULAR PORCENTAJE DE COMPLETADO
+    const calculateCompletionPercentage = () => {
+        let completedFields = 0;
+        const totalFields = 8; // Campos principales requeridos
+
+        if (postData.subCategory) completedFields++;
+        if (postData.title) completedFields++;
+        if (postData.description) completedFields++;
+        if (postData.wilaya) completedFields++;
+        if (postData.commune) completedFields++;
+        if (postData.contacto) completedFields++;
+        if (images.length > 0) completedFields++;
+        if (postData.prixAdulte || postData.price) completedFields++;
+
+        const percentage = Math.round((completedFields / totalFields) * 100);
+        setCompletionPercentage(percentage);
+    };
+
+    // 🔷 FUNCIÓN PARA SANITIZAR DATOS (SIMPLIFICADA)
+    const sanitizePostData = (data) => {
+        if (!data) return {};
+        return { ...data };
+    };
+
+    // 🔷 HANDLERS PRINCIPALES
     const handleChangeInput = (e) => {
         const { name, value, type, checked } = e.target;
         setPostData(prevState => ({
@@ -379,6 +257,7 @@ const Createpost = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validaciones básicas
         if (!postData.subCategory) {
             setAlertMessage(t('validation_category_required'));
             setAlertVariant("danger");
@@ -441,595 +320,230 @@ const Createpost = () => {
         }
     };
 
-   
+    // 🔷 RENDERIZADO DINÁMICO SEGÚN CATEGORÍA
 
-    // 🔷 🧳 VOYAGE ORGANISÉ - COMPLETAMENTE TRADUCIDO
+    // 🧳 VOYAGE ORGANISÉ
     const renderVoyageOrganise = () => (
-        <>
-            <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} className="mb-3">
-
-                <Accordion.Item eventKey="0">
-                    <Accordion.Header>
-                        <i className={`fas fa-map-marked-alt ${isRTL ? 'ms-2' : 'me-2'} text-primary`}></i>
-                        🗺️ {t('voyage.destinations_internationales')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <DestinacionExtranjera
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="1">
-                    <Accordion.Header>
-                        <i className={`fas fa-calendar-alt ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
-                        📅 {t('voyage.dates_duree')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <Horariodesalida
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <DurationInput
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <ReturnDateInput
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <PeriodoViaje
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="2">
-                    <Accordion.Header>
-                        <i className={`fas fa-plane ${isRTL ? 'ms-2' : 'me-2'} text-info`}></i>
-                        ✈️ {t('voyage.transport_deplacements')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <TransportSelect
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="3">
-                    <Accordion.Header>
-                        <i className={`fas fa-hotel ${isRTL ? 'ms-2' : 'me-2'} text-warning`}></i>
-                        🏨 {t('voyage.hebergement_pension')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <ClasificacionHotelhadj
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <PensionSelect
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="4">
-                    <Accordion.Header>
-                        <i className={`fas fa-hiking ${isRTL ? 'ms-2' : 'me-2'} text-primary`}></i>
-                        🎯 {t('voyage.activites_services')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <Form.Group>
-                            <Form.Label>{t('voyage.services_inclus')}</Form.Label>
-                            <div className={`d-flex flex-wrap gap-3 ${isRTL ? 'text-end' : ''}`}>
-                                {['visite_guidee', 'repas', 'transfert', 'assistance', 'assurance'].map(service => (
-                                    <Form.Check
-                                        key={service}
-                                        type="checkbox"
-                                        label={t(`services.${service}`)}
-                                        checked={postData.servicesInclus?.includes(service) || false}
-                                        onChange={(e) => handleArrayChange('servicesInclus', service, e.target.checked)}
-                                        className={isRTL ? 'text-end' : ''}
-                                    />
-                                ))}
-                            </div>
-                        </Form.Group>
-
-                        <Form.Group className="mt-3">
-                            <Form.Label>{t('voyage.activites_proposees')}</Form.Label>
-                            <div className={`d-flex flex-wrap gap-3 ${isRTL ? 'text-end' : ''}`}>
-                                {['excursion', 'plongee', 'randonnee', 'shopping', 'culture'].map(activite => (
-                                    <Form.Check
-                                        key={activite}
-                                        type="checkbox"
-                                        label={t(`activites.${activite}`)}
-                                        checked={postData.activites?.includes(activite) || false}
-                                        onChange={(e) => handleArrayChange('activites', activite, e.target.checked)}
-                                        className={isRTL ? 'text-end' : ''}
-                                    />
-                                ))}
-                            </div>
-                        </Form.Group>
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="5">
-                    <Accordion.Header>
-                        <i className={`fas fa-euro-sign ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
-                        💰 {t('voyage.tarifs_conditions')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <PriceSlider
-                            postData={postData}
-                            setPostData={setPostData}
-                        />
-
-                        <Row className="g-3 mt-3">
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.prix_adulte')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="prixAdulte"
-                                        value={postData.prixAdulte || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.prix_adulte_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.prix_enfant')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="prixEnfant"
-                                        value={postData.prixEnfant || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.prix_enfant_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.prix_bebe')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="prixBebe"
-                                        value={postData.prixBebe || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.prix_bebe_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                        <CancellationPolicy
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                    </Accordion.Body>
-                </Accordion.Item>
-
-            </Accordion>
-
-            <ContactReservation
-                postData={postData}
-                handleChangeInput={handleChangeInput}
-            />
-        </>
-    );
-
-    // 🔷 🏠 LOCATION VACANCES - COMPLETAMENTE TRADUCIDO
-    const renderLocationVacances = () => (
-        <>
-            <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} className="mb-3">
-
-                <Accordion.Item eventKey="0">
-                    <Accordion.Header>
-                        <i className={`fas fa-home ${isRTL ? 'ms-2' : 'me-2'} text-primary`}></i>
-                        🏠 {t('location.informations_logement')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <DestinacionLocal
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <ClasificacionHotel
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-
-                        <Row className="g-3 mt-3">
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.superficie')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="superficie"
-                                        value={postData.superficie || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.superficie_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.etage')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="etage"
-                                        value={postData.etage || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.etage_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.capacite_personnes')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="capacitePersonnes"
-                                        value={postData.capacitePersonnes || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.capacite_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="1">
-                    <Accordion.Header>
-                        <i className={`fas fa-tv ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
-                        📺 {t('location.equipements_services')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-    <Row>
-        <Col md={6}>
-            {['wifi_gratuit', 'climatisation', 'cuisine_equipee', 'television'].map(equipement => (
-                <Form.Check
-                    key={equipement}
-                    type="checkbox"
-                    name={equipement === 'wifi_gratuit' ? 'wifiGratuit' : equipement}
-                    label={t(`equipements.${equipement}`)}
-                    checked={postData[equipement === 'wifi_gratuit' ? 'wifiGratuit' : equipement] || false}
-                    onChange={handleChangeInput}
-                    className={isRTL ? 'text-end' : ''}
-                />
-            ))}
-        </Col>
-        <Col md={6}>
-            {['piscine', 'parking', 'animaux_acceptes', 'menage_inclus'].map(equipement => (
-                <Form.Check
-                    key={equipement}
-                    type="checkbox"
-                    name={equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
-                          equipement === 'menage_inclus' ? 'menageInclus' : equipement}
-                    label={t(`equipements.${equipement}`)}
-                    checked={postData[equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
-                              equipement === 'menage_inclus' ? 'menageInclus' : equipement] || false}
-                    onChange={handleChangeInput}
-                    className={isRTL ? 'text-end' : ''}
-                />
-            ))}
-        </Col>
-    </Row>
-</Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="2">
-                    <Accordion.Header>
-                        <i className={`fas fa-bed ${isRTL ? 'ms-2' : 'me-2'} text-info`}></i>
-                        🛏️ {t('location.chambres_salles_bain')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <Row className="g-3">
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.nombre_chambres')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="nombreChambres"
-                                        value={postData.nombreChambres || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.nombre_chambres_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.nombre_salles_bain')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="nombreSallesBain"
-                                        value={postData.nombreSallesBain || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.nombre_salles_bain_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="3">
-                    <Accordion.Header>
-                        <i className={`fas fa-calendar-check ${isRTL ? 'ms-2' : 'me-2'} text-warning`}></i>
-                        📅 {t('location.disponibilite_tarifs')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <PeriodoViaje
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-
-                        <Row className="g-3 mt-3">
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.check_in')}</Form.Label>
-                                    <Form.Control
-                                        type="time"
-                                        name="checkInTime"
-                                        value={postData.checkInTime || ''}
-                                        onChange={handleChangeInput}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.check_out')}</Form.Label>
-                                    <Form.Control
-                                        type="time"
-                                        name="checkOutTime"
-                                        value={postData.checkOutTime || ''}
-                                        onChange={handleChangeInput}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                        <PriceSlider
-                            postData={postData}
-                            setPostData={setPostData}
-                        />
-
-                        <Form.Group className="mt-3">
-                            <Form.Label>{t('common.tarif_nuit')}</Form.Label>
-                            <Form.Control
-                                type="number"
-                                name="tarifnuit"
-                                value={postData.tarifnuit || ''}
-                                onChange={handleChangeInput}
-                                placeholder={t('common.tarif_nuit_placeholder')}
-                                dir={isRTL ? "rtl" : "ltr"}
+        <Card className="mb-4">
+            <Card.Header className="bg-info text-white">
+                <h5 className="mb-0">✈️ {t('voyage_organise', 'Voyage Organisé')}</h5>
+            </Card.Header>
+            <Card.Body>
+                <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} flush>
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header>
+                            🗺️ {t('voyage.destinations_internationales', 'Destinations Internationales')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <DestinationVoyagesOrganises
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
                             />
-                        </Form.Group>
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-                        <CancellationPolicy
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                    </Accordion.Body>
-                </Accordion.Item>
+                    <Accordion.Item eventKey="1">
+                        <Accordion.Header>
+                            📅 {t('voyage.dates_duree', 'Dates et Durée')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <DateDeparRetour
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                            <HoraDepart
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                            <DurationDisplay
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-            </Accordion>
+                    <Accordion.Item eventKey="2">
+                        <Accordion.Header>
+                            ✈️ {t('voyage.transport_deplacements', 'Transport et Déplacements')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <TransportVoyagesOrganises
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-            <ContactReservation
-                postData={postData}
-                handleChangeInput={handleChangeInput}
-            />
-        </>
+                    <Accordion.Item eventKey="3">
+                        <Accordion.Header>
+                            🏨 {t('voyage.hebergement_pension', 'Hébergement et Pension')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <NombreLugarVoyagesOrganises
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                            <AlojamientoVoyagesOrganises
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+
+                    <Accordion.Item eventKey="4">
+                        <Accordion.Header>
+                            🛎️ {t('voyage.services_inclus', 'Services Inclus')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <ServiciosVoyagesOrganises
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+            </Card.Body>
+        </Card>
     );
 
-    // 🔷 🕋 HAJJ & OMRA - COMPLETAMENTE TRADUCIDO
+    // 🏠 LOCATION VACANCES
+    const renderLocationVacances = () => (
+        <Card className="mb-4">
+            <Card.Header className="bg-success text-white">
+                <h5 className="mb-0">🏠 {t('location_vacances', 'Location Vacances')}</h5>
+            </Card.Header>
+            <Card.Body>
+                <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} flush>
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header>
+                            🏡 {t('location.informations_logement', 'Informations du Logement')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <NombreLugarLocationVacances
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                            <DestinationLocationVacances
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+
+                    <Accordion.Item eventKey="1">
+                        <Accordion.Header>
+                            🏨 {t('location.details_hebergement', 'Détails de l\'Hébergement')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <AlojamientoLocationVacances
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+
+                    <Accordion.Item eventKey="2">
+                        <Accordion.Header>
+                            🚗 {t('location.transport_acces', 'Transport et Accès')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <TransportLocationVacances
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+
+                    <Accordion.Item eventKey="3">
+                        <Accordion.Header>
+                            🛎️ {t('location.services_equipements', 'Services et Équipements')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <ServiciosLocationVacances
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+            </Card.Body>
+        </Card>
+    );
+
+    // 🕋 HAJJ & OMRA
     const renderHadjOmra = () => (
-        <>
-            <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} className="mb-3">
+        <Card className="mb-4">
+            <Card.Header className="bg-warning text-dark">
+                <h5 className="mb-0">🕋 {t('hadj_omra', 'Hadj & Omra')}</h5>
+            </Card.Header>
+            <Card.Body>
+                <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} flush>
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header>
+                            🕋 {t('hadj.destination_peletinage', 'Destination du Pèlerinage')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <DestinationHajjOmra
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                            <NombreLugarHajjOmra
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-                <Accordion.Item eventKey="0">
-                    <Accordion.Header>
-                        <i className={`fas fa-kaaba ${isRTL ? 'ms-2' : 'me-2'} text-primary`}></i>
-                        🕋 {t('hadj.destination_peletinage')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <DestinacionHadjOmra
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                            destinationNumber={1}
-                        />
+                    <Accordion.Item eventKey="1">
+                        <Accordion.Header>
+                            📅 {t('hadj.dates_peletinage', 'Dates du Pèlerinage')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <DateDeparRetour
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                            <HoraDepart
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                            <DurationDisplay
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-                        <Row className="g-3 mt-3">
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label>{t('hadj.type_peletinage')}</Form.Label>
-                                    <Form.Select
-                                        name="typeVoyage"
-                                        value={postData.typeVoyage || ''}
-                                        onChange={handleChangeInput}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    >
-                                        <option value="">{t('common.select_option')}</option>
-                                        <option value="hadj">{t('types_voyage.hadj')}</option>
-                                        <option value="omra">{t('types_voyage.omra')}</option>
-                                        <option value="hadj_omra">{t('types_voyage.hadj_omra')}</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                            <Col md={6}>
-                                <Form.Group>
-                                    <Form.Label>{t('hadj.niveau_confort')}</Form.Label>
-                                    <Form.Select
-                                        name="niveauConfort"
-                                        value={postData.niveauConfort || ''}
-                                        onChange={handleChangeInput}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    >
-                                        <option value="">{t('common.select_option')}</option>
-                                        <option value="economique">{t('niveaux_confort.economique')}</option>
-                                        <option value="standard">{t('niveaux_confort.standard')}</option>
-                                        <option value="confort">{t('niveaux_confort.confort')}</option>
-                                        <option value="luxe">{t('niveaux_confort.luxe')}</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </Accordion.Body>
-                </Accordion.Item>
+                    <Accordion.Item eventKey="2">
+                        <Accordion.Header>
+                            🚗 {t('hadj.transport_hebergement', 'Transport et Hébergement')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <TransportHajjOmra
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                            <AlojamientoHajjOmra
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-                <Accordion.Item eventKey="1">
-                    <Accordion.Header>
-                        <i className={`fas fa-calendar-alt ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
-                        📅 {t('hadj.dates_peletinage')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <Horariodesalida
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <DurationInput
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <ReturnDateInput
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                       
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="2">
-                    <Accordion.Header>
-                        <i className={`fas fa-hotel ${isRTL ? 'ms-2' : 'me-2'} text-info`}></i>
-                        🏨 {t('hadj.transport_hebergement')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <TransportSelecthadj
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <ClasificacionHotelhadj
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                        <PensionSelect
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="3">
-                  
-                   
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="4">
-                    <Accordion.Header>
-                        <i className={`fas fa-passport ${isRTL ? 'ms-2' : 'me-2'} text-danger`}></i>
-                        📋 {t('hadj.documents_requis')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <Form.Group>
-                            <Form.Label>{t('hadj.documents_necessaires')}</Form.Label>
-                            <div className={`d-flex flex-wrap gap-3 ${isRTL ? 'text-end' : ''}`}>
-                                {['passeport', 'photos_identite', 'certificat_vaccination', 'reservation_hotel', 'billet_avion'].map(doc => (
-                                    <Form.Check
-                                        key={doc}
-                                        type="checkbox"
-                                        label={t(`documents.${doc}`)}
-                                        checked={postData.documentsRequises?.includes(doc) || false}
-                                        onChange={(e) => handleArrayChange('documentsRequises', doc, e.target.checked)}
-                                        className={isRTL ? 'text-end' : ''}
-                                    />
-                                ))}
-                            </div>
-                        </Form.Group>
-                    </Accordion.Body>
-                </Accordion.Item>
-
-                <Accordion.Item eventKey="5">
-                    <Accordion.Header>
-                        <i className={`fas fa-euro-sign ${isRTL ? 'ms-2' : 'me-2'} text-success`}></i>
-                        💰 {t('hadj.tarifs_conditions')}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <PriceSlider
-                            postData={postData}
-                            setPostData={setPostData}
-                        />
-
-                        <Row className="g-3 mt-3">
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.prix_adulte')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="prixAdulte"
-                                        value={postData.prixAdulte || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.prix_adulte_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.prix_enfant')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="prixEnfant"
-                                        value={postData.prixEnfant || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.prix_enfant_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group>
-                                    <Form.Label>{t('common.prix_bebe')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="prixBebe"
-                                        value={postData.prixBebe || ''}
-                                        onChange={handleChangeInput}
-                                        placeholder={t('common.prix_bebe_placeholder')}
-                                        dir={isRTL ? "rtl" : "ltr"}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                        <CancellationPolicy
-                            postData={postData}
-                            handleChangeInput={handleChangeInput}
-                        />
-                    </Accordion.Body>
-                </Accordion.Item>
-
-            </Accordion>
-
-            <ContactReservation
-                postData={postData}
-                handleChangeInput={handleChangeInput}
-            />
-        </>
+                    <Accordion.Item eventKey="3">
+                        <Accordion.Header>
+                            🛎️ {t('hadj.services_religieux', 'Services Religieux')}
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <ServiciosHajjOmra
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+            </Card.Body>
+        </Card>
     );
 
     // 🔷 RENDERIZADO DINÁMICO SEGÚN CATEGORÍA
@@ -1042,9 +556,33 @@ const Createpost = () => {
             case "hadj_Omra":
                 return renderHadjOmra();
             default:
-                return
+                return null;
         }
     };
+
+    // 🔷 COMPONENTES COMUNES PARA TODAS LAS CATEGORÍAS
+    const renderCommonComponents = () => (
+        <>
+            {/* Tarifas y Precios - COMÚN PARA TODAS */}
+            <TarifasYprecios 
+                postData={postData} 
+                handleChangeInput={handleChangeInput}
+                category={postData.subCategory}
+            />
+
+            {/* Política de Cancelación - COMÚN PARA TODAS */}
+            <CancellationPolicy
+                postData={postData}
+                handleChangeInput={handleChangeInput}
+            />
+
+            {/* Contacto y Reservas - COMÚN PARA TODAS */}
+            <ContactReservation
+                postData={postData}
+                handleChangeInput={handleChangeInput}
+            />
+        </>
+    );
 
     const wilayasOptions = communesjson.map((wilaya, index) => (
         <option key={index} value={wilaya.wilaya}>
@@ -1063,79 +601,180 @@ const Createpost = () => {
         : [];
 
     return (
-        <Container className="my-4" dir={isRTL ? "rtl" : "ltr"}>
-            <Row className="justify-content-center">
-                <Col lg={10}>
-                    <Card>
-                        <Card.Header className={isEdit ? "bg-warning text-dark" : "bg-primary text-white"}>
-                            <h4 className="mb-0">
-                                {isEdit ? `✏️ ${t('edit_title')}` : `📢 ${t('create_title')}`}
-                            </h4>
-                            {isEdit && postToEdit?.title && (
-                                <small>{t('modification')}: "{postToEdit.title}"</small>
-                            )}
-                        </Card.Header>
-                        <Card.Body>
-                            {showAlert && (
-                                <Alert
-                                    variant={alertVariant}
-                                    dismissible
-                                    onClose={() => setShowAlert(false)}
-                                    className="mb-4"
-                                >
-                                    {alertMessage}
-                                </Alert>
-                            )}
-
-                            <Form onSubmit={handleSubmit}>
-                                <CategorySelector
-                                    postData={postData}
-                                    handleChangeInput={handleChangeInput}
-                                />
-
-                                {postData.subCategory && (
-                                    <>
-
-                                        <DescriptionTextarea
-                                            postData={postData}
-                                            handleChangeInput={handleChangeInput}
-                                        />
-                                        <AddressInput
-                                            postData={postData}
-                                            handleChangeInput={handleChangeInput}
-                                            wilayasOptions={wilayasOptions}
-                                            communesOptions={communesOptions}
-                                            handleWilayaChange={handleWilayaChange}
-                                            handleCommuneChange={handleCommuneChange}
-                                        />
-                                    </>
+        <Container fluid className="p-0" dir={isRTL ? "rtl" : "ltr"}>
+        <Row className="g-0">
+            <Col xs={12}>
+                {/* Header Principal */}
+                <Card className="border-0 rounded-0">
+                    <Card.Header className={isEdit ? "bg-warning text-dark" : "bg-primary text-white"}>
+                        <Row className="align-items-center g-0">
+                            <Col>
+                                <h2 className="mb-1 fs-6">
+                                    {isEdit ? `✏️ ${t('edit_title', 'Modifier la Publication')}` : `📢 ${t('create_title', 'Créer une Nouvelle Publication')}`}
+                                </h2>
+                                {isEdit && postToEdit?.title && (
+                                    <p className="mb-0 opacity-75 small">
+                                        {t('modification', 'Modification de')}: "{postToEdit.title}"
+                                    </p>
                                 )}
-
-                                {renderCategoryFields()}
-
-                                <ImageUpload
-                                    images={images}
-                                    handleChangeImages={handleChangeImages}
-                                    deleteImages={deleteImages}
-                                    theme={theme}
-                                />
-
-                                <div className={`d-flex gap-2 mt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                    <Button
-                                        variant={isEdit ? "warning" : "success"}
-                                        type="submit"
-                                        size="lg"
-                                        className="flex-fill"
-                                    >
-                                        {isEdit ? `💾 ${t('button_update')}` : `📢 ${t('button_publish')}`}
-                                    </Button>
-                                </div>
-                            </Form>
+                            </Col>
+                            <Col xs="auto">
+                                <Badge 
+                                    bg={isEdit ? "dark" : "light"} 
+                                    text={isEdit ? "white" : "dark"}
+                                    className="fs-6"
+                                >
+                                    {completionPercentage}% {t('common.complete', 'Complété')}
+                                </Badge>
+                            </Col>
+                        </Row>
+                    </Card.Header>
+                </Card>
+    
+                {/* Barra de Progreso */}
+                {completionPercentage > 0 && (
+                    <Card className="border-0 rounded-0">
+                        <Card.Body className="py-2">
+                            <div className="d-flex justify-content-between align-items-center mb-1">
+                                <small className="text-muted">
+                                    {t('common.progress', 'Progression de votre annonce')}
+                                </small>
+                                <small className="fw-bold">{completionPercentage}%</small>
+                            </div>
+                            <ProgressBar 
+                                now={completionPercentage} 
+                                variant={completionPercentage < 50 ? "warning" : "success"}
+                                className="h-2"
+                            />
                         </Card.Body>
                     </Card>
-                </Col>
-            </Row>
-        </Container>
+                )}
+    
+                {/* Alertas */}
+                {showAlert && (
+                    <Alert
+                        variant={alertVariant}
+                        dismissible
+                        onClose={() => setShowAlert(false)}
+                        className="mb-0 rounded-0 border-0"
+                    >
+                        <Alert.Heading className="fs-6">
+                            {alertVariant === "success" ? "✅ Success" : "⚠️ Error"}
+                        </Alert.Heading>
+                        {alertMessage}
+                    </Alert>
+                )}
+    
+                {/* Formulario Principal */}
+                <Card className="shadow-none border-0 rounded-0">
+                    <Card.Body className="p-0">
+                        <Form onSubmit={handleSubmit} className="p-0">
+                            {/* Selector de Categoría */}
+                            <CategorySelector
+                                postData={postData}
+                                handleChangeInput={handleChangeInput}
+                            />
+    
+                            {postData.subCategory && (
+                                <>
+                                    {/* Información Básica */}
+                                    <Card className="mb-0 border-0 rounded-0">
+                                        <Card.Header className="bg-light border-0">
+                                            <h5 className="mb-0 fs-6 p-2">
+                                                📝 {t('common.basic_info', 'Informations de Base')}
+                                            </h5>
+                                        </Card.Header>
+                                        <Card.Body className="p-2">
+                                            <DescriptionTextarea
+                                                postData={postData}
+                                                handleChangeInput={handleChangeInput}
+                                            />
+                                            
+                                            <AddressInput
+                                                postData={postData}
+                                                handleChangeInput={handleChangeInput}
+                                                wilayasOptions={wilayasOptions}
+                                                communesOptions={communesOptions}
+                                                handleWilayaChange={handleWilayaChange}
+                                                handleCommuneChange={handleCommuneChange}
+                                            />
+                                        </Card.Body>
+                                    </Card>
+    
+                                    {/* Campos Específicos de la Categoría */}
+                                    {renderCategoryFields()}
+    
+                                    {/* Componentes Comunes */}
+                                    {renderCommonComponents()}
+    
+                                    {/* Subida de Imágenes */}
+                                    <Card className="mb-0 border-0 rounded-0">
+                                        <Card.Header className="bg-light border-0">
+                                            <h5 className="mb-0 fs-6 p-2">
+                                                🖼️ {t('common.images', 'Images de l\'Annonce')}
+                                            </h5>
+                                        </Card.Header>
+                                        <Card.Body className="p-2">
+                                            <ImageUpload
+                                                images={images}
+                                                handleChangeImages={handleChangeImages}
+                                                deleteImages={deleteImages}
+                                                theme={theme}
+                                            />
+                                        </Card.Body>
+                                    </Card>
+    
+                                    {/* Botones de Acción */}
+                                    <Card className="border-0 bg-transparent">
+                                        <Card.Body className="p-2">
+                                            <Row className={`g-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                                <Col xs={8}>
+                                                    <div className="d-grid gap-1">
+                                                        <Button
+                                                            variant={isEdit ? "warning" : "success"}
+                                                            type="submit"
+                                                            size="lg"
+                                                            className="fw-bold py-2"
+                                                        >
+                                                            {isEdit 
+                                                                ? `💾 ${t('button_update', 'Mettre à jour')}`
+                                                                : `📢 ${t('button_publish', 'Publier')}`
+                                                            }
+                                                        </Button>
+                                                    </div>
+                                                </Col>
+                                                <Col xs={4}>
+                                                    <Button
+                                                        variant="outline-secondary"
+                                                        size="lg"
+                                                        className="w-100 py-2"
+                                                        onClick={() => history.goBack()}
+                                                    >
+                                                        ↩️ {t('common.cancel', 'Annuler')}
+                                                    </Button>
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </>
+                            )}
+    
+                            {!postData.subCategory && (
+                                <Card className="text-center border-0 bg-light rounded-0">
+                                    <Card.Body className="py-4">
+                                        <div className="fs-1 mb-2">🏁</div>
+                                        <h5 className="text-muted fs-6">
+                                            {t('common.select_category_first', 'Sélectionnez d\'abord une catégorie pour commencer')}
+                                        </h5>
+                                    </Card.Body>
+                                </Card>
+                            )}
+                        </Form>
+                    </Card.Body>
+                </Card>
+            </Col>
+        </Row>
+    </Container>
     );
 };
 

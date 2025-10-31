@@ -3,7 +3,8 @@ import { Form, Card, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const CancellationPolicy = ({ postData, handleChangeInput }) => {
-    const { t } = useTranslation('categories');
+    const { t, i18n } = useTranslation('categories');
+    const isRTL = i18n.language === 'ar';
 
     const policies = [
         { value: 'Flexible', color: 'success', icon: '✅' },
@@ -18,17 +19,20 @@ const CancellationPolicy = ({ postData, handleChangeInput }) => {
             </Card.Header>
             <Card.Body>
                 <Form.Group>
-                    <Form.Label>{t('selectionnez_politique')}</Form.Label>
+                    <Form.Label className={isRTL ? 'text-end d-block' : ''}>
+                        {t('selectionnez_politique')}
+                    </Form.Label>
                     <Form.Select
                         name="cancelarreserva"
                         value={postData.cancelarreserva || ''}
                         onChange={handleChangeInput}
                         className="mb-3"
+                        dir={isRTL ? 'rtl' : 'ltr'}
                     >
                         <option value="">-- {t('selectionnez_politique')} --</option>
                         {policies.map(policy => (
                             <option key={policy.value} value={policy.value}>
-                                {t(`politique_${policy.value.toLowerCase()}`)}
+                                {policy.icon} {t(`politique_${policy.value.toLowerCase()}`)}
                             </option>
                         ))}
                     </Form.Select>
@@ -36,11 +40,11 @@ const CancellationPolicy = ({ postData, handleChangeInput }) => {
                     {/* Descripción de la política seleccionada */}
                     {postData.cancelarreserva && (
                         <div className={`alert alert-${policies.find(p => p.value === postData.cancelarreserva)?.color || 'info'} mt-3`}>
-                            <div className="d-flex align-items-center">
+                            <div className={`d-flex align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
                                 <span className="fs-5 me-2">
                                     {policies.find(p => p.value === postData.cancelarreserva)?.icon}
                                 </span>
-                                <div>
+                                <div className={isRTL ? 'text-end' : ''}>
                                     <strong>{t(`titre_${postData.cancelarreserva.toLowerCase()}`)}</strong>
                                     <div className="small mt-1">
                                         {t(`description_${postData.cancelarreserva.toLowerCase()}`)}
@@ -55,7 +59,9 @@ const CancellationPolicy = ({ postData, handleChangeInput }) => {
 
                     {/* Vista previa de todas las políticas */}
                     <div className="mt-4">
-                        <h6 className="text-muted mb-3">{t('apercu_politiques') || "Aperçu des politiques disponibles"}</h6>
+                        <h6 className={`text-muted mb-3 ${isRTL ? 'text-end' : ''}`}>
+                            {t('apercu_politiques')}
+                        </h6>
                         <Row className="g-2">
                             {policies.map(policy => (
                                 <Col key={policy.value} md={4}>
