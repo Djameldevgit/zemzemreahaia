@@ -53,7 +53,7 @@ export default function SearchPage() {
 
   // 🔹 Opciones para los selects
   const subCategoryOptions = [
-    { value: "Voyage_Organise", label: "Voyage Organisé" },
+    { value: "Voyage Organise", label: "Voyage Organisé" },
     { value: "Location_Vacances", label: "Location Vacances" },
     { value: "hadj_Omra", label: "Hadj & Omra" },
     { value: "Reservations_Visa", label: "Réservations & Visa" }

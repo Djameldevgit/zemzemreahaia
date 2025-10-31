@@ -14,6 +14,7 @@ export const POST_TYPES = {
 
 }
 
+
 export const viewPost = ({ id, auth }) => async (dispatch) => {
    
     try {
@@ -32,6 +33,7 @@ export const viewPost = ({ id, auth }) => async (dispatch) => {
       console.error("❌ Error en viewPost:", err.response?.data || err.message);
     }
   };
+  
 export const createPost = ({ 
     postData, 
     images, 

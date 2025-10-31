@@ -1035,7 +1035,7 @@ const Createpost = () => {
     // 🔷 RENDERIZADO DINÁMICO SEGÚN CATEGORÍA
     const renderCategoryFields = () => {
         switch (postData.subCategory) {
-            case "Voyage_Organise":
+            case "Voyage Organise":
                 return renderVoyageOrganise();
             case "Location_Vacances":
                 return renderLocationVacances();

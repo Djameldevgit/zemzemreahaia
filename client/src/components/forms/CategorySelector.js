@@ -6,7 +6,7 @@ const CategorySelector = ({ postData, handleChangeInput }) => {
     const { t } = useTranslation('categories');
 
     const categorias = [
-        { value: "Voyage_Organise", emoji: "🗺️", color: "primary" },
+        { value: "Voyage Organise", emoji: "🗺️", color: "primary" },
         { value: "Location_Vacances", emoji: "🏠", color: "success" },
         { value: "hadj_Omra", emoji: "🕋", color: "warning" },
         { value: "Reservations_Visa", emoji: "📋", color: "info" },

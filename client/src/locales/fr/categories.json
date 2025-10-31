@@ -411,7 +411,7 @@
       "descripcionCategorias": "Description des Catégories",
   
       "categoriass": {
-        "Voyage_Organise": "Voyage Organisé",
+        "Voyage Organise": "Voyage Organisé",
         "Location_Vacances": "Location Vacances", 
         "hadj_Omra": "Hadj & Omra",
         "Reservations_Visa": "Réservations & Visa",
@@ -421,7 +421,7 @@
       },
   
       "descripciones": {
-        "Voyage_Organise": "Voyages tout compris avec transport, hébergement et activités organisées",
+        "Voyage Organise": "Voyages tout compris avec transport, hébergement et activités organisées",
         "Location_Vacances": "Location de maisons, appartements ou villas pour vacances",
         "hadj_Omra": "Pèlerinages religieux vers La Mecque et Médine",
         "Reservations_Visa": "Services de réservation et assistance pour visas de voyage",
@@ -431,7 +431,7 @@
       },
   
       "categorias": {
-        "voyage_organise": "Voyage Organisé",
+        "Voyage Organise": "Voyage Organisé",
         "location_vacances": "Location Vacances",
         "hadj_omra": "Hadj & Omra", 
         "reservations_visa": "Réservations & Visa",

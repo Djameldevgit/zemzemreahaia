@@ -328,7 +328,7 @@
       "descripcionCategorias": "وصف الفئات",
   
       "categoriass": {
-        "Voyage_Organise": "رحلة منظمة",
+        "Voyage Organise": "رحلة منظمة",
         "Location_Vacances": "إيجار عطلات",
         "hadj_Omra": "حج وعمرة",
         "Reservations_Visa": "حجوزات وتأشيرات",
@@ -338,7 +338,7 @@
       },
   
       "descripciones": {
-        "Voyage_Organise": "رحلات شاملة مع النقل والإقامة والأنشطة المنظمة",
+        "Voyage Organise": "رحلات شاملة مع النقل والإقامة والأنشطة المنظمة",
         "Location_Vacances": "إيجار منازل أو شقق أو فيلات للعطلات",
         "hadj_Omra": "الرحلات الدينية إلى مكة المكرمة والمدينة المنورة",
         "Reservations_Visa": "خدمات الحجز والمساعدة في تأشيرات السفر",
@@ -348,7 +348,7 @@
       },
   
       "categorias": {
-        "voyage_organise": "رحلة منظمة",
+        "Voyage Organise": "رحلة منظمة",
         "location_vacances": "إيجار عطلات",
         "hadj_omra": "حج وعمرة",
         "reservations_visa": "حجوزات وتأشيرات",
@@ -358,7 +358,7 @@
     
   },
  
-
+   
  
     "edit_title": "تعديل المنشور",
     "create_title": "إنشاء منشور جديد",
