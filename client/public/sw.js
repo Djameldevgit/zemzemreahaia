@@ -6,9 +6,6 @@ const STATIC_CACHE_NAME = 'tu-app-static-v1.0';
 // URLs para cachear
 const STATIC_ASSETS = [
   '/',
-  '/profile',
-  '/message',
-  '/search',
   '/static/js/bundle.js',
   '/static/css/main.css',
   '/manifest.json',
