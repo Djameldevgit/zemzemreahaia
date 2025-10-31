@@ -64,6 +64,8 @@ const LanguageSelectorandroid = () => {
           <Col xs={6} className="ps-0">
             <a href="/" style={{ textDecoration: 'none' }}>
               <h3 style={{ 
+ fontFamily: "'Playfair Display', serif", // Fuente elegante
+
                 margin: 0, 
                 fontSize: '1.3rem', 
                 fontWeight: 'bold',

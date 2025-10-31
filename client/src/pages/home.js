@@ -5,6 +5,7 @@ import Posts from '../components/home/Posts'
  
 import { useSelector } from 'react-redux'
 import LoadIcon from '../images/loading.gif'
+import HeaderAgencia from '../components/HeaderAgencia';
 
 
 let scroll = 0;
@@ -27,7 +28,9 @@ const Home = () => {
 
     return (
         <div >
-      
+      <div>
+        <HeaderAgencia/>
+      </div>
                  
                 {
                     homePosts.loading 

@@ -7,27 +7,36 @@ const TransporteViaje = ({ postData = {}, handleChangeInput }) => {
 
     // 🔷 VALIDACIÓN DEFENSIVA - asegurar que los arrays existan
     const serviciosTransporte = Array.isArray(postData.serviciosTransporte) ? postData.serviciosTransporte : [];
-
     const tiposTransporte = [
-        { value: 'avion', label: 'Avión', emoji: '✈️' },
-        { value: 'bus', label: 'Autobús', emoji: '🚌' },
-        { value: 'tren', label: 'Tren', emoji: '🚆' },
-        { value: 'coche', label: 'Coche', emoji: '🚗' },
-        { value: 'barco', label: 'Barco', emoji: '🚢' },
-        { value: 'minibus', label: 'Minibús', emoji: '🚐' },
-        { value: 'taxi', label: 'Taxi', emoji: '🚕' },
-        { value: 'avion_bus', label: 'Avión + Bus', emoji: '✈️+🚌' },
-        { value: 'tren_bus', label: 'Tren + Bus', emoji: '🚆+🚌' },
-        { value: 'privado', label: 'Vehículo Privado', emoji: '🏎️' }
+        { value: 'avion', label: t('tiposTransporte.avion'), emoji: '✈️' },
+        { value: 'bus', label: t('tiposTransporte.bus'), emoji: '🚌' },
+        { value: 'tren', label: t('tiposTransporte.tren'), emoji: '🚆' },
+        { value: 'coche', label: t('tiposTransporte.coche'), emoji: '🚗' },
+        { value: 'barco', label: t('tiposTransporte.barco'), emoji: '🚢' },
+        { value: 'minibus', label: t('tiposTransporte.minibus'), emoji: '🚐' },
+        { value: 'taxi', label: t('tiposTransporte.taxi'), emoji: '🚕' },
+        { value: 'avion_bus', label: t('tiposTransporte.avion_bus'), emoji: '✈️+🚌' },
+        { value: 'tren_bus', label: t('tiposTransporte.tren_bus'), emoji: '🚆+🚌' },
+        { value: 'privado', label: t('tiposTransporte.privado'), emoji: '🏎️' }
     ];
-
+    
     const clasesTransporte = [
-        'economica', 'premium_economica', 'negocios', 'primera_clase', 'estandar', 'premium'
+        t('clasesTransporte.economica'),
+        t('clasesTransporte.premium_economica'),
+        t('clasesTransporte.negocios'),
+        t('clasesTransporte.primera_clase'),
+        t('clasesTransporte.estandar'),
+        t('clasesTransporte.premium')
     ];
-
+    
     const serviciosDisponibles = [
-        'comida_incluida', 'bebidas_gratis', 'entretenimiento', 'wifi', 
-        'asientos_reclinables', 'espacio_extra', 'maletas_incluidas'
+        t('serviciosDisponibles.comida_incluida'),
+        t('serviciosDisponibles.bebidas_gratis'),
+        t('serviciosDisponibles.entretenimiento'),
+        t('serviciosDisponibles.wifi'),
+        t('serviciosDisponibles.asientos_reclinables'),
+        t('serviciosDisponibles.espacio_extra'),
+        t('serviciosDisponibles.maletas_incluidas')
     ];
 
     // 🔷 HANDLER PARA CHECKBOXES CON ARRAYS

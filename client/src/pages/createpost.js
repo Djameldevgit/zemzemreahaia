@@ -216,18 +216,36 @@ const Createpost = () => {
                 const sanitized = { ...data };
 
                 const arrayFields = [
-                    'servicesInclus', 'activites', 'language', 'servicios', 'serviciosTr',
-                    'specifications', 'wifi', 'optionsPaiement', 'documentsRequises',
-                    'excursions', 'tipodehabutaciones', 'serviciosTransporte'
+                    t('fields.servicesInclus'),
+                    t('fields.activites'),
+                    t('fields.language'),
+                    t('fields.servicios'),
+                    t('fields.serviciosTr'),
+                    t('fields.specifications'),
+                    t('fields.wifi'),
+                    t('fields.optionsPaiement'),
+                    t('fields.documentsRequises'),
+                    t('fields.excursions'),
+                    t('fields.tipodehabutaciones'),
+                    t('fields.serviciosTransporte')
                 ];
-
+                
                 const booleanFields = [
-                    'promoteurimmobilier', 'wifiGratuit', 'climatisation', 'cuisineEquipee',
-                    'television', 'piscine', 'parking', 'animauxAcceptes', 'menageInclus',
-                    'assurancesIncluses', 'guideLocal', 'repasInclus', 'transfertAeroport',
-                    'acompteRequise'
+                    t('fields.promoteurimmobilier'),
+                    t('fields.wifiGratuit'),
+                    t('fields.climatisation'),
+                    t('fields.cuisineEquipee'),
+                    t('fields.television'),
+                    t('fields.piscine'),
+                    t('fields.parking'),
+                    t('fields.animauxAcceptes'),
+                    t('fields.menageInclus'),
+                    t('fields.assurancesIncluses'),
+                    t('fields.guideLocal'),
+                    t('fields.repasInclus'),
+                    t('fields.transfertAeroport'),
+                    t('fields.acompteRequise')
                 ];
-
                 arrayFields.forEach(field => {
                     sanitized[field] = Array.isArray(sanitized[field]) ? sanitized[field] : [];
                 });
@@ -677,37 +695,37 @@ const Createpost = () => {
                         📺 {t('location.equipements_services')}
                     </Accordion.Header>
                     <Accordion.Body>
-                        <Row>
-                            <Col md={6}>
-                                {['wifi_gratuit', 'climatisation', 'cuisine_equipee', 'television'].map(equipement => (
-                                    <Form.Check
-                                        key={equipement}
-                                        type="checkbox"
-                                        name={equipement === 'wifi_gratuit' ? 'wifiGratuit' : equipement}
-                                        label={t(`equipements.${equipement}`)}
-                                        checked={postData[equipement === 'wifi_gratuit' ? 'wifiGratuit' : equipement] || false}
-                                        onChange={handleChangeInput}
-                                        className={isRTL ? 'text-end' : ''}
-                                    />
-                                ))}
-                            </Col>
-                            <Col md={6}>
-                                {['piscine', 'parking', 'animaux_acceptes', 'menage_inclus'].map(equipement => (
-                                    <Form.Check
-                                        key={equipement}
-                                        type="checkbox"
-                                        name={equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
-                                            equipement === 'menage_inclus' ? 'menageInclus' : equipement}
-                                        label={t(`equipements.${equipement}`)}
-                                        checked={postData[equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
-                                            equipement === 'menage_inclus' ? 'menageInclus' : equipement] || false}
-                                        onChange={handleChangeInput}
-                                        className={isRTL ? 'text-end' : ''}
-                                    />
-                                ))}
-                            </Col>
-                        </Row>
-                    </Accordion.Body>
+    <Row>
+        <Col md={6}>
+            {['wifi_gratuit', 'climatisation', 'cuisine_equipee', 'television'].map(equipement => (
+                <Form.Check
+                    key={equipement}
+                    type="checkbox"
+                    name={equipement === 'wifi_gratuit' ? 'wifiGratuit' : equipement}
+                    label={t(`equipements.${equipement}`)}
+                    checked={postData[equipement === 'wifi_gratuit' ? 'wifiGratuit' : equipement] || false}
+                    onChange={handleChangeInput}
+                    className={isRTL ? 'text-end' : ''}
+                />
+            ))}
+        </Col>
+        <Col md={6}>
+            {['piscine', 'parking', 'animaux_acceptes', 'menage_inclus'].map(equipement => (
+                <Form.Check
+                    key={equipement}
+                    type="checkbox"
+                    name={equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
+                          equipement === 'menage_inclus' ? 'menageInclus' : equipement}
+                    label={t(`equipements.${equipement}`)}
+                    checked={postData[equipement === 'animaux_acceptes' ? 'animauxAcceptes' :
+                              equipement === 'menage_inclus' ? 'menageInclus' : equipement] || false}
+                    onChange={handleChangeInput}
+                    className={isRTL ? 'text-end' : ''}
+                />
+            ))}
+        </Col>
+    </Row>
+</Accordion.Body>
                 </Accordion.Item>
 
                 <Accordion.Item eventKey="2">

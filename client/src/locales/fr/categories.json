@@ -1,5 +1,78 @@
 {
+  "equipements": {
+    "wifi_gratuit": "WiFi Gratuito",
+    "climatisation": "Climatización",
+    "cuisine_equipee": "Cocina Equipada", 
+    "television": "Televisión",
+    "piscine": "Piscina",
+    "parking": "Estacionamiento",
+    "animaux_acceptes": "Animales Aceptados",
+    "menage_inclus": "Limpieza Incluida"
+  },
+    "tiposTransporte": {
+      "avion": "Avión",
+      "bus": "Autobús",
+      "tren": "Tren",
+      "coche": "Coche", 
+      "barco": "Barco",
+      "minibus": "Minibús",
+      "taxi": "Taxi",
+      "avion_bus": "Avión + Bus",
+      "tren_bus": "Tren + Bus",
+      "privado": "Vehículo Privado"
+    },
+    "clasesTransporte": {
+      "economica": "Económica",
+      "premium_economica": "Premium Económica",
+      "negocios": "Negocios",
+      "primera_clase": "Primera Clase",
+      "estandar": "Estándar",
+      "premium": "Premium"
+    },
+    "serviciosDisponibles": {
+      "comida_incluida": "Comida Incluida",
+      "bebidas_gratis": "Bebidas Gratis",
+      "entretenimiento": "Entretenimiento",
+      "wifi": "WiFi",
+      "asientos_reclinables": "Asientos Reclinables",
+      "espacio_extra": "Espacio Extra",
+      "maletas_incluidas": "Maletas Incluidas"
+    },
+  
+    
+    "serviciosHotel": {
+      "wifi": "WiFi",
+      "piscina": "Piscina",
+      "spa": "Spa",
+      "gimnasio": "Gimnasio",
+      "restaurante": "Restaurante",
+      "room_service": "Servicio a la habitación",
+      "estacionamiento": "Estacionamiento",
+      "lavanderia": "Lavandería",
+      "business_center": "Centro de negocios",
+      "pets_allowed": "Mascotas permitidas"
+    },
+    "serviciosAdicionales": {
+      "desayuno_incluido": "Desayuno incluido",
+      "vista_al_mar": "Vista al mar",
+      "terraza": "Terraza",
+      "minibar": "Minibar",
+      "caja_fuerte": "Caja fuerte"
+    
+  },
 
+
+
+
+
+  "tiposHabitaciones": {
+    "individual": "Individuelle",
+    "doble": "Double", 
+    "triple": "Triple",
+    "suite": "Suite",
+    "familiar": "Familiale",
+    "presidencial": "Présidentielle"
+  },
  
       "transporteViaje": "Transport du Voyage",
       "tipoTransporte": "Type de Transport",
@@ -97,7 +170,122 @@
       },
   
 
-
+     
+        "edit_title": "Modifier la publication",
+        "create_title": "Créer une nouvelle publication",
+        "modification": "Modification en cours",
+        "button_update": "Mettre à jour",
+        "button_publish": "Publier",
+        "success_update": "Publication mise à jour avec succès",
+        "success_create": "Publication créée avec succès",
+        "error_publication": "Erreur de publication",
+        
+        "validation_title_required": "Le titre est requis",
+        "validation_description_required": "La description est requise",
+        "validation_wilaya_required": "La wilaya est requise",
+        "validation_commune_required": "La commune est requise",
+        "validation_category_required": "La catégorie est requise",
+        "validation_images_required": "Les images sont requises",
+        "validation_images_size": "Image trop volumineuse (max 5MB)",
+        "validation_fix_errors": "Veuillez corriger les erreurs dans le formulaire",
+        "validation_required_fields": "Champs obligatoires incomplets",
+        "validation_scroll_to_errors": "Faites défiler vers le haut pour compléter les champs marqués",
+        "validation_destination_required": "La destination est requise",
+        "validation_departure_date_required": "La date de départ est requise",
+        "validation_price_required": "Le prix est requis",
+        "validation_surface_required": "La superficie est requise",
+        "validation_capacity_required": "La capacité est requise",
+        "validation_night_price_required": "Le prix par nuit est requis",
+        "validation_hadj_destination_required": "La destination du pèlerinage est requise",
+        "validation_pilgrimage_type_required": "Le type de pèlerinage est requis",
+      
+        "common": {
+          "titre": "Titre",
+          "titre_placeholder": "Entrez le titre de la publication",
+          "superficie": "Superficie",
+          "superficie_placeholder": "Entrez la superficie en m²",
+          "etage": "Étage",
+          "etage_placeholder": "Entrez le numéro d'étage",
+          "capacite_personnes": "Capacité",
+          "capacite_placeholder": "Nombre de personnes",
+          "nombre_chambres": "Nombre de chambres",
+          "nombre_chambres_placeholder": "Entrez le nombre de chambres",
+          "nombre_salles_bain": "Nombre de salles de bain",
+          "nombre_salles_bain_placeholder": "Entrez le nombre de salles de bain",
+          "check_in": "Heure d'arrivée",
+          "check_out": "Heure de départ",
+          "tarif_nuit": "Prix par nuit",
+          "tarif_nuit_placeholder": "Prix par nuit en dinar",
+          "prix_adulte": "Prix adulte",
+          "prix_adulte_placeholder": "Prix pour adulte",
+          "prix_enfant": "Prix enfant",
+          "prix_enfant_placeholder": "Prix pour enfant",
+          "prix_bebe": "Prix bébé",
+          "prix_bebe_placeholder": "Prix pour bébé",
+          "select_option": "Sélectionner une option"
+        },
+      
+        "voyage": {
+          "destinations_internationales": "Destinations internationales",
+          "dates_duree": "Dates et durée",
+          "transport_deplacements": "Transport et déplacements",
+          "hebergement_pension": "Hébergement et pension",
+          "activites_services": "Activités et services",
+          "tarifs_conditions": "Tarifs et conditions",
+          "services_inclus": "Services inclus",
+          "activites_proposees": "Activités proposées"
+        },
+      
+        "location": {
+          "informations_logement": "Informations du logement",
+          "equipements_services": "Équipements et services",
+          "chambres_salles_bain": "Chambres et salles de bain",
+          "disponibilite_tarifs": "Disponibilité et tarifs"
+        },
+      
+        "hadj": {
+          "destination_peletinage": "Destination du pèlerinage",
+          "dates_peletinage": "Dates du pèlerinage",
+          "transport_hebergement": "Transport et hébergement",
+          "documents_requis": "Documents requis",
+          "tarifs_conditions": "Tarifs et conditions",
+          "type_peletinage": "Type de pèlerinage",
+          "niveau_confort": "Niveau de confort",
+          "documents_necessaires": "Documents nécessaires"
+        },
+      
+        "services": {
+          "visite_guidee": "Visite guidée",
+          "repas": "Repas",
+          "transfert": "Transferts",
+          "assistance": "Assistance",
+          "assurance": "Assurance"
+        },
+      
+      
+        "types_voyage": {
+          "hadj": "Hadj",
+          "omra": "Omra",
+          "hadj_omra": "Hadj et Omra"
+        },
+      
+        "niveaux_confort": {
+          "economique": "Économique",
+          "standard": "Standard",
+          "confort": "Confort",
+          "luxe": "Luxe"
+        },
+      
+        "documents": {
+          "passeport": "Passeport",
+          "photos_identite": "Photos d'identité",
+          "certificat_vaccination": "Certificat de vaccination",
+          "reservation_hotel": "Réservation d'hôtel",
+          "billet_avion": "Billet d'avion"
+        },
+      
+       
+      
 
 
 
@@ -328,7 +516,36 @@
       "tipo_habitacion_suite": "Suite",
       "tipo_habitacion_familiar": "Chambre familiale",
       "tipo_habitacion_presidencial": "Suite présidentielle",
-  
+     
+     
+     
+          "servicesInclus": "Servicios Incluidos",
+          "activites": "Actividades",
+          "language": "Idioma",
+          "servicios": "Servicios",
+          "serviciosTr": "Servicios de Transporte",
+          "specifications": "Especificaciones",
+          "wifi": "WiFi",
+          "optionsPaiement": "Opciones de Pago",
+          "documentsRequises": "Documentos Requeridos",
+          "excursions": "Excursiones",
+          "tipodehabutaciones": "Tipos de Habitaciones",
+      
+          "promoteurimmobilier": "Promotor Inmobiliario",
+          "wifiGratuit": "WiFi Gratuito",
+          "climatisation": "Climatización",
+          "cuisineEquipee": "Cocina Equipada",
+          "television": "Televisión",
+          "piscine": "Piscina",
+          "parking": "Estacionamiento",
+          "animauxAcceptes": "Animales Aceptados",
+          "menageInclus": "Limpieza Incluida",
+          "assurancesIncluses": "Seguros Incluidos",
+          "guideLocal": "Guía Local",
+          "repasInclus": "Comidas Incluidas",
+          "transfertAeroport": "Traslado Aeropuerto",
+          "acompteRequise": "Anticipo Requerido",
+      
       "servicio_wifi": "WiFi",
       "servicio_piscina": "Piscine",
       "servicio_spa": "Spa",

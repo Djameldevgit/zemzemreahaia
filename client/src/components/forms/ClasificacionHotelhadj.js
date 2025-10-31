@@ -20,9 +20,13 @@ const ClasificacionHotelhadj = ({ postData = {}, handleChangeInput, handleArrayC
     ];
 
     const tiposHabitaciones = [
-        'individual', 'doble', 'triple', 'suite', 'familiar', 'presidencial'
+        t('tiposHabitaciones.individual'),
+        t('tiposHabitaciones.doble'), 
+        t('tiposHabitaciones.triple'),
+        t('tiposHabitaciones.suite'),
+        t('tiposHabitaciones.familiar'),
+        t('tiposHabitaciones.presidencial')
     ];
- 
 
    
     return (

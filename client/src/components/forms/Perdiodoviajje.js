@@ -6,8 +6,18 @@ const PeriodoViaje = ({ postData, handleChangeInput }) => {
     const { t } = useTranslation('categories');
 
     const meses = [
-        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        t('meses.enero'),
+        t('meses.febrero'),
+        t('meses.marzo'),
+        t('meses.abril'),
+        t('meses.mayo'),
+        t('meses.junio'),
+        t('meses.julio'),
+        t('meses.agosto'),
+        t('meses.septiembre'),
+        t('meses.octubre'),
+        t('meses.noviembre'),
+        t('meses.diciembre')
     ];
 
     return (

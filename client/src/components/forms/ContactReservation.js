@@ -4,18 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 const ContactReservation = ({ postData, handleChangeInput }) => {
     const { t } = useTranslation('categories');
-    const [showExamples, setShowExamples] = useState(false);
-
-    // Ejemplos de formato para guiar al usuario
-    const contactExamples = [
-        "📞 +213-555-123-456",
-        "📧 email@example.com", 
-        "🌐 https://www.agence-voyage.com",
-        "📱 WhatsApp: +213-555-789-012",
-        "📠 Fax: +213-21-123-456",
-        "📍 Adresse: Rue Example, Alger"
-    ];
-
+ 
     // Detectar tipo de contacto para mostrar badges
     const detectContactType = (contactText) => {
         if (!contactText) return [];

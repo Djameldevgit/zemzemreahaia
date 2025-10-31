@@ -10,13 +10,15 @@ import VerifyModal from '../../authAndVerify/VerifyModal';
 import DesactivateModal from '../../authAndVerify/DesactivateModal';
 import { GLOBALTYPES } from '../../../redux/actions/globalTypes';
 import moment from 'moment';
-
+import HeaderAgencia from '../../HeaderAgencia';
+ 
 const CardBodyCarousel = ({ post }) => {
   const { languageReducer, auth, socket } = useSelector((state) => state);
   const [isLike, setIsLike] = useState(false);
   const [loadLike, setLoadLike] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saveLoad, setSaveLoad] = useState(false);
+  const [viewsCount, setViewsCount] = useState(post.views || 0); // Estado para views
 
   const [showModal, setShowModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
@@ -30,18 +32,30 @@ const CardBodyCarousel = ({ post }) => {
   const { t } = useTranslation(['cardbodycarousel', 'common']);
   const lang = languageReducer.language || 'en';
   const history = useHistory();
-  const location = useLocation(); // NUEVO: Para detectar la ruta actual
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const [showInfo, setShowInfo] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
 
-  // NUEVO: Detectar si estamos en la página detailPost
+  // Detectar si estamos en la página detailPost
   const isDetailPage = location.pathname.includes('/post/');
 
   // Verificar si el usuario es el dueño del post o es admin
   const isPostOwner = auth.user && post.user && auth.user._id === post.user._id;
   const isAdmin = auth.user && auth.user.role === 'admin';
+
+  // CONTADOR DE VIEWS - Simular incremento cuando el post es visible
+  useEffect(() => {
+    if (post._id && !isDetailPage) {
+      // Simular incremento de views (en una app real harías una llamada API)
+      const newViews = (post.views || 0) + 1;
+      setViewsCount(newViews);
+      
+      // Aquí normalmente harías dispatch para actualizar las views en el backend
+      // dispatch(updatePostViews({ postId: post._id, views: newViews }));
+    }
+  }, [post._id, isDetailPage]);
 
   // Handlers para mostrar/ocultar información
   const handleImageClick = () => {
@@ -218,12 +232,7 @@ const CardBodyCarousel = ({ post }) => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const options = { day: 'numeric', month: 'short', year: 'numeric' };
-    return new Date(dateString).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', options);
-  };
-
-  // MODAL DE OPCIONES MEJORADO CON BOTONES DIRECTOS
+  // MODAL DE OPCIONES MEJORADO
   const OptionsModal = () => {
     if (!showOptionsModal) return null;
 
@@ -386,37 +395,6 @@ const CardBodyCarousel = ({ post }) => {
               </button>
             )}
 
-            {/* BOTÓN DE REPORTAR - PARA USUARIOS NO PROPIETARIOS */}
-            {!isPostOwner && !isAdmin && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  showAlert(t('post_reported'), 'info');
-                  setShowOptionsModal(false);
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  padding: "16px 24px",
-                  textAlign: "left",
-                  fontSize: "16px",
-                  color: "#e74c3c",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  transition: "background-color 0.2s ease"
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = "rgba(231, 76, 60, 0.1)"}
-                onMouseLeave={(e) => e.target.style.backgroundColor = "transparent"}
-              >
-                <span className="material-icons" style={{ color: "#e74c3c" }}>
-                  flag
-                </span>
-                {t('report_post')}
-              </button>
-            )}
-
             {/* BOTÓN DE CERRAR */}
             <div style={{ padding: "8px 16px", marginTop: "8px" }}>
               <button
@@ -460,8 +438,8 @@ const CardBodyCarousel = ({ post }) => {
             className="carousel-container"
             style={{
               position: "relative",
-              height: "400px",
-              maxHeight: "80vh",
+              height: isDetailPage ? "auto" : "400px",
+              maxHeight: isDetailPage ? "none" : "80vh",
               overflow: 'hidden',
               cursor: isDetailPage ? 'default' : 'pointer'
             }}
@@ -470,466 +448,453 @@ const CardBodyCarousel = ({ post }) => {
             onTouchEnd={handleTouchEnd}
           >
             
-
-            {/* Botón de tres puntos (parte superior derecha) - OCULTO EN DETAILPAGE */}
-            {!isDetailPage && (
-              <div style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                zIndex: 10,
-                opacity: showInfo ? 1 : 0.8,
-                transition: 'opacity 0.3s ease'
-              }}>
-                <div
-                  style={{
-                    cursor: "pointer",
-                    backgroundColor: "rgba(0, 0, 0, 0.6)",
-                    borderRadius: "50%",
-                    padding: "6px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
-                    transition: "all 0.2s ease",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255, 255, 255, 0.2)"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "scale(1.1)";
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "scale(1)";
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowOptionsModal(true);
-                  }}
-                >
-                  <span className="material-icons" style={{
-                    fontSize: "18px",
-                    color: "white"
-                  }}>
-                    more_vert
-                  </span>
-                </div>
+            {/* EN DETALLE: MOSTRAR HEADERAGENCIA */}
+            {isDetailPage ? (
+              <div style={{ marginBottom: '20px' }}>
+                <HeaderAgencia 
+                  componentHeight="180px"
+                  imageColumns={3}
+                  cardColumns={9}
+                  imageSrc={post.images[0]?.url || "/images/agencia.jpg"}
+                />
               </div>
-            )}
-
-            {/* Botón de edición (solo en detailPage para dueño o admin) */}
-            {isDetailPage && (isPostOwner || isAdmin) && (
-              <div style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                zIndex: 10
-              }}>
-                <div
-                  style={{
-                    cursor: "pointer",
-                    backgroundColor: "rgba(255, 193, 7, 0.8)",
-                    borderRadius: "50%",
-                    padding: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "36px",
-                    height: "36px",
-                    transition: "all 0.2s ease",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255, 255, 255, 0.3)",
-                    boxShadow: "0 4px 12px rgba(255, 193, 7, 0.4)"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "scale(1.1)";
-                    e.currentTarget.style.backgroundColor = "rgba(255, 193, 7, 0.9)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "scale(1)";
-                    e.currentTarget.style.backgroundColor = "rgba(255, 193, 7, 0.8)";
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditPost(e);
-                  }}
-                >
-                  <span className="material-icons" style={{
-                    fontSize: "20px",
-                    color: "white"
-                  }}>
-                    edit
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Información del artista (ocultable con animación) - OCULTA EN DETAILPAGE */}
-            {!isDetailPage && (
-              <div style={{
-                position: "absolute",
-                bottom: "0",
-                left: "0",
-                right: "0",
-                zIndex: 2,
-                color: "white",
-                background: showInfo
-                  ? "linear-gradient(transparent 0%, rgba(0, 0, 0, 0.8) 100%)"
-                  : "transparent",
-                padding: showInfo ? "16px 12px 12px 12px" : "0px 12px",
-                backdropFilter: showInfo ? "blur(10px)" : "none",
-                borderTop: showInfo ? "1px solid rgba(255, 255, 255, 0.1)" : "none",
-                height: showInfo ? "auto" : "0px",
-                opacity: showInfo ? 1 : 0,
-                transform: showInfo ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                overflow: 'hidden'
-              }}>
-                {/* Primera línea: Usuario y fecha */}
+            ) : (
+              // EN OTRAS PÁGINAS: MOSTRAR CAROUSEL NORMAL
+              <>
+                {/* Botón de tres puntos (parte superior derecha) */}
                 <div style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  marginBottom: showInfo ? "8px" : "0px",
-                  transition: 'margin-bottom 0.3s ease'
+                  position: "absolute",
+                  top: "10px",
+                  right: "19px",
+                  zIndex: 10,
+                  opacity: showInfo ? 1 : 0.8,
+                  transition: 'opacity 0.3s ease'
                 }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{
-                      fontSize: "clamp(14px, 2vh, 18px)",
-                      fontWeight: "bold",
-                      marginBottom: "2px",
+                  <div
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: "rgba(0, 0, 0, 0.6)",
+                      borderRadius: "50%",
+                      padding: "6px",
                       display: "flex",
                       alignItems: "center",
-                      gap: "8px",
-                      opacity: showInfo ? 1 : 0,
-                      transform: showInfo ? 'translateX(0)' : 'translateX(-10px)',
-                      transition: 'all 0.3s ease 0.1s'
+                      justifyContent: "center",
+                      width: "32px",
+                      height: "32px",
+                      transition: "all 0.2s ease",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255, 255, 255, 0.2)"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "scale(1.1)";
+                      e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "scale(1)";
+                      e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowOptionsModal(true);
+                    }}
+                  >
+                    <span className="material-icons" style={{
+                      fontSize: "18px",
+                      color: "white"
                     }}>
-                      <span>{post?.title || t('default_category')}</span>
-                      {post.user?.isVerified && (
-                        <span className="material-icons" style={{
-                          fontSize: "16px",
-                          color: "#0095f6"
-                        }}>
-                          verified
+                      more_vert
+                    </span>
+                  </div>
+                </div>
+
+                {/* Información del artista (ocultable con animación) */}
+                <div style={{
+                  position: "absolute",
+                  bottom: "0",
+                  left: "0",
+                  right: "0",
+                  zIndex: 2,
+                  color: "white",
+                  background: showInfo
+                    ? "linear-gradient(transparent 0%, rgba(0, 0, 0, 0.8) 100%)"
+                    : "transparent",
+                  padding: showInfo ? "16px 12px 12px 12px" : "0px 12px",
+                  backdropFilter: showInfo ? "blur(10px)" : "none",
+                  borderTop: showInfo ? "1px solid rgba(255, 255, 255, 0.1)" : "none",
+                  height: showInfo ? "auto" : "0px",
+                  opacity: showInfo ? 1 : 0,
+                  transform: showInfo ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  overflow: 'hidden'
+                }}>
+                  {/* Primera línea: Usuario y fecha */}
+                  <div style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    marginBottom: showInfo ? "8px" : "0px",
+                    transition: 'margin-bottom 0.3s ease'
+                  }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        fontSize: "clamp(14px, 2vh, 18px)",
+                        fontWeight: "bold",
+                        marginBottom: "2px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        opacity: showInfo ? 1 : 0,
+                        transform: showInfo ? 'translateX(0)' : 'translateX(-10px)',
+                        transition: 'all 0.3s ease 0.1s'
+                      }}>
+                        <span>{post?.title || t('default_category')}</span>
+                        {post.user?.isVerified && (
+                          <span className="material-icons" style={{
+                            fontSize: "16px",
+                            color: "#0095f6"
+                          }}>
+                            verified
+                          </span>
+                        )}
+                      </div>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        fontSize: "clamp(10px, 1.5vh, 12px)",
+                        opacity: showInfo ? 0.9 : 0,
+                        transform: showInfo ? 'translateX(0)' : 'translateX(-10px)',
+                        transition: 'all 0.3s ease 0.15s'
+                      }}>
+                        <span className="material-icons" style={{ fontSize: "12px" }}>
+                          schedule
                         </span>
-                      )}
+                        <span>{moment(post.createdAt).fromNow()}</span>
+                      </div>
                     </div>
+
+                    {/* Botón Más Detalles */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/post/${post._id}`);
+                      }}
+                      style={{
+                        background: "rgba(255, 255, 255, 0.2)",
+                        border: "1px solid rgba(255, 255, 255, 0.3)",
+                        color: "white",
+                        padding: "6px 12px",
+                        borderRadius: "20px",
+                        fontSize: "clamp(10px, 1.5vh, 12px)",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        transition: "all 0.3s ease",
+                        backdropFilter: "blur(10px)",
+                        opacity: showInfo ? 1 : 0,
+                        transform: showInfo ? 'translateX(0)' : 'translateX(10px)',
+                        transition: 'all 0.3s ease 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = "rgba(255, 255, 255, 0.3)";
+                        e.target.style.transform = "scale(1.05)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = "rgba(255, 255, 255, 0.2)";
+                        e.target.style.transform = "scale(1)";
+                      }}
+                    >
+                      <span>{t('details')}</span>
+                      <span className="material-icons" style={{ fontSize: "14px" }}>
+                        arrow_forward
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Información del viaje */}
+                  {post.title && (
                     <div style={{
+                      fontSize: "clamp(12px, 1.5vh, 14px)",
+                      opacity: showInfo ? 0.95 : 0,
+                      lineHeight: "1.3",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      marginTop: showInfo ? "4px" : "0px",
+                      transform: showInfo ? 'translateY(0)' : 'translateY(10px)',
+                      transition: 'all 0.3s ease 0.25s'
+                    }}>
+                      <strong className='text-warning'>Départ: </strong> {post.commune} : {post.wilaya}
+                    </div>
+                  )}
+                </div>
+
+                {/* Indicador visual cuando la información está oculta */}
+                {!showInfo && (
+                  <div style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    zIndex: 1,
+                    background: "rgba(0, 0, 0, 0.5)",
+                    color: "white",
+                    padding: "4px 12px",
+                    borderRadius: "15px",
+                    fontSize: "11px",
+                    fontWeight: "500",
+                    backdropFilter: "blur(5px)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    animation: "pulse 2s infinite",
+                    cursor: "pointer"
+                  }}>
+                    <span className="material-icons" style={{
+                      fontSize: "14px",
+                      marginRight: "4px"
+                    }}>
+                      touch_app
+                    </span>
+                    {t('tap_to_see_info')}
+                  </div>
+                )}
+
+                {/* CONTENEDOR DE ICONOS MEJORADO Y ORGANIZADO */}
+                <div style={{
+                  position: "absolute",
+                  right: "12px",
+                  bottom: "70px", // Posicionado más arriba para mejor acceso
+                  zIndex: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "4px",
+                  justifyContent: "center",
+                  padding: "10px 0"
+                }}>
+                  {/* Botón de like */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "4px"
+                  }}>
+                    <div
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                        borderRadius: "50%",
+                        padding: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        opacity: loadLike ? 0.7 : 1,
+                        width: "44px",
+                        height: "44px",
+                        transition: "all 0.3s ease",
+                        backdropFilter: "blur(10px)",
+                        border: "1px solid rgba(255, 255, 255, 0.2)"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.15)";
+                        e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        isLike ? handleUnLike() : handleLike();
+                      }}
+                    >
+                      <span
+                        className="material-icons"
+                        style={{
+                          fontSize: "22px",
+                          color: isLike ? "#F91880" : "white",
+                          transition: "all 0.3s ease"
+                        }}
+                      >
+                        {loadLike ? "hourglass_empty" : "favorite"}
+                      </span>
+                    </div>
+                    <span style={{
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                      color: "white",
+                      textShadow: "1px 1px 3px rgba(0,0,0,0.8)",
+                      minWidth: "20px",
+                      textAlign: "center"
+                    }}>
+                      {post.likes.length}
+                    </span>
+                  </div>
+
+                  {/* CONTADOR DE VIEWS MEJORADO */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "4px"
+                  }}>
+                    <div style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.7)",
+                      borderRadius: "50%",
+                      padding: "10px",
                       display: "flex",
                       alignItems: "center",
-                      gap: "8px",
-                      fontSize: "clamp(10px, 1.5vh, 12px)",
-                      opacity: showInfo ? 0.9 : 0,
-                      transform: showInfo ? 'translateX(0)' : 'translateX(-10px)',
-                      transition: 'all 0.3s ease 0.15s'
+                      justifyContent: "center",
+                      width: "44px",
+                      height: "44px",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255, 255, 255, 0.2)"
                     }}>
-                      <span className="material-icons" style={{ fontSize: "12px" }}>
-                        schedule
+                      <span className="material-icons" style={{
+                        fontSize: "22px",
+                        color: "#00D4AA"
+                      }}>
+                        visibility
                       </span>
-                      <span>{moment(post.createdAt).fromNow()}</span>
+                    </div>
+                    <span style={{
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                      color: "white",
+                      textShadow: "1px 1px 3px rgba(0,0,0,0.8)",
+                      minWidth: "20px",
+                      textAlign: "center"
+                    }}>
+                      {viewsCount}
+                    </span>
+                  </div>
+
+                  {/* Botón de guardar */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "4px"
+                  }}>
+                    <div
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                        borderRadius: "50%",
+                        padding: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "44px",
+                        height: "44px",
+                        transition: "all 0.3s ease",
+                        backdropFilter: "blur(10px)",
+                        border: "1px solid rgba(255, 255, 255, 0.2)"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.15)";
+                        e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        saved ? handleUnSavePost() : handleSavePost();
+                      }}
+                    >
+                      <span
+                        className="material-icons"
+                        style={{
+                          fontSize: "22px",
+                          color: saved ? "#ff8c00" : "white",
+                          opacity: saveLoad ? 0.5 : 1,
+                          transition: "all 0.3s ease"
+                        }}
+                      >
+                        {saveLoad ? "hourglass_empty" : "bookmark"}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Botón Más Detalles */}
-                  <button
+                  {/* Botón de compartir */}
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "4px"
+                  }}>
+                    <div
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                        borderRadius: "50%",
+                        padding: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "44px",
+                        height: "44px",
+                        transition: "all 0.3s ease",
+                        backdropFilter: "blur(10px)",
+                        border: "1px solid rgba(255, 255, 255, 0.2)"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.15)";
+                        e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShare();
+                      }}
+                    >
+                      <span className="material-icons" style={{
+                        fontSize: "22px",
+                        color: "#4FC3F7",
+                        transition: "all 0.3s ease"
+                      }}>
+                        share
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Carousel */}
+                <div className="card" style={{ height: "100%" }}>
+                  <div
+                    className="card__image"
                     onClick={(e) => {
                       e.stopPropagation();
                       history.push(`/post/${post._id}`);
                     }}
                     style={{
-                      background: "rgba(255, 255, 255, 0.2)",
-                      border: "1px solid rgba(255, 255, 255, 0.3)",
-                      color: "white",
-                      padding: "6px 12px",
-                      borderRadius: "20px",
-                      fontSize: "clamp(10px, 1.5vh, 12px)",
-                      fontWeight: "500",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      transition: "all 0.3s ease",
-                      backdropFilter: "blur(10px)",
-                      opacity: showInfo ? 1 : 0,
-                      transform: showInfo ? 'translateX(0)' : 'translateX(10px)',
-                      transition: 'all 0.3s ease 0.2s'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.3)";
-                      e.target.style.transform = "scale(1.05)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.background = "rgba(255, 255, 255, 0.2)";
-                      e.target.style.transform = "scale(1)";
+                      height: "100%",
+                      cursor: 'pointer'
                     }}
                   >
-                    <span>{t('details')}</span>
-                    <span className="material-icons" style={{ fontSize: "14px" }}>
-                      arrow_forward
-                    </span>
-                  </button>
-                </div>
-
-                {/* Título de la obra */}
-                {post.title && (
-                 
-                 
-                 <div style={{
-                    fontSize: "clamp(12px, 1.5vh, 14px)",
-                    opacity: showInfo ? 0.95 : 0,
-                    lineHeight: "1.3",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    marginTop: showInfo ? "4px" : "0px",
-                    transform: showInfo ? 'translateY(0)' : 'translateY(10px)',
-                    transition: 'all 0.3s ease 0.25s'
-                  }}>
-                <strong className='text-warning'>Départ: </strong>   {post.commune} : {post.wilaya}
+                    <div style={{ height: "100%" }}>
+                      <Carousel images={post.images} id={post._id} />
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              </>
             )}
-
-            {/* Indicador visual cuando la información está oculta - OCULTO EN DETAILPAGE */}
-            {!isDetailPage && !showInfo && (
-              <div style={{
-                position: "absolute",
-                bottom: "10px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                zIndex: 1,
-                background: "rgba(0, 0, 0, 0.5)",
-                color: "white",
-                padding: "4px 12px",
-                borderRadius: "15px",
-                fontSize: "11px",
-                fontWeight: "500",
-                backdropFilter: "blur(5px)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
-                animation: "pulse 2s infinite",
-                cursor: "pointer"
-              }}>
-                <span className="material-icons" style={{
-                  fontSize: "14px",
-                  marginRight: "4px"
-                }}>
-                  touch_app
-                </span>
-                {t('tap_to_see_info')}
-              </div>
-            )}
-
-            {/* Contenedor de iconos al estilo TikTok (derecha) - OCULTO EN DETAILPAGE */}
-            {!isDetailPage && (
-              <div style={{
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "clamp(6px, 2vh, 16px)",
-                justifyContent: "center",
-                maxHeight: "calc(100% - 140px)",
-                paddingTop: "10px",
-                paddingBottom: "10px"
-              }}>
-                {/* Botón de like */}
-                <div style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "2px"
-                }}>
-                  <div
-                    style={{
-                      cursor: "pointer",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      borderRadius: "50%",
-                      padding: "8px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      opacity: loadLike ? 0.7 : 1,
-                      width: "clamp(32px, 5vh, 40px)",
-                      height: "clamp(32px, 5vh, 40px)",
-                      transition: "transform 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      isLike ? handleUnLike() : handleLike();
-                    }}
-                  >
-                    <span
-                      className="material-icons"
-                      style={{
-                        fontSize: "clamp(18px, 3vh, 24px)",
-                        color: isLike ? "#F91880" : "white"
-                      }}
-                    >
-                      {loadLike ? "hourglass_empty" : "favorite"}
-                    </span>
-                  </div>
-                  <span style={{
-                    fontSize: "clamp(10px, 1.5vh, 12px)",
-                    fontWeight: "bold",
-                    color: "white",
-                    textShadow: "1px 1px 2px rgba(0,0,0,0.7)"
-                  }}>
-                    {post.likes.length}
-                  </span>
-                </div>
-
-                {/* Botón de guardar */}
-                <div style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "2px"
-                }}>
-                  <div
-                    style={{
-                      cursor: "pointer",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      borderRadius: "50%",
-                      padding: "8px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "clamp(32px, 5vh, 40px)",
-                      height: "clamp(32px, 5vh, 40px)",
-                      transition: "transform 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      saved ? handleUnSavePost() : handleSavePost();
-                    }}
-                  >
-                    <span
-                      className="material-icons"
-                      style={{
-                        fontSize: "clamp(18px, 3vh, 24px)",
-                        color: saved ? "#ff8c00" : "white",
-                        opacity: saveLoad ? 0.5 : 1
-                      }}
-                    >
-                      {saveLoad ? "hourglass_empty" : "bookmark"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Contador de vistas */}
-                <div style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "2px"
-                }}>
-                  <div style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    borderRadius: "50%",
-                    padding: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "clamp(32px, 5vh, 40px)",
-                    height: "clamp(32px, 5vh, 40px)"
-                  }}>
-                    <span className="material-icons" style={{
-                      fontSize: "clamp(18px, 3vh, 24px)",
-                      color: "white"
-                    }}>
-                      visibility
-                    </span>
-                  </div>
-                  <span style={{
-                    fontSize: "clamp(10px, 1.5vh, 12px)",
-                    fontWeight: "bold",
-                    color: "white",
-                    textShadow: "1px 1px 2px rgba(0,0,0,0.7)"
-                  }}>
-                    {post.views || 0}
-                  </span>
-                </div>
-
-                {/* Botón de compartir */}
-                <div style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "2px"
-                }}>
-                  <div
-                    style={{
-                      cursor: "pointer",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      borderRadius: "50%",
-                      padding: "8px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "clamp(32px, 5vh, 40px)",
-                      height: "clamp(32px, 5vh, 40px)",
-                      transition: "transform 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleShare();
-                    }}
-                  >
-                    <span className="material-icons" style={{
-                      fontSize: "clamp(18px, 3vh, 24px)",
-                      color: "white"
-                    }}>
-                      share
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Carousel */}
-            <div className="card" style={{ height: "100%" }}>
-              <div
-                className="card__image"
-                onClick={(e) => {
-                  if (!isDetailPage) {
-                    e.stopPropagation();
-                    history.push(`/post/${post._id}`);
-                  }
-                }}
-                style={{
-                  height: "100%",
-                  cursor: isDetailPage ? 'default' : 'pointer'
-                }}
-              >
-                <div style={{ height: "100%" }}>
-                  <Carousel images={post.images} id={post._id} />
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </div>
 
-      {/* Modal de opciones con botones directos - OCULTO EN DETAILPAGE */}
+      {/* Modal de opciones */}
       {!isDetailPage && <OptionsModal />}
 
-      {/* Los modales restantes se mantienen igual */}
+      {/* Modal de eliminación */}
       {showDeleteModal && (
         <div style={{
           position: "fixed",

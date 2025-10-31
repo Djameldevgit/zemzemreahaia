@@ -47,8 +47,6 @@ const CategorySelector = ({ postData, handleChangeInput }) => {
                     </option>
                 ))}
             </Form.Select>
-            
-         
         </Form.Group>
     );
 };

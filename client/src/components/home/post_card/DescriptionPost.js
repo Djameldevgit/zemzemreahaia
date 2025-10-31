@@ -488,62 +488,85 @@ const DescriptionPost = ({ post }) => {
   return (
     <Container fluid className="px-2 py-3">
       {/* HEADER PRINCIPAL MEJORADO */}
-      <Card className={`border-0 shadow-lg mb-4 overflow-hidden ${theme ? 'bg-dark text-light' : 'bg-white'}`}>
+      <Card className={`border-0 shadow-lg overflow-hidden ${theme ? 'bg-dark text-light' : 'bg-white'}`}>
         <div className={`bg-gradient p-4 text-white position-relative`} style={{
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           borderRadius: '0.5rem 0.5rem 0 0'
         }}>
-          <div className="position-absolute top-0 end-0 p-3">
+          <Row>
+            <div className="position-absolute top-0 end-0 pY-3">
             {post.subCategory && (
               <Badge bg="light" text="dark" className="fs-6 px-3 py-2 shadow">
                 <i className={getIconClass("fas fa-suitcase-rolling")}></i>
                 {t(`category_${post.subCategory}`) || post.subCategory}
               </Badge>
             )}
-          </div>
+          </div> 
+          </Row>
+         
 
-          <Row className="align-items-center">
+          <Row className="align-items">
             <Col xs={12} lg={8}>
-              <div className={`d-flex align-items-center mb-3 ${getFlexClass()}`}>
-                <div className={`rounded-circle p-3 me-3 ${theme ? 'bg-light bg-opacity-10' : 'bg-white bg-opacity-25'}`}>
-                  <i className={`fas fa-plane-departure fs-1 ${theme ? 'text-light' : 'text-white'}`}></i>
-                </div>
-                <div>
-  <div className="position-relative">
-    <h2 className="fw-bold text-white mb-2 position-relative d-inline-block px-4 py-2" style={{
-      fontSize: '2.5rem',
-      fontWeight: '800',
-      background: 'linear-gradient(135deg, #2c5282 0%, #3182ce 50%, #63b3ed 100%)',
-      borderRadius: '10px',
-      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-      border: '1px solid rgba(255,255,255,0.2)'
-    }}>
-      {post.title || t('travel_agency')}
-    </h2>
-  </div>
-  <p className={`opacity-90 ${theme ? 'text-light' : 'text-white'} d-flex align-items-center mt-3`}>
-    <i className={`${getIconClass("fas fa-map-location-dot")} ${theme ? 'text-warning' : 'text-warning'} me-2`}></i>
-    {t('discover_adventure')}
-  </p>
-</div>
+              <div className={`d-flex align-items-start ${isRTL ? 'flex-row-reverse' : 'flex-row'}`} />
+              {/* Icono */}
+              <div className={`rounded-circle p-2 ${isRTL ? 'ms-2' : 'me-2'} ${theme ? 'bg-light bg-opacity-10' : 'bg-white bg-opacity-25'}`} style={{ flexShrink: 0 }}> {/* p-2 más pequeño y flexShrink: 0 */}
+                <i className={`fas fa-plane-departure ${theme ? 'text-light' : 'text-white'}`} style={{ fontSize: '1.5rem' }}></i> {/* Tamaño reducido */}
               </div>
+
+
+              <div className="flex-grow-1" style={{ marginLeft: isRTL ? '0' : '0', marginRight: isRTL ? '0' : '0' }}> {/* Sin márgenes laterales */}
+
+                <h4 className="fw-bold text-white mb-1 px-3 py-2" style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%)',
+                  borderRadius: '8px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                  lineHeight: '1.2',
+                  display: 'inline-block',
+                  textAlign: isRTL ? 'right' : 'left',
+                  direction: isRTL ? 'rtl' : 'ltr',
+                  margin: '0' /* Sin margen externo */
+                }}>
+                  {post.title || t('travel_agency')}
+                </h4>
+
+                {/* Descripción con menos margen superior */}
+                <p className={`opacity-90 ${theme ? 'text-light' : 'text-white'} d-flex align-items-center mt-1 ${isRTL ? 'flex-row-reverse justify-content-end' : ''}`} style={{
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  marginBottom: '0' /* Sin margen inferior */
+                }}>
+                  <i className={`fas fa-map-location-dot ${isRTL ? 'ms-1' : 'me-1'} ${theme ? 'text-warning' : 'text-warning'}`}></i>
+                  {t('discover_adventure')}
+                </p>
+              </div>
+
             </Col>
 
-            <Col xs={12} lg={4} className="text-lg-end">
+            {/* Columna del precio */}
+            <Col xs={12} lg={4} className={`text-lg-${isRTL ? 'start' : 'end'} `}> {/* mt-2 reducido */}
               {post.price && (
-                <div className={`rounded-3 p-3 d-inline-block ${theme ? 'bg-secondary' : 'bg-light'}`}>
-                  <div className={`small ${theme ? 'text-light' : 'text-dark'}`}>{t('desde')}</div>
-                  <div className={`fs-2 fw-bold ${theme ? 'text-light' : 'text-dark'}`}>
-                    {post.price} <small className="fs-4">DA</small>
+                <div className={`rounded-2 p-2 d-inline-block ${theme ? 'bg-secondary' : 'bg-light'}`} style={{ /* p-2 reducido */
+                  minWidth: '120px',
+                  textAlign: 'center'
+                }}>
+                  <div className={`small ${theme ? 'text-light' : 'text-muted'}`}>{t('desde')}</div>
+                  <div className={`fs-5 fw-bold ${theme ? 'text-light' : 'text-dark'}`}> {/* fs-5 en lugar de fs-2 */}
+                    {post.price} <small className="fs-6">DA</small> {/* fs-6 en lugar de fs-4 */}
                   </div>
-                  <div className={`small ${theme ? 'text-light' : 'text-dark'}`}>{t('per_person')}</div>
+                  <div className={`small ${theme ? 'text-light' : 'text-muted'}`}>{t('per_person')}</div>
                 </div>
               )}
             </Col>
           </Row>
 
+
+
           {/* BADGES INFORMATIVOS - CORREGIDOS */}
-          <div className={`d-flex flex-wrap gap-2 mt-3 ${isRTL ? 'justify-content-end' : ''}`}>
+          <div className={`d-flex flex-wrap gap-2  ${isRTL ? 'justify-content-end' : ''}`}>
             {post.typeVoyage && (
               <Badge bg="light" text="dark" className="px-3 py-2 fs-6 shadow-sm">
                 <i className={getIconClass("fas fa-route")}></i>
@@ -574,11 +597,11 @@ const DescriptionPost = ({ post }) => {
         <Card.Body className="p-4">
           {/* DESCRIPCIÓN PRINCIPAL */}
           {(post.description || post.content) && (
-            <Alert variant={theme ? 'secondary' : 'light'} className="border-start border-4 border-primary mb-0">
+            <Alert variant={theme ? 'secondary' : 'light'} className="border-start border-1 border-primary mb-0">
               <div className={`d-flex align-items-start ${getFlexClass()}`}>
-                <i className="fas fa-circle-info text-primary fs-4 mt-1 me-3"></i>
+                <i className="fas fa-circle-info text-primary fs-4 mt-1"></i>
                 <div className="flex-grow-1">
-                  <h5 className="alert-heading mb-2">
+                  <h5 className="alert-heading">
                     <i className={getIconClass("fas fa-file-lines")}></i>
                     {t('about_trip')}
                   </h5>

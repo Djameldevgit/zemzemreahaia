@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./cronJobs/DeleteUsersNoVerified');
+//require('./cronJobs/DeleteUsersNoVerified');
 const { autoUnblockUsers } = require('./controllers/autoUnBlockUser');
 const express = require('express');
 const mongoose = require('mongoose');

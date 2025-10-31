@@ -20,16 +20,33 @@ const ClasificacionHotel = ({ postData = {}, handleChangeInput, handleArrayChang
     ];
 
     const tiposHabitaciones = [
-        'individual', 'doble', 'triple', 'suite', 'familiar', 'presidencial'
+        t('tiposHabitaciones.individual'),
+        t('tiposHabitaciones.doble'), 
+        t('tiposHabitaciones.triple'),
+        t('tiposHabitaciones.suite'),
+        t('tiposHabitaciones.familiar'),
+        t('tiposHabitaciones.presidencial')
     ];
-
+    
     const serviciosHotel = [
-        'wifi', 'piscina', 'spa', 'gimnasio', 'restaurante', 'room_service',
-        'estacionamiento', 'lavanderia', 'business_center', 'pets_allowed'
+        t('serviciosHotel.wifi'),
+        t('serviciosHotel.piscina'),
+        t('serviciosHotel.spa'),
+        t('serviciosHotel.gimnasio'),
+        t('serviciosHotel.restaurante'),
+        t('serviciosHotel.room_service'),
+        t('serviciosHotel.estacionamiento'),
+        t('serviciosHotel.lavanderia'),
+        t('serviciosHotel.business_center'),
+        t('serviciosHotel.pets_allowed')
     ];
-
+    
     const serviciosAdicionales = [
-        'desayuno_incluido', 'vista_al_mar', 'terraza', 'minibar', 'caja_fuerte'
+        t('serviciosAdicionales.desayuno_incluido'),
+        t('serviciosAdicionales.vista_al_mar'),
+        t('serviciosAdicionales.terraza'),
+        t('serviciosAdicionales.minibar'),
+        t('serviciosAdicionales.caja_fuerte')
     ];
 
     return (

@@ -1,6 +1,117 @@
 {
 
+
  
+    "validation_fix_errors": "يرجى تصحيح الأخطاء في النموذج",
+    "validation_required_fields": "الحقول المطلوبة غير مكتملة",
+    "validation_scroll_to_errors": "انتقل للأعلى لإكمال الحقول المميزة",
+    "validation_destination_required": "الوجهة مطلوبة",
+    "validation_departure_date_required": "تاريخ المغادرة مطلوب",
+    "validation_price_required": "السعر مطلوب",
+    "validation_surface_required": "المساحة مطلوبة",
+    "validation_capacity_required": "السعة مطلوبة",
+    "validation_night_price_required": "سعر الليلة مطلوب",
+    "validation_hadj_destination_required": "وجهة الحج مطلوبة",
+    "validation_pilgrimage_type_required": "نوع الحج مطلوب",
+  
+
+
+
+
+
+
+  
+      "servicesInclus": "الخدمات المشمولة",
+      "activites": "الأنشطة",
+      "language": "اللغة",
+      "servicios": "الخدمات",
+      "serviciosTr": "خدمات النقل",
+      "specifications": "المواصفات",
+      "wifi": "واي فاي",
+      "optionsPaiement": "خيارات الدفع",
+      "documentsRequises": "المستندات المطلوبة",
+      "excursions": "الجولات",
+      "tipodehabutaciones": "أنواع الغرف",
+      
+      "promoteurimmobilier": "مطور عقاري",
+      "wifiGratuit": "واي فاي مجاني",
+      "climatisation": "تكييف",
+      "cuisineEquipee": "مطبخ مجهز",
+      "television": "تلفزيون",
+      "piscine": "مسبح",
+      "parking": "موقف سيارات",
+      "animauxAcceptes": "مسموح بالحيوانات الأليفة",
+      "menageInclus": "التنظيف مشمول",
+      "assurancesIncluses": "التأمين مشمول",
+      "guideLocal": "مرشد محلي",
+      "repasInclus": "الوجبات مشمولة",
+      "transfertAeroport": "نقل من المطار",
+      "acompteRequise": "دفعة أولى مطلوبة",
+  
+  
+    "tiposTransporte": {
+      "avion": "طائرة",
+      "bus": "حافلة",
+      "tren": "قطار", 
+      "coche": "سيارة",
+      "barco": "قارب",
+      "minibus": "حافلة صغيرة",
+      "taxi": "تاكسي",
+      "avion_bus": "طائرة + حافلة",
+      "tren_bus": "قطار + حافلة",
+      "privado": "مركبة خاصة"
+    },
+    "clasesTransporte": {
+      "economica": "اقتصادية",
+      "premium_economica": "اقتصادية متميزة",
+      "negocios": "رجال الأعمال",
+      "primera_clase": "درجة أولى",
+      "estandar": "قياسي",
+      "premium": "متميز"
+    },
+    "serviciosDisponibles": {
+      "comida_incluida": "الوجبات مشمولة",
+      "bebidas_gratis": "مشروبات مجانية",
+      "entretenimiento": "ترفيه",
+      "wifi": "واي فاي",
+      "asientos_reclinables": "مقاعد قابلة للإرجاع",
+      "espacio_extra": "مساحة إضافية",
+      "maletas_incluidas": "الأمتعة مشمولة"
+    
+  },
+  
+ 
+  
+    
+    "serviciosHotel": {
+      "wifi": "واي فاي",
+      "piscina": "مسبح",
+      "spa": "سبا",
+      "gimnasio": "نادي رياضي",
+      "restaurante": "مطعم",
+      "room_service": "خدمة الغرف",
+      "estacionamiento": "موقف سيارات",
+      "lavanderia": "خدمة غسيل الملابس",
+      "business_center": "مركز أعمال",
+      "pets_allowed": "مسموح بالحيوانات الأليفة"
+    },
+    "serviciosAdicionales": {
+      "desayuno_incluido": "الإفطار مشمول",
+      "vista_al_mar": "إطلالة على البحر",
+      "terraza": "شرفة",
+      "minibar": " ثلاجة صغيرة",
+      "caja_fuerte": "خزنة"
+    
+  },
+  
+  "tiposHabitaciones": {
+  "individual": "فردي",
+  "doble": "مزدوج",
+  "triple": "ثلاثي",
+  "suite": "سويت",
+  "familiar": "عائلي",
+  "presidencial": "ريزيدنسيال"
+  },
       "transporteViaje": "نقل الرحلة",
       "tipoTransporte": "نوع النقل",
       "seleccionarTransporte": "اختر نوع النقل",
@@ -87,7 +198,7 @@
       "dateRetour": "تاريخ العودة",
 
       "titreAnnonce": "عنوان الإعلان",
-      "titre": "العنوان",
+ 
       "placeholderTitre": "مثال: رحلة منظمة إلى إسطنبول - شاملة كل شيء",
       "conseilTitre": "أنشئ عنوانًا جذابًا ووصفيًا لإعلانك",
     
@@ -247,6 +358,132 @@
     
   },
  
+
+ 
+    "edit_title": "تعديل المنشور",
+    "create_title": "إنشاء منشور جديد",
+    "modification": "جاري التعديل",
+    "button_update": "تحديث المنشور",
+    "button_publish": "نشر المنشور",
+    "success_update": "تم تحديث المنشور بنجاح",
+    "success_create": "تم إنشاء المنشور بنجاح",
+    "error_publication": "خطأ في النشر",
+    
+    "validation_title_required": "العنوان مطلوب",
+    "validation_description_required": "الوصف مطلوب",
+    "validation_wilaya_required": "الولاية مطلوبة",
+    "validation_commune_required": "البلدية مطلوبة",
+    "validation_category_required": "الفئة مطلوبة",
+    "validation_images_required": "الصور مطلوبة",
+    "validation_images_size": "حجم الصورة كبير جداً (الحد الأقصى 5MB)",
+   
+  
+     
+      "titre": "العنوان",
+      "titre_placeholder": "أدخل عنوان المنشور",
+      "superficie": "المساحة",
+      "superficie_placeholder": "أدخل المساحة بالمتر المربع",
+      "etage": "الطابق",
+      "etage_placeholder": "أدخل رقم الطابق",
+      "capacite_personnes": "السعة",
+      "capacite_placeholder": "عدد الأشخاص",
+      "nombre_chambres": "عدد الغرف",
+      "nombre_chambres_placeholder": "أدخل عدد الغرف",
+      "nombre_salles_bain": "عدد دورات المياه",
+      "nombre_salles_bain_placeholder": "أدخل عدد دورات المياه",
+      "check_in": "وقت الوصول",
+      "check_out": "وقت المغادرة",
+      "tarif_nuit": "سعر الليلة",
+      "tarif_nuit_placeholder": "سعر الليلة بالدينار",
+      "prix_adulte": "سعر البالغ",
+      "prix_adulte_placeholder": "سعر البالغ",
+      "prix_enfant": "سعر الطفل",
+      "prix_enfant_placeholder": "سعر الطفل",
+      "prix_bebe": "سعر الرضيع",
+      "prix_bebe_placeholder": "سعر الرضيع",
+      "select_option": "اختر خيار",
+   
+    "voyage": {
+      "destinations_internationales": "الوجهات الدولية",
+      "dates_duree": "التواريخ والمدة",
+      "transport_deplacements": "النقل والتنقلات",
+      "hebergement_pension": "الإقامة والإعاشة",
+      "activites_services": "الأنشطة والخدمات",
+      "tarifs_conditions": "الأسعار والشروط",
+      "services_inclus": "الخدمات المشمولة",
+      "activites_proposees": "الأنشطة المقترحة"
+    },
+  
+    "location": {
+      "informations_logement": "معلومات السكن",
+      "equipements_services": "التجهيزات والخدمات",
+      "chambres_salles_bain": "الغرف ودورات المياه",
+      "disponibilite_tarifs": "التوافر والأسعار"
+    },
+  
+    "hadj": {
+      "destination_peletinage": "وجهة الحج",
+      "dates_peletinage": "تواريخ الحج",
+      "transport_hebergement": "النقل والإقامة",
+      "documents_requis": "المستندات المطلوبة",
+      "tarifs_conditions": "الأسعار والشروط",
+      "type_peletinage": "نوع الحج",
+      "niveau_confort": "مستوى الراحة",
+      "documents_necessaires": "المستندات اللازمة"
+    },
+  
+    "services": {
+      "visite_guidee": "جولة مرشدة",
+      "repas": "الوجبات",
+      "transfert": "الانتقالات",
+      "assistance": "المساعدة",
+      "assurance": "التأمين"
+    },
+  
+   
+    "types_voyage": {
+      "hadj": "الحج",
+      "omra": "العمرة",
+      "hadj_omra": "الحج والعمرة"
+    },
+  
+    "niveaux_confort": {
+      "economique": "اقتصادي",
+      "standard": "قياسي",
+      "confort": "مريح",
+      "luxe": "فاخر"
+    },
+  
+    "documents": {
+      "passeport": "جواز السفر",
+      "photos_identite": "صور شخصية",
+      "certificat_vaccination": "شهادة التطعيم",
+      "reservation_hotel": "حجز الفندق",
+      "billet_avion": "تذكرة الطائرة"
+    },
+  
+    "equipements": {
+      "wifi_gratuit": "واي فاي مجاني",
+      "climatisation": "تكييف",
+      "cuisine_equipee": "مطبخ مجهز",
+      "television": "تلفزيون",
+      "piscine": "مسبح",
+      "parking": "موقف سيارات",
+      "animaux_acceptes": "مسموح بالحيوانات الأليفة",
+      "menage_inclus": "التنظيف مشمول"
+    
+  },
+
+
+
+
+
+
+
+
+
+
+
           "politique_annulation": "سياسة الإلغاء",
           "selectionnez_politique": "اختر سياسة...",
           

@@ -1,7 +1,17 @@
   {
     "price_type_label": "Price Type",
   "features_selected_count": "Selected: {{count}} features",
- 
+  "validation_fix_errors": "Por favor corrige los errores en el formulario",
+  "validation_required_fields": "Campos requeridos incompletos",
+  "validation_scroll_to_errors": "Desplázate hacia arriba para completar los campos marcados",
+  "validation_destination_required": "La destino es requerida",
+  "validation_departure_date_required": "La fecha de salida es requerida", 
+  "validation_price_required": "El precio es requerido",
+  "validation_surface_required": "La superficie es requerida",
+  "validation_capacity_required": "La capacidad es requerida",
+  "validation_night_price_required": "El precio por noche es requerido",
+  "validation_hadj_destination_required": "La destino del peregrinaje es requerida",
+  "validation_pilgrimage_type_required": "El tipo de peregrinaje es requerido",
 
     "post_title_placeholder": "Title of your post",
     "post_content_placeholder": "What's on your mind, {{username}}?",

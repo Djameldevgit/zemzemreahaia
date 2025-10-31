@@ -7,26 +7,26 @@ const TransporteViajehadj = ({ postData = {}, handleChangeInput }) => {
 
     // 🔷 VALIDACIÓN DEFENSIVA - asegurar que los arrays existan
     const serviciosTransporte = Array.isArray(postData.serviciosTransporte) ? postData.serviciosTransporte : [];
-
     const tiposTransporte = [
-        { value: 'avion', label: 'Avión', emoji: '✈️' },
-        { value: 'bus', label: 'Autobús', emoji: '🚌' },
-        { value: 'tren', label: 'Tren', emoji: '🚆' },
-        { value: 'coche', label: 'Coche', emoji: '🚗' },
-        { value: 'barco', label: 'Barco', emoji: '🚢' },
-       
-   
+        { value: 'avion', label: t('tiposTransporte.avion'), emoji: '✈️' },
+        { value: 'bus', label: t('tiposTransporte.bus'), emoji: '🚌' },
+        { value: 'tren', label: t('tiposTransporte.tren'), emoji: '🚆' },
+        { value: 'coche', label: t('tiposTransporte.coche'), emoji: '🚗' },
+        { value: 'barco', label: t('tiposTransporte.barco'), emoji: '🚢' }
     ];
-
+    
     const clasesTransporte = [
-        'economica',  'primera_clase', 'estandar'
+        t('clasesTransporte.economica'),
+        t('clasesTransporte.primera_clase'),
+        t('clasesTransporte.estandar')
     ];
-
+    
     const serviciosDisponibles = [
-        'comida_incluida', 
-        'asientos_reclinables', 'espacio_extra', 'maletas_incluidas'
+        t('serviciosDisponibles.comida_incluida'),
+        t('serviciosDisponibles.asientos_reclinables'),
+        t('serviciosDisponibles.espacio_extra'),
+        t('serviciosDisponibles.maletas_incluidas')
     ];
-
     // 🔷 HANDLER PARA CHECKBOXES CON ARRAYS
     const handleArrayChange = (field, value, isChecked) => {
         const currentArray = postData[field] || [];

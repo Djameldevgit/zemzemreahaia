@@ -70,14 +70,11 @@ const Navbar2 = () => {
   const [showNotifyDropdown, setShowNotifyDropdown] = useState(false);
 
   const notifyDropdownRef = useRef(null);
-  const openStatusModal = () => dispatch({ type: GLOBALTYPES.STATUS, payload: true });
 
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  const toggleTheme = () => dispatch({ type: GLOBALTYPES.THEME, payload: !theme });
-  const history = useHistory();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 700);
@@ -143,7 +140,7 @@ const Navbar2 = () => {
           background: settings.style
             ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
             : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
-          padding: isMobile ? '8px 0' : '12px 0',
+          padding: isMobile ? '4px 0' : '2px 0',
           boxShadow: '0 2px 20px rgba(0,0,0,0.08)'
         }}
         className={settings.style ? "navbar-dark" : "navbar-light"}
@@ -188,11 +185,13 @@ const Navbar2 = () => {
               <Card.Title
                 className="mb-0"
                 style={{
+                  fontFamily: "'Playfair Display', serif", // Fuente elegante
                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   fontWeight: 'bold',
-                  fontSize: '1.5rem'
+                  fontSize: '1.5rem',
+                  letterSpacing: '0.5px'
                 }}
               >
                 {t('appName')}
@@ -402,9 +401,9 @@ const Navbar2 = () => {
                     </div>
 
                     <MenuItem icon={FaTools} iconColor="#6c757d" to="/users/roles">
-                          {t('roles')}
-                        </MenuItem>
- 
+                      {t('roles')}
+                    </MenuItem>
+
 
                     <MenuItem icon={FaShareAlt} iconColor="#ffc107" onClick={() => setShowShareModal(true)}>
                       {t('shareApp')}
