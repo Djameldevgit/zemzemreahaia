@@ -1,7 +1,16 @@
 {
-  "short_name": "voyage zemzem",
-  "name": "voyage zemzem",
+  "short_name": "djamel agence",
+  "name": "djamel agence",
   "icons": [
+
+
+    {
+      "src": "badge.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "badge"
+
+    },
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",

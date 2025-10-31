@@ -1,200 +1,89 @@
-// Configuración - ¡Personaliza estas variables!
-const CACHE_NAME = 'tu-app-mern-v1.0';
-const API_CACHE_NAME = 'tu-app-api-v1.0';
-const STATIC_CACHE_NAME = 'tu-app-static-v1.0';
-
-// URLs para cachear
-const STATIC_ASSETS = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json',
-  '/favicon.ico'
+const CACHE_NAME = "Aps Web/Mobile";  // Incrementa la versión al hacer cambios
+ 
+const urlsToCache = [
+  "/",
+  "/index.html",
+  "/profile",
+  "/message",
+  "/search",
+  "/static/js/main.chunk.js",
+  "/static/css/main.chunk.css",
+  "/logo192.png",
+  "/badge.png"
 ];
 
-// Estrategias de cache
-const STRATEGIES = {
-  STATIC: 'cache-first',
-  API: 'network-first',
-  IMAGES: 'cache-first'
-};
-
-// 📦 INSTALACIÓN - Cachear recursos críticos
-self.addEventListener('install', (event) => {
-  console.log('🔄 Service Worker instalando...');
-  
+// --- Instalación y Caching ---
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE_NAME)
-      .then((cache) => {
-        console.log('📦 Cacheando recursos estáticos');
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .then(() => {
-        console.log('✅ Todos los recursos cacheados');
-        return self.skipWaiting(); // Activar inmediatamente
-      })
-      .catch((error) => {
-        console.error('❌ Error en instalación:', error);
-      })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+      .then(() => self.skipWaiting())
   );
 });
 
-// 🎯 ACTIVACIÓN - Limpiar caches viejos
+// --- Limpieza de Caches Antiguos ---
 self.addEventListener('activate', (event) => {
-  console.log('🚀 Service Worker activado');
-  
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME && 
-              cacheName !== API_CACHE_NAME && 
-              cacheName !== STATIC_CACHE_NAME) {
-            console.log('🗑️ Eliminando cache viejo:', cacheName);
-            return caches.delete(cacheName);
+        cacheNames.map(cache => {
+          if (cache !== CACHE_NAME) {
+            return caches.delete(cache);
           }
         })
       );
-    }).then(() => {
-      console.log('✅ Service Worker listo para controlar clientes');
-      return self.clients.claim();
     })
   );
 });
 
-// 🌐 FETCH - Interceptar peticiones
-self.addEventListener('fetch', (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  // Estrategia para APIs
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(handleApiRequest(request));
-  }
-  // Estrategia para assets estáticos
-  else if (isStaticAsset(url)) {
-    event.respondWith(handleStaticRequest(request));
-  }
-  // Estrategia para imágenes
-  else if (isImageRequest(request)) {
-    event.respondWith(handleImageRequest(request));
-  }
-  // Estrategia por defecto
-  else {
-    event.respondWith(handleDefaultRequest(request));
-  }
+// --- Estrategia de Cache Híbrida ---
+self.addEventListener("fetch", (event) => {
+  // Ignora todas las peticiones que no sean GET
+  if (event.request.method !== 'GET') return;
+  
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
+  );
 });
 
-// 🎯 ESTRATEGIAS DE CACHE
+// --- Notificaciones Push ---
+self.addEventListener('push', (event) => {
+  const fallbackPayload = {
+    title: 'Nueva notificación',
+    body: '¡Tienes una actualización!',
+    url: '/'
+  };
 
-// Para APIs - Network First
-async function handleApiRequest(request) {
-  const cache = await caches.open(API_CACHE_NAME);
-  
-  try {
-    // Intentar network primero
-    const networkResponse = await fetch(request);
-    
-    // Cachear respuesta exitosa
-    if (networkResponse.ok) {
-      await cache.put(request, networkResponse.clone());
-    }
-    
-    return networkResponse;
-  } catch (error) {
-    // Fallback a cache si no hay conexión
-    console.log('🌐 Fallando a cache para API');
-    const cachedResponse = await cache.match(request);
-    
-    if (cachedResponse) {
-      return cachedResponse;
-    }
-    
-    // Respuesta de error elegante
-    return new Response(
-      JSON.stringify({ 
-        error: 'Sin conexión', 
-        message: 'No hay conexión y no hay datos en cache' 
-      }),
-      { 
-        status: 503,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }
-}
+  const payload = event.data?.json().catch(() => fallbackPayload) || fallbackPayload;
 
-// Para assets estáticos - Cache First
-async function handleStaticRequest(request) {
-  const cache = await caches.open(STATIC_CACHE_NAME);
-  const cachedResponse = await cache.match(request);
-  
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-  
-  try {
-    const networkResponse = await fetch(request);
-    await cache.put(request, networkResponse.clone());
-    return networkResponse;
-  } catch (error) {
-    // Fallback para HTML - servir la app shell
-    if (request.destination === 'document') {
-      return cache.match('/');
-    }
-    throw error;
-  }
-}
+  const options = {
+    body: payload.body,
+    icon: '/logo192.png',
+    badge: '/badge.png',
+    vibrate: [200, 100, 200],
+    data: { url: payload.url || '/' }
+  };
 
-// Para imágenes - Cache First con actualización
-async function handleImageRequest(request) {
-  const cache = await caches.open(CACHE_NAME);
-  const cachedResponse = await cache.match(request);
-  
-  if (cachedResponse) {
-    // Actualizar cache en background
-    fetch(request).then((networkResponse) => {
-      if (networkResponse.ok) {
-        cache.put(request, networkResponse);
-      }
-    });
-    return cachedResponse;
-  }
-  
-  const networkResponse = await fetch(request);
-  if (networkResponse.ok) {
-    await cache.put(request, networkResponse.clone());
-  }
-  return networkResponse;
-}
+  event.waitUntil(
+    self.registration.showNotification(payload.title, options)
+      .then(() => {
+        if ('setAppBadge' in navigator) {
+          navigator.setAppBadge(1).catch(e => console.log("Badge no soportado"));
+        }
+      })
+      .catch(err => console.error('Error en notificación:', err))
+  );
+});
 
-// Estrategia por defecto
-async function handleDefaultRequest(request) {
-  const cache = await caches.open(CACHE_NAME);
-  const cachedResponse = await cache.match(request);
-  
-  if (cachedResponse) {
-    return cachedResponse;
-  }
-  
-  return fetch(request);
-}
-
-// 🔍 HELPERS
-function isStaticAsset(url) {
-  return url.pathname.startsWith('/static/') ||
-         url.pathname.endsWith('.js') ||
-         url.pathname.endsWith('.css') ||
-         url.pathname.endsWith('.json');
-}
-
-function isImageRequest(request) {
-  return request.destination === 'image';
-}
-
-// 📱 Manejo de mensajes (para actualizaciones)
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+// --- Clic en Notificación ---
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window' }).then(windowClients => {
+      const client = windowClients.find(c => c.url === url);
+      return client ? client.focus() : clients.openWindow(url);
+    })
+  );
 });
