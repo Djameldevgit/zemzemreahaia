@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../redux/actions/authAction';
-import { GLOBALTYPES } from '../../redux/actions/globalTypes';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Avatar from '../Avatar';
 import Card from 'react-bootstrap/Card';
 import {
@@ -22,6 +21,7 @@ import {
   FaShareAlt,
   FaGlobe,
   FaCheckCircle,
+  FaDownload
 } from 'react-icons/fa';
 
 import { Navbar, Container, NavDropdown, Badge } from 'react-bootstrap';
@@ -39,9 +39,44 @@ const Navbar2 = () => {
   const { languageReducer } = useSelector(state => state);
   const { t, i18n } = useTranslation('navbar2');
   const lang = languageReducer.language || 'es';
+
+  // 🔥 ESTADOS PWA OPTIMIZADOS
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isPWAInstalled, setIsPWAInstalled] = useState(false);
+  const [showInstallButton, setShowInstallButton] = useState(false);
+
+  // 🔥 DETECCIÓN RÁPIDA DE PWA
+ 
+  
+  
+
+
+  // 🔥 FORZAR MOSTRAR BOTÓN EN DESARROLLO (para testing)
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      const timer = setTimeout(() => {
+        if (!showInstallButton && !isPWAInstalled) {
+          console.log('🧪 PWA: Development mode - showing install button');
+          setShowInstallButton(true);
+        }
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showInstallButton, isPWAInstalled]);
+
+  // Estados del componente
   const [showShareModal, setShowShareModal] = useState(false);
   const [userRole, setUserRole] = useState(auth.user?.role);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [showDeactivatedModal, setShowDeactivatedModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 700);
+  const [showFeaturesModal, setShowFeaturesModal] = useState(false);
+  const [showNotifyDropdown, setShowNotifyDropdown] = useState(false);
 
+  const notifyDropdownRef = useRef(null);
+
+  // Efectos de idioma y usuario
   useEffect(() => {
     if (lang && lang !== i18n.language) {
       i18n.changeLanguage(lang);
@@ -54,6 +89,81 @@ const Navbar2 = () => {
     }
   }, [auth.user?.role, userRole]);
 
+  // Handlers
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+ 
+  // 🔥 DETECCIÓN PWA MEJORADA
+  useEffect(() => {
+    // Verificar si ya está instalada
+    const checkPWAInstallation = () => {
+      const isInstalled = 
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone ||
+        localStorage.getItem('pwaInstalled') === 'true';
+      
+      setIsPWAInstalled(isInstalled);
+      return isInstalled;
+    };
+  
+    // Verificar al cargar
+    const installed = checkPWAInstallation();
+    
+    if (!installed) {
+      // Escuchar eventos de instalación PWA
+      const handleInstallAvailable = () => {
+        console.log('🎯 Mostrar botón de instalación');
+        setShowInstallButton(true);
+      };
+  
+      const handleInstalled = () => {
+        console.log('🎉 PWA instalada, ocultar botón');
+        setIsPWAInstalled(true);
+        setShowInstallButton(false);
+      };
+  
+      window.addEventListener('pwaInstallAvailable', handleInstallAvailable);
+      window.addEventListener('pwaInstalled', handleInstalled);
+  
+      // Verificar periodicamente (fallback)
+      const installCheckInterval = setInterval(() => {
+        if (checkPWAInstallation()) {
+          clearInterval(installCheckInterval);
+        } else if (window.deferredPrompt && !showInstallButton) {
+          setShowInstallButton(true);
+        }
+      }, 2000);
+  
+      return () => {
+        window.removeEventListener('pwaInstallAvailable', handleInstallAvailable);
+        window.removeEventListener('pwaInstalled', handleInstalled);
+        clearInterval(installCheckInterval);
+      };
+    }
+  }, [showInstallButton]);
+  
+  // 🔥 MANEJADOR DE INSTALACIÓN MEJORADO
+  const handleInstallPWA = async () => {
+    try {
+      if (window.installPWA) {
+        const installed = await window.installPWA();
+        if (installed) {
+          setShowInstallButton(false);
+          setIsPWAInstalled(true);
+        }
+      } else {
+        console.error('❌ Función installPWA no disponible');
+        // Fallback: abrir en nueva pestaña con instrucciones
+        window.open('/?install-pwa=true', '_blank');
+      }
+    } catch (error) {
+      console.error('❌ Error instalando PWA:', error);
+    }
+  };
+
+  // Verificaciones de settings
   if (!settings) {
     return (
       <nav className="navbar navbar-light bg-light">
@@ -62,42 +172,10 @@ const Navbar2 = () => {
     );
   }
 
-  const [showLanguageModal, setShowLanguageModal] = useState(false);
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [showDeactivatedModal, setShowDeactivatedModal] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 700);
-  const [showFeaturesModal, setShowFeaturesModal] = useState(false);
-  const [showNotifyDropdown, setShowNotifyDropdown] = useState(false);
-
-  const notifyDropdownRef = useRef(null);
-
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 700);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notifyDropdownRef.current && !notifyDropdownRef.current.contains(event.target)) {
-        setShowNotifyDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   const totalItems = (cart?.items && Array.isArray(cart.items))
     ? cart.items.reduce((acc, item) => acc + (item?.quantity || 0), 0)
     : 0;
 
-  // ✅ VERIFICACIÓN SEGURA DE SETTINGS
   if (!settings || Object.keys(settings).length === 0) {
     return (
       <nav className="navbar navbar-light bg-light">
@@ -185,7 +263,7 @@ const Navbar2 = () => {
               <Card.Title
                 className="mb-0"
                 style={{
-                  fontFamily: "'Playfair Display', serif", // Fuente elegante
+                  fontFamily: "'Playfair Display', serif",
                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -223,6 +301,45 @@ const Navbar2 = () => {
                 title={t('search')}
               />
             </Link>
+
+            {/* 🔥 BOTÓN INSTALAR PWA MEJORADO */}
+            {showInstallButton && !isPWAInstalled && (
+  <button
+    className="d-flex align-items-center justify-content-center icon-button text-decoration-none"
+    onClick={handleInstallPWA}
+    style={{
+      width: isMobile ? '40px' : '45px',
+      height: isMobile ? '40px' : '45px',
+      borderRadius: '12px',
+      backgroundColor: settings.style ? 'rgba(255,255,255,0.1)' : 'rgba(40, 167, 69, 0.1)',
+      border: '2px solid #28a745',
+      transition: 'all 0.3s ease',
+      animation: 'pulse 2s infinite'
+    }}
+    title={t('installPWA')}
+  >
+    <FaDownload
+      size={isMobile ? 18 : 20}
+      style={{ color: '#28a745' }}
+    />
+  </button>
+)}
+            {/* 🔥 INDICADOR PWA INSTALADA */}
+            {isPWAInstalled && (
+              <div
+                className="d-flex align-items-center justify-content-center"
+                style={{
+                  width: isMobile ? '40px' : '45px',
+                  height: isMobile ? '40px' : '45px',
+                }}
+                title={t('appInstalled')}
+              >
+                <FaCheckCircle
+                  size={isMobile ? 18 : 20}
+                  style={{ color: '#28a745' }}
+                />
+              </div>
+            )}
 
             {/* Botón Agregar Post */}
             {(userRole === "Super-utilisateur" || userRole === "admin") && (
@@ -397,13 +514,12 @@ const Navbar2 = () => {
 
                     {/* Estado de verificación */}
                     <div style={{ padding: '12px 20px', margin: '0 8px' }}>
-
+                      <ActivateButton />
                     </div>
 
                     <MenuItem icon={FaTools} iconColor="#6c757d" to="/users/roles">
                       {t('roles')}
                     </MenuItem>
-
 
                     <MenuItem icon={FaShareAlt} iconColor="#ffc107" onClick={() => setShowShareModal(true)}>
                       {t('shareApp')}
@@ -413,8 +529,6 @@ const Navbar2 = () => {
                     </MenuItem>
 
                     <NavDropdown.Divider style={{ margin: '8px 16px' }} />
-
-
 
                     {/* Panel de Admin */}
                     {userRole === "admin" && (
@@ -490,8 +604,14 @@ const Navbar2 = () => {
         </Container>
       </Navbar>
 
-      {/* CSS personalizado */}
+      {/* 🔥 ESTILOS PARA ANIMACIÓN PWA */}
       <style jsx>{`
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+          100% { transform: scale(1); }
+        }
+        
         .icon-button:hover {
           transform: translateY(-2px);
           box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3) !important;

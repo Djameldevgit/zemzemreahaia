@@ -1,4 +1,8 @@
 {
+  "installPWA": "Installer l'application",
+  "appInstalled": "Application installée",
+
+
   "appName": "Agence de Voyage",
   "loading": "Chargement...",
   "loadingSettings": "Chargement de la configuration...",

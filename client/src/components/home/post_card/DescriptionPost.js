@@ -1,6 +1,16 @@
 import React from 'react';
-import { Card, Row, Col, Badge, Button } from 'react-bootstrap';
+import { Card, Badge, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { 
+  FaCar, FaEye, FaComments, FaPlaneDeparture, FaCalendarDay, 
+  FaHourglassHalf, FaClock, FaBus, FaMapMarkerAlt, FaMapMarker, 
+  FaKaaba, FaPassport, FaUmbrellaBeach, FaHome, FaRulerCombined, 
+  FaBuilding, FaUserTie, FaList, FaHotel, FaMapPin, FaBed, 
+  FaListOl, FaStar, FaWifi, FaLanguage, FaMoneyBillWave, 
+  FaLaptop, FaBan, FaGlobe, FaMapMarkedAlt, FaSignature, 
+  FaCalendarCheck, FaConciergeBell, FaCheckCircle, FaTimesCircle, 
+  FaTag, FaPhone, FaCalendarAlt, FaSyncAlt, FaInfoCircle
+} from 'react-icons/fa';
 
 const DescriptionPost = ({ post, readMore, setReadMore }) => {
     const { t, i18n } = useTranslation('descripcion');
@@ -30,19 +40,26 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
         return value ? t('oui', 'Oui') : t('non', 'Non');
     };
 
-    // Componente para cada item de información
+    // Componente para cada item de información - TODOS EN LA MISMA FILA
     const InfoItem = ({ icon, label, value, array, boolean, link }) => {
         if (!value && (!array || array.length === 0) && !boolean) return null;
 
         return (
-            <Row className="mb-3 border-bottom pb-2">
-                <Col xs={12} md={3} className={`d-flex align-items-start ${isRTL ? 'justify-content-end' : ''}`}>
-                    <div className="me-2">
-                        <i className={icon}></i>
-                    </div>
-                    <span className="fw-bold text-muted small">{label}</span>
-                </Col>
-                <Col xs={12} md={9} className={isRTL ? 'text-end' : ''}>
+            <div className="d-flex align-items-center mb-3 border-bottom pb-2">
+                {/* Icono */}
+                <div className="flex-shrink-0 me-3" style={{ color: "#6c757d" }}>
+                    {icon}
+                </div>
+                
+                {/* Campo/Label */}
+                <div className="flex-shrink-0 me-3">
+                    <span className="fw-bold text-muted" style={{ fontSize: '18px', minWidth: '120px' }}>
+                        {label}
+                    </span>
+                </div>
+                
+                {/* Valor */}
+                <div className="flex-grow-1">
                     {boolean && (
                         <span className={value ? 'text-success' : 'text-danger'}>
                             {renderBoolean(value)}
@@ -55,38 +72,42 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-primary text-decoration-none"
+                            style={{ fontSize: '18px' }}
                         >
                             {value}
                         </a>
                     ) : (
-                        <span className={!array && !boolean ? 'text-dark' : ''}>
+                        <span 
+                            className={!array && !boolean ? 'text-dark' : ''}
+                            style={{ fontSize: '18px' }}
+                        >
                             {value}
                         </span>
                     )}
-                </Col>
-            </Row>
+                </div>
+            </div>
         );
     };
 
     return (
         <Card className="mb-4">
-            <Card.Header className="bg-light">
-                <h5 className="mb-0">
-                    <i className="fas fa-info-circle me-2"></i>
-                    {t('informations_details', 'Informations Détaillées')}
-                </h5>
-            </Card.Header>
+           <Card.Header className="bg-light" style={{ paddingLeft: '15px' }}>
+    <h5 className="ml-4 mb-0 d-flex align-items-center">
+        <FaInfoCircle size={16} color="#6c757d" className="me-2" />
+        {t('informations_details', 'Informations Détaillées')}
+    </h5>
+</Card.Header>
             <Card.Body>
                 {/* Información Básica */}
                 <InfoItem 
-                    icon="fas fa-car"
-                    label={t('categorie', 'Catégorie')}
-                    value={post.subCategory}
-                />
+    icon={<FaList size={16} color="#6c757d" />}
+    label={t('categorie', 'Catégorie')}
+    value={post.subCategory}
+/>
 
                 {post.title && (
                     <InfoItem 
-                        icon="fas fa-eye"
+                        icon={<FaEye size={16} color="#6c757d" />}
                         label={t('titre', 'Titre')}
                         value={post.title}
                     />
@@ -94,17 +115,17 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {/* Descripción con Read More */}
                 {post.description && (
-                    <Row className="mb-3 border-bottom pb-2">
-                        <Col xs={12} md={3} className={`d-flex align-items-start ${isRTL ? 'justify-content-end' : ''}`}>
-                            <div className="me-2">
-                                <i className="fas fa-comments"></i>
-                            </div>
-                            <span className="fw-bold text-muted small">
+                    <div className="d-flex align-items-start mb-3 border-bottom pb-2">
+                        <div className="flex-shrink-0 me-3" style={{ color: "#6c757d" }}>
+                            <FaComments size={16} color="#6c757d" />
+                        </div>
+                        <div className="flex-shrink-0 me-3">
+                            <span className="fw-bold text-muted" style={{ fontSize: '14px', minWidth: '120px' }}>
                                 {t('description', 'Description')}
                             </span>
-                        </Col>
-                        <Col xs={12} md={9}>
-                            <Card.Text className={isRTL ? 'text-end' : ''}>
+                        </div>
+                        <div className="flex-grow-1">
+                            <div className={isRTL ? 'text-end' : ''}>
                                 {post.description.length < 60
                                     ? post.description
                                     : readMore 
@@ -117,6 +138,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
                                         className="p-0 ms-2 text-decoration-none"
                                         onClick={() => setReadMore(!readMore)}
                                         size="sm"
+                                        style={{ fontSize: '12px' }}
                                     >
                                         {readMore 
                                             ? t('masquer_contenu', 'Masquer le contenu') 
@@ -124,15 +146,15 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
                                         }
                                     </Button>
                                 )}
-                            </Card.Text>
-                        </Col>
-                    </Row>
+                            </div>
+                        </div>
+                    </div>
                 )}
 
                 {/* Información de Viaje */}
                 {post.horadudepar && (
                     <InfoItem 
-                        icon="fas fa-plane-departure"
+                        icon={<FaPlaneDeparture size={16} color="#6c757d" />}
                         label={t('heure_depart', 'Heure de départ')}
                         value={post.horadudepar}
                     />
@@ -140,7 +162,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.datedepar && (
                     <InfoItem 
-                        icon="fas fa-calendar-day"
+                        icon={<FaCalendarDay size={16} color="#6c757d" />}
                         label={t('date_depart', 'Date de départ')}
                         value={post.datedepar}
                     />
@@ -148,7 +170,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.duracionviaje && (
                     <InfoItem 
-                        icon="fas fa-hourglass-half"
+                        icon={<FaHourglassHalf size={16} color="#6c757d" />}
                         label={t('duree_voyage', 'Durée du voyage')}
                         value={post.duracionviaje}
                     />
@@ -156,7 +178,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.horariollegada && (
                     <InfoItem 
-                        icon="fas fa-clock"
+                        icon={<FaClock size={16} color="#6c757d" />}
                         label={t('heure_arrivee', 'Heure d\'arrivée')}
                         value={post.horariollegada}
                     />
@@ -164,7 +186,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.transporte && (
                     <InfoItem 
-                        icon="fas fa-bus"
+                        icon={<FaBus size={16} color="#6c757d" />}
                         label={t('transport', 'Transport')}
                         value={post.transporte}
                     />
@@ -173,7 +195,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
                 {/* Localización */}
                 {post.commune && (
                     <InfoItem 
-                        icon="fas fa-map-marker-alt"
+                        icon={<FaMapMarkerAlt size={16} color="#6c757d" />}
                         label={t('lieu_depart', 'Lieu de départ')}
                         value={post.commune}
                     />
@@ -181,7 +203,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.wilaya && (
                     <InfoItem 
-                        icon="fas fa-map-marker"
+                        icon={<FaMapMarker size={16} color="#6c757d" />}
                         label={t('wilaya', 'Wilaya')}
                         value={post.wilaya}
                     />
@@ -189,7 +211,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.destinacionhadj && (
                     <InfoItem 
-                        icon="fas fa-kaaba"
+                        icon={<FaKaaba size={16} color="#6c757d" />}
                         label={t('destination', 'Destination')}
                         value={post.destinacionhadj}
                     />
@@ -198,7 +220,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
                 {/* Información de Vacaciones */}
                 {post.itemsReservations_Visa && (
                     <InfoItem 
-                        icon="fas fa-passport"
+                        icon={<FaPassport size={16} color="#6c757d" />}
                         label={t('reservations_visa', 'Réservations/Visa')}
                         value={post.itemsReservations_Visa}
                     />
@@ -206,7 +228,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.Location_Vacances && (
                     <InfoItem 
-                        icon="fas fa-umbrella-beach"
+                        icon={<FaUmbrellaBeach size={16} color="#6c757d" />}
                         label={t('location_vacances', 'Location Vacances')}
                         value={post.Location_Vacances}
                     />
@@ -214,7 +236,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.alquilergeneral && (
                     <InfoItem 
-                        icon="fas fa-home"
+                        icon={<FaHome size={16} color="#6c757d" />}
                         label={t('a_louer', 'À louer')}
                         value={post.alquilergeneral}
                     />
@@ -222,7 +244,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.superficie && (
                     <InfoItem 
-                        icon="fas fa-ruler-combined"
+                        icon={<FaRulerCombined size={16} color="#6c757d" />}
                         label={t('superficie', 'Superficie')}
                         value={`${post.superficie} m²`}
                     />
@@ -230,7 +252,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.etage && (
                     <InfoItem 
-                        icon="fas fa-building"
+                        icon={<FaBuilding size={16} color="#6c757d" />}
                         label={t('etage', 'Étage')}
                         value={post.etage}
                     />
@@ -238,7 +260,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.promoteurimmobilier !== undefined && (
                     <InfoItem 
-                        icon="fas fa-user-tie"
+                        icon={<FaUserTie size={16} color="#6c757d" />}
                         label={t('promoteur_immobilier', 'Promoteur Immobilier')}
                         boolean={true}
                         value={post.promoteurimmobilier}
@@ -246,25 +268,25 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
                 )}
 
                 {post.specifications && post.specifications.length > 0 && (
-                    <Row className="mb-3 border-bottom pb-2">
-                        <Col xs={12} md={3} className={`d-flex align-items-start ${isRTL ? 'justify-content-end' : ''}`}>
-                            <div className="me-2">
-                                <i className="fas fa-list"></i>
-                            </div>
-                            <span className="fw-bold text-muted small">
+                    <div className="d-flex align-items-start mb-3 border-bottom pb-2">
+                        <div className="flex-shrink-0 me-3" style={{ color: "#6c757d" }}>
+                            <FaList size={16} color="#6c757d" />
+                        </div>
+                        <div className="flex-shrink-0 me-3">
+                            <span className="fw-bold text-muted" style={{ fontSize: '14px', minWidth: '120px' }}>
                                 {t('specifications', 'Spécifications')}
                             </span>
-                        </Col>
-                        <Col xs={12} md={9}>
+                        </div>
+                        <div className="flex-grow-1">
                             {renderArray(post.specifications)}
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                 )}
 
                 {/* Información de Hotel */}
                 {post.nombredelhotel && (
                     <InfoItem 
-                        icon="fas fa-hotel"
+                        icon={<FaHotel size={16} color="#6c757d" />}
                         label={t('nom_hotel', 'Nom de l\'hôtel')}
                         value={post.nombredelhotel}
                     />
@@ -272,7 +294,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.adresshotel && (
                     <InfoItem 
-                        icon="fas fa-map-pin"
+                        icon={<FaMapPin size={16} color="#6c757d" />}
                         label={t('adresse', 'Adresse')}
                         value={post.adresshotel}
                     />
@@ -280,71 +302,71 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.totalhabitaciones && (
                     <InfoItem 
-                        icon="fas fa-bed"
+                        icon={<FaBed size={16} color="#6c757d" />}
                         label={t('total_chambres', 'Total chambres')}
                         value={post.totalhabitaciones}
                     />
                 )}
 
                 {post.tipodehabutaciones && post.tipodehabutaciones.length > 0 && (
-                    <Row className="mb-3 border-bottom pb-2">
-                        <Col xs={12} md={3} className={`d-flex align-items-start ${isRTL ? 'justify-content-end' : ''}`}>
-                            <div className="me-2">
-                                <i className="fas fa-list-ol"></i>
-                            </div>
-                            <span className="fw-bold text-muted small">
+                    <div className="d-flex align-items-start mb-3 border-bottom pb-2">
+                        <div className="flex-shrink-0 me-3" style={{ color: "#6c757d" }}>
+                            <FaListOl size={16} color="#6c757d" />
+                        </div>
+                        <div className="flex-shrink-0 me-3">
+                            <span className="fw-bold text-muted" style={{ fontSize: '14px', minWidth: '120px' }}>
                                 {t('types_chambres', 'Types de chambres')}
                             </span>
-                        </Col>
-                        <Col xs={12} md={9}>
+                        </div>
+                        <div className="flex-grow-1">
                             {renderArray(post.tipodehabutaciones)}
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                 )}
 
                 {post.estrellas && (
                     <InfoItem 
-                        icon="fas fa-star"
+                        icon={<FaStar size={16} color="#6c757d" />}
                         label={t('etoiles', 'Étoiles')}
                         value={`${post.estrellas} ${t('etoiles', 'Étoiles')}`}
                     />
                 )}
 
                 {post.wifi && post.wifi.length > 0 && (
-                    <Row className="mb-3 border-bottom pb-2">
-                        <Col xs={12} md={3} className={`d-flex align-items-start ${isRTL ? 'justify-content-end' : ''}`}>
-                            <div className="me-2">
-                                <i className="fas fa-wifi"></i>
-                            </div>
-                            <span className="fw-bold text-muted small">
+                    <div className="d-flex align-items-start mb-3 border-bottom pb-2">
+                        <div className="flex-shrink-0 me-3" style={{ color: "#6c757d" }}>
+                            <FaWifi size={16} color="#6c757d" />
+                        </div>
+                        <div className="flex-shrink-0 me-3">
+                            <span className="fw-bold text-muted" style={{ fontSize: '14px', minWidth: '120px' }}>
                                 {t('wifi', 'WiFi')}
                             </span>
-                        </Col>
-                        <Col xs={12} md={9}>
+                        </div>
+                        <div className="flex-grow-1">
                             {renderArray(post.wifi)}
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                 )}
 
                 {post.language && post.language.length > 0 && (
-                    <Row className="mb-3 border-bottom pb-2">
-                        <Col xs={12} md={3} className={`d-flex align-items-start ${isRTL ? 'justify-content-end' : ''}`}>
-                            <div className="me-2">
-                                <i className="fas fa-language"></i>
-                            </div>
-                            <span className="fw-bold text-muted small">
+                    <div className="d-flex align-items-start mb-3 border-bottom pb-2">
+                        <div className="flex-shrink-0 me-3" style={{ color: "#6c757d" }}>
+                            <FaLanguage size={16} color="#6c757d" />
+                        </div>
+                        <div className="flex-shrink-0 me-3">
+                            <span className="fw-bold text-muted" style={{ fontSize: '14px', minWidth: '120px' }}>
                                 {t('langues', 'Langues')}
                             </span>
-                        </Col>
-                        <Col xs={12} md={9}>
+                        </div>
+                        <div className="flex-grow-1">
                             {renderArray(post.language)}
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                 )}
 
                 {post.tarifnuit && (
                     <InfoItem 
-                        icon="fas fa-money-bill-wave"
+                        icon={<FaMoneyBillWave size={16} color="#6c757d" />}
                         label={t('tarif_nuit', 'Tarif/nuit')}
                         value={post.tarifnuit}
                     />
@@ -352,7 +374,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.reservacionenlinea && (
                     <InfoItem 
-                        icon="fas fa-laptop"
+                        icon={<FaLaptop size={16} color="#6c757d" />}
                         label={t('reservation_en_ligne', 'Réservation en ligne')}
                         value={post.reservacionenlinea}
                     />
@@ -360,7 +382,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.politiqueAnnulation && (
                     <InfoItem 
-                        icon="fas fa-ban"
+                        icon={<FaBan size={16} color="#6c757d" />}
                         label={t('politique_annulation', 'Politique d\'annulation')}
                         value={post.politiqueAnnulation}
                     />
@@ -368,7 +390,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.hotelWebsite && (
                     <InfoItem 
-                        icon="fas fa-globe"
+                        icon={<FaGlobe size={16} color="#6c757d" />}
                         label={t('site_web', 'Site web')}
                         value={post.hotelWebsite}
                         link={true}
@@ -378,7 +400,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
                 {/* Destinos de Viaje */}
                 {post.destinacionvoyage1 && (
                     <InfoItem 
-                        icon="fas fa-map-marked-alt"
+                        icon={<FaMapMarkedAlt size={16} color="#6c757d" />}
                         label={t('destination_1', 'Destination 1')}
                         value={post.destinacionvoyage1}
                     />
@@ -386,7 +408,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.voyage1hotel1 && (
                     <InfoItem 
-                        icon="fas fa-hotel"
+                        icon={<FaHotel size={16} color="#6c757d" />}
                         label={t('hotel_1', 'Hôtel 1')}
                         value={post.voyage1hotel1}
                     />
@@ -394,7 +416,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.voyage1nombrehotel1 && (
                     <InfoItem 
-                        icon="fas fa-signature"
+                        icon={<FaSignature size={16} color="#6c757d" />}
                         label={t('nom_hotel_1', 'Nom Hôtel 1')}
                         value={post.voyage1nombrehotel1}
                     />
@@ -402,7 +424,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.destinacionvoyage2 && (
                     <InfoItem 
-                        icon="fas fa-map-marked-alt"
+                        icon={<FaMapMarkedAlt size={16} color="#6c757d" />}
                         label={t('destination_2', 'Destination 2')}
                         value={post.destinacionvoyage2}
                     />
@@ -410,7 +432,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.voyage2hotel2 && (
                     <InfoItem 
-                        icon="fas fa-hotel"
+                        icon={<FaHotel size={16} color="#6c757d" />}
                         label={t('hotel_2', 'Hôtel 2')}
                         value={post.voyage2hotel2}
                     />
@@ -418,7 +440,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.voyage1nombrehotel2 && (
                     <InfoItem 
-                        icon="fas fa-signature"
+                        icon={<FaSignature size={16} color="#6c757d" />}
                         label={t('nom_hotel_2', 'Nom Hôtel 2')}
                         value={post.voyage1nombrehotel2}
                     />
@@ -426,7 +448,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.fecharegreso && (
                     <InfoItem 
-                        icon="fas fa-calendar-check"
+                        icon={<FaCalendarCheck size={16} color="#6c757d" />}
                         label={t('date_retour', 'Date de retour')}
                         value={post.fecharegreso}
                     />
@@ -434,7 +456,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.serviciosdelhotel && (
                     <InfoItem 
-                        icon="fas fa-concierge-bell"
+                        icon={<FaConciergeBell size={16} color="#6c757d" />}
                         label={t('services_hotel', 'Services hôtel')}
                         value={post.serviciosdelhotel}
                     />
@@ -442,7 +464,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.incluidoenelprecio && (
                     <InfoItem 
-                        icon="fas fa-check-circle"
+                        icon={<FaCheckCircle size={16} color="#6c757d" />}
                         label={t('inclus_prix', 'Inclus dans le prix')}
                         value={post.incluidoenelprecio}
                     />
@@ -450,7 +472,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.cancelarreserva && (
                     <InfoItem 
-                        icon="fas fa-times-circle"
+                        icon={<FaTimesCircle size={16} color="#6c757d" />}
                         label={t('annulation', 'Annulation')}
                         value={post.cancelarreserva}
                     />
@@ -458,7 +480,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.price && (
                     <InfoItem 
-                        icon="fas fa-tag"
+                        icon={<FaTag size={16} color="#6c757d" />}
                         label={t('prix_personne', 'Prix par personne')}
                         value={`${post.price} DA`}
                     />
@@ -466,7 +488,7 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {post.contacto && (
                     <InfoItem 
-                        icon="fas fa-phone"
+                        icon={<FaPhone size={16} color="#6c757d" />}
                         label={t('contact', 'Contact')}
                         value={post.contacto}
                     />
@@ -474,20 +496,20 @@ const DescriptionPost = ({ post, readMore, setReadMore }) => {
 
                 {/* Información del Post */}
                 <InfoItem 
-                    icon="fas fa-calendar-alt"
+                    icon={<FaCalendarAlt size={16} color="#6c757d" />}
                     label={t('publie_le', 'Publié le')}
                     value={`${new Date(post.createdAt).toLocaleDateString()} à ${new Date(post.createdAt).toLocaleTimeString()}`}
                 />
 
                 <InfoItem 
-                    icon="fas fa-sync-alt"
+                    icon={<FaSyncAlt size={16} color="#6c757d" />}
                     label={t('actualise_le', 'Actualisé le')}
                     value={`${new Date(post.updatedAt).toLocaleDateString()} à ${new Date(post.updatedAt).toLocaleTimeString()}`}
                 />
 
                 {post.vistas > 0 && (
                     <InfoItem 
-                        icon="fas fa-eye"
+                        icon={<FaEye size={16} color="#6c757d" />}
                         label={t('vues', 'Vues')}
                         value={post.vistas.toString()}
                     />

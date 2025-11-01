@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="./icon-web-01.png" />
+    <link rel="icon" href="/icon-web-01.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
    
     <!-- Meta tags PWA mejorados -->
@@ -15,10 +15,10 @@
       name="description"
       content="Agence Voyage - Votre partenaire de confiance pour les voyages organisés, locations de vacances et pèlerinages"
     />
+    <!-- Usar rutas absolutas para los iconos -->
     <link rel="apple-touch-icon" href="/icon-web-01.png" />
-    
-    <link rel="manifest" href="/manifest.json" />
-
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+   
     <!-- Bootstrap CSS consolidado -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -93,6 +93,7 @@
       crossorigin="anonymous"
     ></script>
 
+    <!-- Script PWA mejorado -->
     <script>
       // Ocultar loading screen cuando la app esté lista
       window.addEventListener('load', function() {
@@ -104,12 +105,70 @@
             setTimeout(() => loading.remove(), 500);
           }
         }, 1000);
+
+        // Detectar si está en modo standalone PWA
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+          document.body.classList.add('pwa-standalone');
+        }
+      });
+      window.installPWA = function() {
+        if (window.deferredPrompt) {
+          window.deferredPrompt.prompt();
+          window.deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('✅ User accepted the install prompt');
+            } else {
+              console.log('❌ User dismissed the install prompt');
+            }
+            window.deferredPrompt = null;
+          });
+        } else {
+          console.log('❌ No deferredPrompt available');
+        }
+      };
+      // Registrar Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(error) {
+              console.log('SW registration failed: ', error);
+            });
+        });
+      }
+
+      // Detectar PWA instalada
+      window.addEventListener('appinstalled', (evt) => {
+        console.log('PWA installed successfully!');
+        localStorage.setItem('pwaInstalled', 'true');
       });
 
-      // Detectar si está en modo standalone PWA
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        document.body.classList.add('pwa-standalone');
-      }
+      // Capturar el evento beforeinstallprompt para usarlo luego
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log('beforeinstallprompt event fired');
+        // Aquí puedes mostrar un botón de instalación en tu interfaz
+        // Por ejemplo, mostrar un botón en el navbar
+        // Luego, cuando el usuario haga clic en ese botón, llamas a deferredPrompt.prompt()
+      });
+
+    
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log('beforeinstallprompt event fired');
+        
+        // Disparar un evento personalizado para que React lo capture
+        window.dispatchEvent(new Event('pwaInstallAvailable'));
+      });
+    
+      // También podríamos guardarlo en window para acceso global
+      window.deferredPrompt = deferredPrompt;
+
     </script>
   </body>
 </html>

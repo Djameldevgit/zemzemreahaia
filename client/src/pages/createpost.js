@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Container, Row, Col, Card, Form, Button, Alert, Accordion, Badge, ProgressBar } from 'react-bootstrap';
+import { FaInfoCircle, FaImage, FaEdit, FaPlane, FaHome, FaKaaba, FaSave, FaTimes } from 'react-icons/fa';
 
-// 🔷 COMPONENTES COMUNES (CAMPOS QUE APARECEN EN LAS 3 CATEGORÍAS)
+// 🔷 COMPONENTES COMUNES
 import CategorySelector from '../components/forms/CategorySelector';
 import DescriptionTextarea from '../components/forms/DescriptionTextarea';
 import AddressInput from '../components/forms/AddressInput';
@@ -46,7 +47,6 @@ import ServiciosVoyagesOrganises from '../components/forms/voyageorgranise/Servi
 // 🔷 IMPORTAR ACCIONES Y DATOS
 import { createPost, updatePost } from '../redux/actions/postAction';
 import communesjson from "../json/communes.json";
-import valid from './../utils/valid';
 
 const Createpost = () => {
     // 🔷 ESTADOS GLOBALES 
@@ -64,7 +64,6 @@ const Createpost = () => {
 
     // 🔷 ESTADO INICIAL SIMPLIFICADO
     const initialState = {
-        // Información básica (COMÚN)
         category: "Agence de Voyage",
         subCategory: "",
         title: "",
@@ -75,19 +74,16 @@ const Createpost = () => {
         contacto: "",
         images: [],
 
-        // Fechas y horarios (COMÚN)
+        // Fechas y horarios
         datedepar: "",
         horadudepar: "",
         dateretour: "",
         dureeSejour: "",
 
-        // Precios (COMÚN)
+        // Precios
         prixAdulte: "",
         prixEnfant: "",
         prixBebe: "",
-
-        // Campos específicos por categoría (se inicializan vacíos)
-        // Estos se llenarán según la categoría seleccionada
     };
 
     // 🔷 ESTADOS
@@ -156,7 +152,7 @@ const Createpost = () => {
     // 🔷 FUNCIÓN PARA CALCULAR PORCENTAJE DE COMPLETADO
     const calculateCompletionPercentage = () => {
         let completedFields = 0;
-        const totalFields = 8; // Campos principales requeridos
+        const totalFields = 8;
 
         if (postData.subCategory) completedFields++;
         if (postData.title) completedFields++;
@@ -171,7 +167,7 @@ const Createpost = () => {
         setCompletionPercentage(percentage);
     };
 
-    // 🔷 FUNCIÓN PARA SANITIZAR DATOS (SIMPLIFICADA)
+    // 🔷 FUNCIÓN PARA SANITIZAR DATOS
     const sanitizePostData = (data) => {
         if (!data) return {};
         return { ...data };
@@ -186,23 +182,7 @@ const Createpost = () => {
         }));
     };
 
-    const handleArrayChange = (field, value, isChecked) => {
-        setPostData(prevState => {
-            const currentArray = prevState[field] || [];
-            let newArray;
-
-            if (isChecked) {
-                newArray = [...currentArray, value];
-            } else {
-                newArray = currentArray.filter(item => item !== value);
-            }
-
-            return {
-                ...prevState,
-                [field]: newArray
-            };
-        });
-    };
+    // 🔷 ELIMINADA: handleArrayChange - No se estaba usando
 
     const handleWilayaChange = (event) => {
         const selectedWilaya = event.target.value;
@@ -325,16 +305,19 @@ const Createpost = () => {
     // 🧳 VOYAGE ORGANISÉ
     const renderVoyageOrganise = () => (
         <Card className="mb-4">
-            <Card.Header className="bg-info text-white">
-                <h5 className="mb-0">✈️ {t('voyage_organise', 'Voyage Organisé')}</h5>
+            <Card.Header className="bg-info text-white ps-3">
+                <h5 className="mb-0 d-flex align-items-center">
+                    <FaPlane size={16} color="white" className="me-2" />
+                    {t('voyage_organise', 'Voyage Organisé')}
+                </h5>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="px-2"> {/* Menos padding horizontal */}
                 <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} flush>
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>
                             🗺️ {t('voyage.destinations_internationales', 'Destinations Internationales')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2"> {/* Menos padding horizontal */}
                             <DestinationVoyagesOrganises
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -346,7 +329,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             📅 {t('voyage.dates_duree', 'Dates et Durée')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <DateDeparRetour
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -366,7 +349,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             ✈️ {t('voyage.transport_deplacements', 'Transport et Déplacements')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <TransportVoyagesOrganises
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -378,7 +361,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             🏨 {t('voyage.hebergement_pension', 'Hébergement et Pension')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <NombreLugarVoyagesOrganises
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -394,7 +377,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             🛎️ {t('voyage.services_inclus', 'Services Inclus')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <ServiciosVoyagesOrganises
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -409,16 +392,19 @@ const Createpost = () => {
     // 🏠 LOCATION VACANCES
     const renderLocationVacances = () => (
         <Card className="mb-4">
-            <Card.Header className="bg-success text-white">
-                <h5 className="mb-0">🏠 {t('location_vacances', 'Location Vacances')}</h5>
+            <Card.Header className="bg-success text-white ps-3">
+                <h5 className="mb-0 d-flex align-items-center">
+                    <FaHome size={16} color="white" className="me-2" />
+                    {t('location_vacances', 'Location Vacances')}
+                </h5>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="px-2">
                 <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} flush>
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>
                             🏡 {t('location.informations_logement', 'Informations du Logement')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <NombreLugarLocationVacances
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -434,7 +420,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             🏨 {t('location.details_hebergement', 'Détails de l\'Hébergement')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <AlojamientoLocationVacances
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -446,7 +432,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             🚗 {t('location.transport_acces', 'Transport et Accès')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <TransportLocationVacances
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -458,7 +444,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             🛎️ {t('location.services_equipements', 'Services et Équipements')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <ServiciosLocationVacances
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -473,16 +459,19 @@ const Createpost = () => {
     // 🕋 HAJJ & OMRA
     const renderHadjOmra = () => (
         <Card className="mb-4">
-            <Card.Header className="bg-warning text-dark">
-                <h5 className="mb-0">🕋 {t('hadj_omra', 'Hadj & Omra')}</h5>
+            <Card.Header className="bg-warning text-dark ps-3">
+                <h5 className="mb-0 d-flex align-items-center">
+                    <FaKaaba size={16} color="#6c757d" className="me-2" />
+                    {t('hadj_omra', 'Hadj & Omra')}
+                </h5>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="px-2">
                 <Accordion activeKey={activeAccordion} onSelect={setActiveAccordion} flush>
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>
                             🕋 {t('hadj.destination_peletinage', 'Destination du Pèlerinage')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <DestinationHajjOmra
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -498,7 +487,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             📅 {t('hadj.dates_peletinage', 'Dates du Pèlerinage')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <DateDeparRetour
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -518,7 +507,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             🚗 {t('hadj.transport_hebergement', 'Transport et Hébergement')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <TransportHajjOmra
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -534,7 +523,7 @@ const Createpost = () => {
                         <Accordion.Header>
                             🛎️ {t('hadj.services_religieux', 'Services Religieux')}
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body className="px-2">
                             <ServiciosHajjOmra
                                 postData={postData}
                                 handleChangeInput={handleChangeInput}
@@ -563,20 +552,20 @@ const Createpost = () => {
     // 🔷 COMPONENTES COMUNES PARA TODAS LAS CATEGORÍAS
     const renderCommonComponents = () => (
         <>
-            {/* Tarifas y Precios - COMÚN PARA TODAS */}
+            {/* Tarifas y Precios */}
             <TarifasYprecios 
                 postData={postData} 
                 handleChangeInput={handleChangeInput}
                 category={postData.subCategory}
             />
 
-            {/* Política de Cancelación - COMÚN PARA TODAS */}
+            {/* Política de Cancelación */}
             <CancellationPolicy
                 postData={postData}
                 handleChangeInput={handleChangeInput}
             />
 
-            {/* Contacto y Reservas - COMÚN PARA TODAS */}
+            {/* Contacto y Reservas */}
             <ContactReservation
                 postData={postData}
                 handleChangeInput={handleChangeInput}
@@ -602,179 +591,234 @@ const Createpost = () => {
 
     return (
         <Container fluid className="p-0" dir={isRTL ? "rtl" : "ltr"}>
-        <Row className="g-0">
-            <Col xs={12}>
-                {/* Header Principal */}
-                <Card className="border-0 rounded-0">
-                    <Card.Header className={isEdit ? "bg-warning text-dark" : "bg-primary text-white"}>
-                        <Row className="align-items-center g-0">
-                            <Col>
-                                <h2 className="mb-1 fs-6">
-                                    {isEdit ? `✏️ ${t('edit_title', 'Modifier la Publication')}` : `📢 ${t('create_title', 'Créer une Nouvelle Publication')}`}
-                                </h2>
-                                {isEdit && postToEdit?.title && (
-                                    <p className="mb-0 opacity-75 small">
-                                        {t('modification', 'Modification de')}: "{postToEdit.title}"
-                                    </p>
-                                )}
-                            </Col>
-                            <Col xs="auto">
-                                <Badge 
-                                    bg={isEdit ? "dark" : "light"} 
-                                    text={isEdit ? "white" : "dark"}
-                                    className="fs-6"
-                                >
-                                    {completionPercentage}% {t('common.complete', 'Complété')}
-                                </Badge>
-                            </Col>
-                        </Row>
-                    </Card.Header>
-                </Card>
-    
-                {/* Barra de Progreso */}
-                {completionPercentage > 0 && (
+            <Row className="g-0">
+                <Col xs={12}>
+                    {/* Header Principal */}
                     <Card className="border-0 rounded-0">
-                        <Card.Body className="py-2">
-                            <div className="d-flex justify-content-between align-items-center mb-1">
-                                <small className="text-muted">
-                                    {t('common.progress', 'Progression de votre annonce')}
-                                </small>
-                                <small className="fw-bold">{completionPercentage}%</small>
-                            </div>
-                            <ProgressBar 
-                                now={completionPercentage} 
-                                variant={completionPercentage < 50 ? "warning" : "success"}
-                                className="h-2"
-                            />
+                        <Card.Header className={`${isEdit ? "bg-warning text-dark" : "bg-primary text-white"} ps-3`}>
+                            <Row className="align-items-center g-0">
+                                <Col>
+                                    <h2 className="mb-1 fs-6 d-flex align-items-center">
+                                        {isEdit ? (
+                                            <>
+                                                <FaEdit size={16} color="#6c757d" className="me-2" />
+                                                {t('edit_title', 'Modifier la Publication')}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FaInfoCircle size={16} color="white" className="me-2" />
+                                                {t('create_title', 'Créer une Nouvelle Publication')}
+                                            </>
+                                        )}
+                                    </h2>
+                                    {isEdit && postToEdit?.title && (
+                                        <p className="mb-0 opacity-75 small">
+                                            {t('modification', 'Modification de')}: "{postToEdit.title}"
+                                        </p>
+                                    )}
+                                </Col>
+                                <Col xs="auto">
+                                    <Badge 
+                                        bg={isEdit ? "dark" : "light"} 
+                                        text={isEdit ? "white" : "dark"}
+                                        className="fs-6"
+                                    >
+                                        {completionPercentage}% {t('common.complete', 'Complété')}
+                                    </Badge>
+                                </Col>
+                            </Row>
+                        </Card.Header>
+                    </Card>
+
+                    {/* Barra de Progreso */}
+                    {completionPercentage > 0 && (
+                        <Card className="border-0 rounded-0">
+                            <Card.Body className="py-2">
+                                <div className="d-flex justify-content-between align-items-center mb-1">
+                                    <small className="text-muted">
+                                        {t('common.progress', 'Progression de votre annonce')}
+                                    </small>
+                                    <small className="fw-bold">{completionPercentage}%</small>
+                                </div>
+                                <ProgressBar 
+                                    now={completionPercentage} 
+                                    variant={completionPercentage < 50 ? "warning" : "success"}
+                                    className="h-2"
+                                />
+                            </Card.Body>
+                        </Card>
+                    )}
+
+                    {/* Alertas */}
+                    {showAlert && (
+                        <Alert
+                            variant={alertVariant}
+                            dismissible
+                            onClose={() => setShowAlert(false)}
+                            className="mb-0 rounded-0 border-0"
+                        >
+                            <Alert.Heading className="fs-6">
+                                {alertVariant === "success" ? "✅ Success" : "⚠️ Error"}
+                            </Alert.Heading>
+                            {alertMessage}
+                        </Alert>
+                    )}
+
+                    {/* Formulario Principal */}
+                    <Card className="shadow-none border-0 rounded-0">
+                        <Card.Body className="p-0">
+                            <Form onSubmit={handleSubmit} className="p-0">
+                                {/* Selector de Categoría */}
+                                <div className="px-2"> {/* Contenedor para controlar dropdowns */}
+                                    <CategorySelector
+                                        postData={postData}
+                                        handleChangeInput={handleChangeInput}
+                                    />
+                                </div>
+
+                                {postData.subCategory && (
+                                    <>
+                                        {/* Información Básica */}
+                                        <Card className="mb-0 border-0 rounded-0">
+                                            <Card.Header className="bg-light border-0 ps-3">
+                                                <h5 className="mb-0 fs-6 d-flex align-items-center">
+                                                    <FaInfoCircle size={16} color="#6c757d" className="me-2" />
+                                                    {t('common.basic_info', 'Informations de Base')}
+                                                </h5>
+                                            </Card.Header>
+                                            <Card.Body className="px-2"> {/* Menos padding horizontal */}
+                                                <DescriptionTextarea
+                                                    postData={postData}
+                                                    handleChangeInput={handleChangeInput}
+                                                />
+                                                
+                                                <AddressInput
+                                                    postData={postData}
+                                                    handleChangeInput={handleChangeInput}
+                                                    wilayasOptions={wilayasOptions}
+                                                    communesOptions={communesOptions}
+                                                    handleWilayaChange={handleWilayaChange}
+                                                    handleCommuneChange={handleCommuneChange}
+                                                />
+                                            </Card.Body>
+                                        </Card>
+
+                                        {/* Campos Específicos de la Categoría */}
+                                        {renderCategoryFields()}
+
+                                        {/* Componentes Comunes */}
+                                        {renderCommonComponents()}
+
+                                        {/* Subida de Imágenes - SIN ZOOM */}
+                                        <Card className="mb-0 border-0 rounded-0">
+                                            <Card.Header className="bg-light border-0 ps-3">
+                                                <h5 className="mb-0 fs-6 d-flex align-items-center">
+                                                    <FaImage size={16} color="#6c757d" className="me-2" />
+                                                    {t('common.images', 'Images de l\'Annonce')}
+                                                </h5>
+                                            </Card.Header>
+                                            <Card.Body className="px-2">
+                                                <ImageUpload
+                                                    images={images}
+                                                    handleChangeImages={handleChangeImages}
+                                                    deleteImages={deleteImages}
+                                                    theme={theme}
+                                                    // Prop para desactivar zoom
+                                                    disableZoom={true}
+                                                />
+                                            </Card.Body>
+                                        </Card>
+
+                                        {/* Botones de Acción */}
+                                        <Card className="border-0 bg-transparent">
+                                            <Card.Body className="px-2"> {/* Menos padding horizontal */}
+                                                <Row className={`g-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                                    <Col xs={8}>
+                                                        <div className="d-grid gap-1">
+                                                            <Button
+                                                                variant={isEdit ? "warning" : "success"}
+                                                                type="submit"
+                                                                size="lg"
+                                                                className="fw-bold py-2 d-flex align-items-center justify-content-center"
+                                                            >
+                                                                {isEdit ? (
+                                                                    <>
+                                                                        <FaSave size={16} className="me-2" />
+                                                                        {t('button_update', 'Mettre à jour')}
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <FaInfoCircle size={16} className="me-2" />
+                                                                        {t('button_publish', 'Publier')}
+                                                                    </>
+                                                                )}
+                                                            </Button>
+                                                        </div>
+                                                    </Col>
+                                                    <Col xs={4}>
+                                                        <Button
+                                                            variant="outline-secondary"
+                                                            size="lg"
+                                                            className="w-100 py-2 d-flex align-items-center justify-content-center"
+                                                            onClick={() => history.goBack()}
+                                                        >
+                                                            <FaTimes size={16} className="me-2" />
+                                                            {t('common.cancel', 'Annuler')}
+                                                        </Button>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Body>
+                                        </Card>
+                                    </>
+                                )}
+
+                                {!postData.subCategory && (
+                                    <Card className="text-center border-0 bg-light rounded-0">
+                                        <Card.Body className="py-4">
+                                            <div className="fs-1 mb-2">🏁</div>
+                                            <h5 className="text-muted fs-6">
+                                                {t('common.select_category_first', 'Sélectionnez d\'abord une catégorie pour commencer')}
+                                            </h5>
+                                        </Card.Body>
+                                    </Card>
+                                )}
+                            </Form>
                         </Card.Body>
                     </Card>
-                )}
-    
-                {/* Alertas */}
-                {showAlert && (
-                    <Alert
-                        variant={alertVariant}
-                        dismissible
-                        onClose={() => setShowAlert(false)}
-                        className="mb-0 rounded-0 border-0"
-                    >
-                        <Alert.Heading className="fs-6">
-                            {alertVariant === "success" ? "✅ Success" : "⚠️ Error"}
-                        </Alert.Heading>
-                        {alertMessage}
-                    </Alert>
-                )}
-    
-                {/* Formulario Principal */}
-                <Card className="shadow-none border-0 rounded-0">
-                    <Card.Body className="p-0">
-                        <Form onSubmit={handleSubmit} className="p-0">
-                            {/* Selector de Categoría */}
-                            <CategorySelector
-                                postData={postData}
-                                handleChangeInput={handleChangeInput}
-                            />
-    
-                            {postData.subCategory && (
-                                <>
-                                    {/* Información Básica */}
-                                    <Card className="mb-0 border-0 rounded-0">
-                                        <Card.Header className="bg-light border-0">
-                                            <h5 className="mb-0 fs-6 p-2">
-                                                📝 {t('common.basic_info', 'Informations de Base')}
-                                            </h5>
-                                        </Card.Header>
-                                        <Card.Body className="p-2">
-                                            <DescriptionTextarea
-                                                postData={postData}
-                                                handleChangeInput={handleChangeInput}
-                                            />
-                                            
-                                            <AddressInput
-                                                postData={postData}
-                                                handleChangeInput={handleChangeInput}
-                                                wilayasOptions={wilayasOptions}
-                                                communesOptions={communesOptions}
-                                                handleWilayaChange={handleWilayaChange}
-                                                handleCommuneChange={handleCommuneChange}
-                                            />
-                                        </Card.Body>
-                                    </Card>
-    
-                                    {/* Campos Específicos de la Categoría */}
-                                    {renderCategoryFields()}
-    
-                                    {/* Componentes Comunes */}
-                                    {renderCommonComponents()}
-    
-                                    {/* Subida de Imágenes */}
-                                    <Card className="mb-0 border-0 rounded-0">
-                                        <Card.Header className="bg-light border-0">
-                                            <h5 className="mb-0 fs-6 p-2">
-                                                🖼️ {t('common.images', 'Images de l\'Annonce')}
-                                            </h5>
-                                        </Card.Header>
-                                        <Card.Body className="p-2">
-                                            <ImageUpload
-                                                images={images}
-                                                handleChangeImages={handleChangeImages}
-                                                deleteImages={deleteImages}
-                                                theme={theme}
-                                            />
-                                        </Card.Body>
-                                    </Card>
-    
-                                    {/* Botones de Acción */}
-                                    <Card className="border-0 bg-transparent">
-                                        <Card.Body className="p-2">
-                                            <Row className={`g-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                                <Col xs={8}>
-                                                    <div className="d-grid gap-1">
-                                                        <Button
-                                                            variant={isEdit ? "warning" : "success"}
-                                                            type="submit"
-                                                            size="lg"
-                                                            className="fw-bold py-2"
-                                                        >
-                                                            {isEdit 
-                                                                ? `💾 ${t('button_update', 'Mettre à jour')}`
-                                                                : `📢 ${t('button_publish', 'Publier')}`
-                                                            }
-                                                        </Button>
-                                                    </div>
-                                                </Col>
-                                                <Col xs={4}>
-                                                    <Button
-                                                        variant="outline-secondary"
-                                                        size="lg"
-                                                        className="w-100 py-2"
-                                                        onClick={() => history.goBack()}
-                                                    >
-                                                        ↩️ {t('common.cancel', 'Annuler')}
-                                                    </Button>
-                                                </Col>
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                            )}
-    
-                            {!postData.subCategory && (
-                                <Card className="text-center border-0 bg-light rounded-0">
-                                    <Card.Body className="py-4">
-                                        <div className="fs-1 mb-2">🏁</div>
-                                        <h5 className="text-muted fs-6">
-                                            {t('common.select_category_first', 'Sélectionnez d\'abord une catégorie pour commencer')}
-                                        </h5>
-                                    </Card.Body>
-                                </Card>
-                            )}
-                        </Form>
-                    </Card.Body>
-                </Card>
-            </Col>
-        </Row>
-    </Container>
+                </Col>
+            </Row>
+
+            {/* 🔷 ESTILOS PARA CONTROLAR DROPDOWNS Y ELIMINAR ZOOM */}
+            <style>{`
+                .form-select {
+                    position: relative;
+                    z-index: 1000;
+                }
+                .dropdown-menu {
+                    z-index: 1050 !important;
+                }
+                /* Eliminar efectos de zoom en todas las imágenes */
+                img {
+                    transform: none !important;
+                    transition: none !important;
+                }
+                .image-hover-zoom {
+                    transform: none !important;
+                }
+                .image-hover-zoom:hover {
+                    transform: none !important;
+                }
+                /* Menos padding horizontal en todos los forms */
+                .form-control, .form-select, .form-check-input {
+                    border-radius: 0.375rem;
+                }
+                .card-body.px-2 .form-control,
+                .card-body.px-2 .form-select {
+                    padding-left: 0.5rem;
+                    padding-right: 0.5rem;
+                }
+            `}</style>
+        </Container>
     );
 };
 
